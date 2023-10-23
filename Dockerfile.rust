@@ -2,15 +2,8 @@
 FROM rust:latest AS builder
 
 WORKDIR /app
-RUN apt update && apt install lld clang -y
 COPY . .
 RUN cargo build --release
+RUN mv /app/target/release/prep prep
 
-
-FROM rust:latest AS runtime
-
-WORKDIR /app
-
-COPY --from=builder /app/target/release/the_prep the_prep
-
-CMD ["./the_prep"]
+CMD ["./prep"]

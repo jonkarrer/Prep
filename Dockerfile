@@ -1,4 +1,3 @@
-# Builder stage
 FROM rust:latest AS builder
 
 WORKDIR /app

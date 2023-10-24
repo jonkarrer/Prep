@@ -2,17 +2,22 @@ version: "3.8"
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile.rust
+    build: .
     hostname: web
     ports:
       - "8000:8000"
 
+  # surrealdb:
+  #   image: surrealdb/surrealdb:latest
+  #   container_name: surrealdb
+  #   command: start --user password --pass password file:/data/database.db
+  #   ports:
+  #     - 3000:3000
+    # volumes:
+    #   - ./data:/data
+
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
+    build: ./proxy
     ports:
       - "80:80"
     depends_on:

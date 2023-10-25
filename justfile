@@ -5,3 +5,8 @@ start-db:
 stop-db:
     docker kill surreal_db;
     @echo 'SurrealDB stopped'
+
+test-gateway:
+    just start-db;
+    cargo test gateway
+    just stop-db;

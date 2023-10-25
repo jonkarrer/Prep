@@ -1,2 +1,2 @@
 mod recipe_repo;
-use pub recipe_repo::*;
+pub use recipe_repo::*;

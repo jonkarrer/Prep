@@ -2,12 +2,15 @@ mod application;
 mod domain;
 mod infra;
 
+use application::{generate_recipe, RecipeRepository};
 use domain::Recipe;
-use application::generate_recipe;
-use poem::{get, handler, listener::TcpListener, web::Path, IntoResponse, Route, Server, web::Json};
+use infra::{DatabaseConfig, SurrealGateway};
+use poem::{
+    get, handler, listener::TcpListener, web::Json, web::Path, IntoResponse, Result, Route, Server,
+};
 
 #[handler]
-fn make_recipe(Path(name): Path<String>) -> Result<String> {
+async fn make_recipe(Path(name): Path<String>) -> Result<String> {
     println!("request accepted");
     let recipe: Recipe = generate_recipe(name.as_str()).unwrap();
 
@@ -20,7 +23,7 @@ fn make_recipe(Path(name): Path<String>) -> Result<String> {
     };
 
     let repo = SurrealGateway::new(&db_config).await;
-    repo.insert(&recipe, "jon@gmail.com").await?;
+    repo.insert(recipe, "jon@gmail").await?;
 
     Ok(String::from("Recipe inserted"))
 }
@@ -29,9 +32,7 @@ fn make_recipe(Path(name): Path<String>) -> Result<String> {
 async fn main() -> Result<(), std::io::Error> {
     println!("starting server");
     let app = Route::new().at("/make/recipe/:name", get(make_recipe));
-    Server::new(TcpListener::bind("0.0.0.0:8000"))
+    Server::new(TcpListener::bind("127.0.0.1:8000"))
         .run(app)
         .await
-
-      Start database
 }

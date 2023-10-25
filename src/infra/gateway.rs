@@ -1,6 +1,6 @@
+use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use application::interface::RecipeRepository;
 use surrealdb::{
     engine::remote::ws::{Client, Ws},
     opt::auth::Root,
@@ -16,9 +16,11 @@ pub struct DatabaseConfig {
     pub namespace: Option<String>,
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct RecipeRecord {
-    id: Option<Thing>
-    recipe: Recipe
+    id: Option<Thing>,
+    user_id: String,
+    recipe: Recipe,
 }
 
 pub struct SurrealGateway {
@@ -52,18 +54,48 @@ impl SurrealGateway {
     }
 }
 
+#[async_trait::async_trait]
 impl RecipeRepository for SurrealGateway {
-    async fn insert(&self, recipe: &Recipe, user_id: &str) -> Result<()> {
+    async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<()> {
         let record = RecipeRecord {
             id: None,
-            recipe
+            user_id: user_id.to_string(),
+            recipe,
         };
 
-        self.database
-            .create::<Option<RecipeRecord>>(("recipes", user_id))
+        self.db
+            .create::<Vec<RecipeRecord>>("recipes")
             .content(&record)
             .await
             .context("Failed to insert recipe")?;
+
+        Ok(())
+    }
+
+    async fn select(&self, id: &str) -> Result<Recipe> {
+        let query_for_record: Option<RecipeRecord> = self.db.select(("recipes", id)).await?;
+
+        match query_for_record {
+            Some(record) => Ok(record.recipe),
+            None => Err(anyhow::anyhow!("Failed to select recipe by id")),
+        }
+    }
+
+    async fn update(&self, new_recipe: Recipe, id: &str) -> Result<()> {
+        self.db
+            .update::<Option<RecipeRecord>>(("recipes", id))
+            .content(new_recipe)
+            .await
+            .context("Failed to update recipe")?;
+
+        Ok(())
+    }
+
+    async fn delete(&self, id: &str) -> Result<()> {
+        self.db
+            .delete::<Option<RecipeRecord>>(("recipes", id))
+            .await
+            .context("Failed to delete recipe")?;
 
         Ok(())
     }

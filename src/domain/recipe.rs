@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct Recipe {
     pub title: String,
     pub ingredients: Vec<String>,

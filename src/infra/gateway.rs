@@ -1,109 +1,128 @@
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use surrealdb::{
-    engine::remote::ws::{Client, Ws},
-    opt::auth::Root,
-    sql::Thing,
-    Surreal,
-};
+use serde_json::Value;
+use sqlx::mysql::MySqlPool;
+use sqlx::FromRow;
 
 pub struct DatabaseConfig {
     pub db_name: String,
     pub password: String,
     pub user_name: String,
     pub host: String,
-    pub namespace: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct RecipeRecord {
-    id: Option<Thing>,
+    id: String,
     user_id: String,
-    recipe: Recipe,
+    recipe: serde_json::Value,
 }
 
-pub struct SurrealGateway {
-    pub db: Surreal<Client>,
+pub struct MySqlGateway {
+    pub pool: MySqlPool,
 }
 
-impl SurrealGateway {
+impl MySqlGateway {
     pub async fn new(config: &DatabaseConfig) -> Self {
-        let db = Surreal::new::<Ws>(config.host.as_str())
+        let addr = format!(
+            "mysql://{}:{}@{}/{}",
+            config.user_name, config.password, config.host, config.db_name
+        );
+        let pool = MySqlPool::connect(addr.as_str())
             .await
-            .expect("Failed connection with SurrealDB");
+            .expect("Failed connection with MySql database");
 
-        db.signin(Root {
-            username: config.user_name.as_str(),
-            password: config.password.as_str(),
-        })
+        Self { pool }
+    }
+
+    pub async fn _create_recipe_table(&self) {
+        sqlx::query(
+            r#"
+            CREATE TABLE recipes (
+                id VARCHAR(255) PRIMARY KEY,
+                user_id VARCHAR(255) NOT NULL,
+                recipe JSON NOT NULL
+            );
+            "#,
+        )
+        .execute(&self.pool)
         .await
-        .expect("Failed to sign into SurrealDB");
-
-        let namespace = match &config.namespace {
-            Some(namespace) => namespace.as_str(),
-            None => "",
-        };
-
-        db.use_ns(namespace)
-            .use_db(config.db_name.as_str())
-            .await
-            .expect("Failed connection with SurrealDB");
-
-        Self { db }
+        .unwrap();
     }
 }
 
 #[async_trait::async_trait]
-impl RecipeRepository for SurrealGateway {
+impl RecipeRepository for MySqlGateway {
     type RecipeId = String;
     async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<Self::RecipeId> {
-        let record = RecipeRecord {
-            id: None,
-            user_id: user_id.to_string(),
-            recipe,
-        };
+        let blob: Value = serde_json::to_value(recipe)?;
+        let id = uuid::Uuid::new_v4().to_string();
 
-        let recipe_record: Vec<RecipeRecord> = self
-            .db
-            .create("recipes")
-            .content(&record)
-            .await
-            .context("Failed to insert recipe")?;
+        sqlx::query(
+            r#"
+            INSERT INTO recipes (id, user_id, recipe)
+            VALUES (?, ?, ?);
+            "#,
+        )
+        .bind(&id)
+        .bind(user_id)
+        .bind(blob)
+        .execute(&self.pool)
+        .await
+        .context("Failed to insert recipe")?;
 
-        match recipe_record.get(0) {
-            Some(record) => match &record.id {
-                Some(id) => Ok(id.id.to_raw()),
-                None => Err(anyhow::anyhow!("Recipe missing an id")),
-            },
-            None => Err(anyhow::anyhow!("Recipe not found")),
-        }
+        Ok(id)
     }
 
     async fn select_by_id(&self, recipe_id: &str) -> Result<Recipe> {
-        let query_for_record: Option<RecipeRecord> = self.db.select(("recipes", recipe_id)).await?;
+        let recipe_record: RecipeRecord = sqlx::query_as(
+            r#"
+            SELECT id, user_id, recipe 
+            FROM recipes
+            WHERE id = ?
+            "#,
+        )
+        .bind(recipe_id)
+        .fetch_one(&self.pool)
+        .await
+        .context("Failed to get recipe by id")?;
 
-        match query_for_record {
-            Some(record) => Ok(record.recipe),
-            None => Err(anyhow::anyhow!("Failed to select recipe by recipe_id")),
-        }
+        let recipe: Recipe = serde_json::from_value(recipe_record.recipe)?;
+
+        Ok(recipe)
     }
 
     async fn update(&self, new_recipe: Recipe, recipe_id: &str) -> Result<()> {
-        self.db
-            .update::<Option<RecipeRecord>>(("recipes", recipe_id))
-            .content(new_recipe)
-            .await
-            .context("Failed to update recipe")?;
+        let blob: Value = serde_json::to_value(new_recipe)?;
+
+        sqlx::query(
+            r#"
+            UPDATE recipes
+            SET recipe = ?
+            WHERE id = ?;
+            "#,
+        )
+        .bind(blob)
+        .bind(recipe_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to update recipe")?;
 
         Ok(())
     }
 
     async fn delete(&self, recipe_id: &str) -> Result<()> {
-        self.db
-            .delete::<Option<RecipeRecord>>(("recipes", recipe_id))
-            .await
-            .context("Failed to delete recipe")?;
+        sqlx::query(
+            r#"
+            DELETE FROM recipes 
+            WHERE id = ?
+            "#,
+        )
+        .bind(recipe_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to delete recipe")?;
 
         Ok(())
     }
@@ -128,14 +147,14 @@ mod tests {
         };
 
         let db_config = DatabaseConfig {
-            db_name: "test".to_string(),
-            host: "127.0.0.1:3000".to_string(),
+            host: "localhost:3306".to_string(),
+            password: "my-secret-pw".to_string(),
+            db_name: "mysql".to_string(),
             user_name: "root".to_string(),
-            password: "surreal_ps".to_string(),
-            namespace: Some("test".to_string()),
         };
 
-        let repo = SurrealGateway::new(&db_config).await;
+        let repo = MySqlGateway::new(&db_config).await;
+        repo._create_recipe_table().await;
 
         // Test insert
         let id = repo.insert(recipe, "jon@gmail").await.unwrap();

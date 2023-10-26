@@ -4,7 +4,7 @@ mod infra;
 
 use application::{generate_recipe, RecipeRepository};
 use domain::Recipe;
-use infra::{DatabaseConfig, SurrealGateway};
+use infra::{DatabaseConfig, MySqlGateway};
 use poem::{
     get, handler, listener::TcpListener, web::Json, web::Path, IntoResponse, Result, Route, Server,
 };
@@ -15,14 +15,13 @@ async fn make_recipe(Path(name): Path<String>) -> Result<String> {
     let recipe: Recipe = generate_recipe(name.as_str()).unwrap();
 
     let db_config = DatabaseConfig {
-        db_name: "test".to_string(),
-        host: "127.0.0.1:3000".to_string(),
+        host: "localhost:3306".to_string(),
+        password: "my-secret-pw".to_string(),
+        db_name: "mysql".to_string(),
         user_name: "root".to_string(),
-        password: "surreal_ps".to_string(),
-        namespace: Some("test".to_string()),
     };
 
-    let repo = SurrealGateway::new(&db_config).await;
+    let repo = MySqlGateway::new(&db_config).await;
     repo.insert(recipe, "jon@gmail").await?;
 
     Ok(String::from("Recipe inserted"))

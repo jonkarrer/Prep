@@ -1,4 +1,4 @@
-use crate::{domain::Recipe, infra::RecipeRecord};
+use crate::domain::Recipe;
 use anyhow::Result;
 
 #[async_trait::async_trait]

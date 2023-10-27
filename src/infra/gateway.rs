@@ -1,3 +1,4 @@
+use crate::domain::RecipeRecord;
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
@@ -10,13 +11,6 @@ pub struct DatabaseConfig {
     pub password: String,
     pub user_name: String,
     pub host: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, FromRow)]
-pub struct RecipeRecord {
-    id: String,
-    user_id: String,
-    recipe: serde_json::Value,
 }
 
 pub struct MySqlGateway {

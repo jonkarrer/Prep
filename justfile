@@ -1,8 +1,8 @@
 start-db:
-    docker run --name sql_db -d --rm --pull always -p 3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw mysql:latest;
+   bash ./scripts/init_db.sh 
 
 stop-db:
-    docker kill sql_db;
+    docker kill mysql;
 
 test-gateway:
     just start-db;

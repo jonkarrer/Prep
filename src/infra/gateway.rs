@@ -1,10 +1,8 @@
 use crate::domain::RecipeRecord;
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
-use sqlx::FromRow;
 
 pub struct DatabaseConfig {
     pub db_name: String,

@@ -17,7 +17,7 @@ fi
 
 # set env vars
 if [[ "${ENV_CONFIG}" == 'dev' ]]; then
-  source .env.dev
+  source .env
 else
   source .env.prod
 fi

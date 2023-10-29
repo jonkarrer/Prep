@@ -1,5 +1,6 @@
 CREATE TABLE recipe (
-    recipe_id CHAR(36) PRIMARY KEY NOT NULL,
+    row_id INT AUTO_INCREMENT PRIMARY KEY,
+    recipe_id CHAR(36) UNIQUE NOT NULL,
     user_id CHAR(36) NOT NULL,
     title VARCHAR(60) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

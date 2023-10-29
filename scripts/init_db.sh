@@ -5,18 +5,18 @@ set -x
 set -eo pipefail
 
 # check for dependancies
-# if ! [ -x "$(command -v mysql)" ]; then
-#   echo >&2 "Error: mysql is not installed."
-#   exit 1
-# fi
+if ! [ -x "$(command -v mysql)" ]; then
+  echo >&2 "Error: mysql is not installed."
+  exit 1
+fi
 
-# if ! [ -x "$(command -v sqlx)" ]; then
-#   echo >&2 "Error: sqlx is not installed."
-#   echo >&2 "Use:"
-#   echo >&2 "    cargo install --version=0.6.0 sqlx-cli --no-default-features --features postgres"
-#   echo >&2 "to install it."
-#   exit 1
-# fi
+if ! [ -x "$(command -v sqlx)" ]; then
+  echo >&2 "Error: sqlx is not installed."
+  echo >&2 "Use:"
+  echo >&2 "    cargo install --version=0.6.0 sqlx-cli --no-default-features --features postgres"
+  echo >&2 "to install it."
+  exit 1
+fi
 
 # set env vars
 DB_USER=${MYSQL_USER:="root"}
@@ -39,5 +39,6 @@ until mysql -h 127.0.0.1 -u "${DB_USER}" -p"${DB_PASSWORD}" -P "${DB_PORT}" -D "
 done
 
 # create migration with sqlx
-# export DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
-# sqlx database create
+export DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
+sqlx database create
+sqlx migrate run

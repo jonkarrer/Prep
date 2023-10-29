@@ -9,7 +9,7 @@ test-gateway:
 echo-db-url:
     @source .env.dev && echo "${DATABASE_URL}"
 
-start-db:
+init_db:
    bash ./scripts/init_db.sh
 
 stop-db:

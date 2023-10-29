@@ -9,8 +9,15 @@ test-gateway:
 echo-db-url:
     @source .env.dev && echo "${DATABASE_URL}"
 
-init_db:
-   bash ./scripts/init_db.sh
+# init docker database instance and run migrations
+init-db env_config:
+    export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh
+
+# use when docker is already running and needs a migration
+run-migration env_config:
+    export ENV_CONFIG={{env_config}} \
+    && export SKIP_DOCKER=true \
+    && ./scripts/init_db.sh
 
 stop-db:
     docker kill mysql;

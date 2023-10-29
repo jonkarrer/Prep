@@ -1,15 +1,9 @@
+use crate::configuration::DatabaseConfig;
 use crate::domain::RecipeRecord;
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
-
-pub struct DatabaseConfig {
-    pub db_name: String,
-    pub password: String,
-    pub user_name: String,
-    pub host: String,
-}
 
 pub struct MySqlGateway {
     pub pool: MySqlPool,
@@ -18,29 +12,14 @@ pub struct MySqlGateway {
 impl MySqlGateway {
     pub async fn new(config: &DatabaseConfig) -> Self {
         let addr = format!(
-            "mysql://{}:{}@{}/{}",
-            config.user_name, config.password, config.host, config.db_name
+            "mysql://{}:{}@{}:{}/{}",
+            config.user_name, config.password, config.host, config.port, config.db_name
         );
         let pool = MySqlPool::connect(addr.as_str())
             .await
             .expect("Failed connection with MySql database");
 
         Self { pool }
-    }
-
-    pub async fn _create_recipe_table(&self) {
-        sqlx::query(
-            r#"
-            CREATE TABLE recipes (
-                id VARCHAR(255) PRIMARY KEY,
-                user_id VARCHAR(255) NOT NULL,
-                recipe JSON NOT NULL
-            );
-            "#,
-        )
-        .execute(&self.pool)
-        .await
-        .unwrap();
     }
 }
 
@@ -139,14 +118,14 @@ mod tests {
         };
 
         let db_config = DatabaseConfig {
-            host: "localhost:3306".to_string(),
+            host: "localhost".to_string(),
             password: "my-secret-pw".to_string(),
             db_name: "mysql".to_string(),
             user_name: "root".to_string(),
+            port: 3306,
         };
 
         let repo = MySqlGateway::new(&db_config).await;
-        repo._create_recipe_table().await;
 
         // Test insert
         let id = repo.insert(recipe, "jon@gmail").await.unwrap();

@@ -1,24 +1,27 @@
 version: "3.8"
 
 services:
+  database:
+    build: ./database
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    # volumes:
+    #   - ./data:/data
+
   web:
     build: .
     hostname: web
     ports:
-      - "8000:8000"
-
-  # surrealdb:
-  #   image: surrealdb/surrealdb:latest
-  #   container_name: surrealdb
-  #   command: start --user password --pass password file:/data/database.db
-  #   ports:
-  #     - 3000:3000
-    # volumes:
-    #   - ./data:/data
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - database
 
   nginx:
     build: ./proxy
     ports:
-      - "80:80"
+      - ${NGINX_PORT}:${NGINX_PORT}
     depends_on:
       - web
+      - database

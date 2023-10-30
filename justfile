@@ -18,8 +18,8 @@ stop-db:
 
 ## migrations
 migrate-add file_name:
-    @source .env.dev \
-    && sqlx migrate add {{file_name}}
+    @source .env \
+    && sqlx migrate add --source database/migrations {{file_name}}
 
 run-migration env_config:
     export ENV_CONFIG={{env_config}} \

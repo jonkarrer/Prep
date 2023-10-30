@@ -6,6 +6,7 @@ pub struct Recipe {
     pub title: String,
     pub ingredients: Vec<String>,
     pub instructions: Vec<String>,
+    pub servings: f32,
 }
 
 pub struct RecipeModel {

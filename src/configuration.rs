@@ -22,14 +22,17 @@ impl DatabaseConfig {
     }
 }
 
-pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+pub fn get_configuration() -> Settings {
     let settings = config::Config::builder()
         // Add configuration values from a file named `configuration.yaml`.
         .add_source(config::File::new(
             "configuration.yaml",
             config::FileFormat::Yaml,
         ))
-        .build()?;
+        .build()
+        .expect("Failed to read configuration");
 
-    settings.try_deserialize::<Settings>()
+    settings
+        .try_deserialize::<Settings>()
+        .expect("Failed to deserialize configuration")
 }

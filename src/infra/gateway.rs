@@ -26,24 +26,24 @@ impl MySqlGateway {
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
     type RecipeId = String;
+
     async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<Self::RecipeId> {
-        let blob: Value = serde_json::to_value(recipe)?;
-        let id = uuid::Uuid::new_v4().to_string();
+        let recipe_id = uuid::Uuid::new_v4().to_string();
 
         sqlx::query(
             r#"
-            INSERT INTO recipes (id, user_id, recipe)
-            VALUES (?, ?, ?);
-            "#,
+        INSERT INTO recipes (recipe_id, user_id, title, servings)
+        VALUES (?,?,?,?)
+        "#,
         )
-        .bind(&id)
+        .bind(&recipe_id)
         .bind(user_id)
-        .bind(blob)
+        .bind(recipe.title)
+        .bind(recipe.servings)
         .execute(&self.pool)
-        .await
-        .context("Failed to insert recipe")?;
+        .await?;
 
-        Ok(id)
+        Ok(recipe_id)
     }
 
     async fn select_by_id(&self, recipe_id: &str) -> Result<Recipe> {

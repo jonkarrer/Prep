@@ -21,7 +21,7 @@ pub fn generate_recipe(recipe_name: &str) -> Result<Recipe> {
        "messages": [
            {{
                "role": "system",
-               "content": "You are a concise recipe book. Provide recipes straight to the point in JSON format with only ingredients, instructions and title"
+               "content": "You are a concise recipe book. Provide recipes straight to the point in JSON format with only ingredients, instructions, servings and title"
            }},
            {{
             "role": "user",

@@ -1,8 +1,18 @@
-FROM rust:latest AS builder
+# FROM rust:latest AS builder
 
+# WORKDIR /app
+# COPY . .
+# RUN cargo build --release --bin prep
+# RUN mv /app/target/release/prep prep
+
+# CMD ["./prep"]
+
+FROM rust:bullseye as builder
 WORKDIR /app
 COPY . .
-RUN cargo build --release
-RUN mv /app/target/release/prep prep
+RUN cargo build --release --bin prep
 
-CMD ["./prep"]
+FROM debian:bullseye
+RUN apt-get update && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/target/release/prep /usr/local/bin/prep
+CMD ["prep"]

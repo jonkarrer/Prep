@@ -13,6 +13,15 @@ pub struct DatabaseConfig {
     pub port: u16,
 }
 
+impl DatabaseConfig {
+    pub fn connection_string(&self) -> String {
+        format!(
+            "mysql://{}:{}@{}:{}/{}",
+            self.user_name, self.password, self.host, self.port, self.db_name
+        )
+    }
+}
+
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let settings = config::Config::builder()
         // Add configuration values from a file named `configuration.yaml`.

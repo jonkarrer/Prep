@@ -11,7 +11,7 @@ echo-db-url:
 
 ## init docker database instance and run migrations
 init-db env_config:
-    export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh
+    export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh && cargo run --bin seeder
 
 stop-db:
     docker kill mysql && docker rm -f mysql

@@ -3,6 +3,7 @@ version: "3.8"
 services:
   database:
     build: ./database
+    hostname: database
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
@@ -16,7 +17,16 @@ services:
     ports:
       - ${APP_PORT}:${APP_PORT}
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=database # use hostname defined in database service
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - APP_PORT=${APP_PORT}
+      - APP_HOST=${APP_HOST}
+      - NGINX_PORT=${NGINX_PORT}
+      - OPEN_API_TOKEN=${OPEN_API_TOKEN}
     depends_on:
       - database
 

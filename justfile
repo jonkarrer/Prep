@@ -1,3 +1,9 @@
+build-app:
+    ./scripts/build.sh
+
+teardown-app:
+    docker compose down
+
 # ---- Tests ----
 test-gateway:
     just start-db;

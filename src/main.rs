@@ -1,27 +1,32 @@
-mod application;
-mod domain;
-mod infra;
-
-use application::{generate_recipe, RecipeRepository};
-use domain::Recipe;
-use infra::{DatabaseConfig, MySqlGateway};
-use poem::{
-    get, handler, listener::TcpListener, web::Json, web::Path, IntoResponse, Result, Route, Server,
-};
+use poem::{get, handler, listener::TcpListener, Result, Route, Server};
+use prep::application::RecipeRepository;
+use prep::configuration::{get_configuration, Settings};
+use prep::domain::Recipe;
+use prep::infra::MySqlGateway;
 
 #[handler]
-async fn make_recipe(Path(name): Path<String>) -> Result<String> {
+async fn health_check() -> Result<String> {
     println!("request accepted");
-    let recipe: Recipe = generate_recipe(name.as_str()).unwrap();
+    // let recipe: Recipe = generate_recipe(name.as_str()).unwrap();
 
-    let db_config = DatabaseConfig {
-        host: "localhost:3306".to_string(),
-        password: "my-secret-pw".to_string(),
-        db_name: "mysql".to_string(),
-        user_name: "root".to_string(),
+    let recipe = Recipe {
+        ingredients: vec![
+            "1 1/2 pounds ground beef".to_string(),
+            "1/2 cup breadcrumbs".to_string(),
+        ],
+        instructions: vec![
+            "Preheat the oven to 350°F (175°C).".to_string(),
+            "In a large bowl, combine all the ingredients.".to_string(),
+        ],
+        title: "Health Check".to_string(),
+        servings: 1.0,
     };
 
-    let repo = MySqlGateway::new(&db_config).await;
+    let Settings { database, .. } = get_configuration();
+
+    dbg!(&database);
+    let repo = MySqlGateway::new(&database).await;
+    dbg!("repo connected");
     repo.insert(recipe, "jon@gmail").await?;
 
     Ok(String::from("Recipe inserted"))
@@ -29,9 +34,16 @@ async fn make_recipe(Path(name): Path<String>) -> Result<String> {
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    println!("starting server");
-    let app = Route::new().at("/make/recipe/:name", get(make_recipe));
-    Server::new(TcpListener::bind("127.0.0.1:8000"))
-        .run(app)
-        .await
+    println!("----- Starting Server -----");
+    let Settings {
+        application_port,
+        application_host,
+        ..
+    } = get_configuration();
+
+    let address = format!("{}:{}", application_host, application_port);
+    let listener = TcpListener::bind(address);
+
+    let app = Route::new().at("/health_check", get(health_check));
+    Server::new(listener).run(app).await
 }

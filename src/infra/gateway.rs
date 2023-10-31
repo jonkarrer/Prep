@@ -1,17 +1,9 @@
+use crate::configuration::DatabaseConfig;
 use crate::domain::RecipeRecord;
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
-use sqlx::FromRow;
-
-pub struct DatabaseConfig {
-    pub db_name: String,
-    pub password: String,
-    pub user_name: String,
-    pub host: String,
-}
 
 pub struct MySqlGateway {
     pub pool: MySqlPool,
@@ -20,53 +12,38 @@ pub struct MySqlGateway {
 impl MySqlGateway {
     pub async fn new(config: &DatabaseConfig) -> Self {
         let addr = format!(
-            "mysql://{}:{}@{}/{}",
-            config.user_name, config.password, config.host, config.db_name
+            "mysql://{}:{}@{}:{}/{}",
+            config.user_name, config.password, config.host, config.port, config.db_name
         );
         let pool = MySqlPool::connect(addr.as_str())
             .await
-            .expect("Failed connection with MySql database");
+            .expect("Failed connection with database");
 
         Self { pool }
-    }
-
-    pub async fn _create_recipe_table(&self) {
-        sqlx::query(
-            r#"
-            CREATE TABLE recipes (
-                id VARCHAR(255) PRIMARY KEY,
-                user_id VARCHAR(255) NOT NULL,
-                recipe JSON NOT NULL
-            );
-            "#,
-        )
-        .execute(&self.pool)
-        .await
-        .unwrap();
     }
 }
 
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
     type RecipeId = String;
+
     async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<Self::RecipeId> {
-        let blob: Value = serde_json::to_value(recipe)?;
-        let id = uuid::Uuid::new_v4().to_string();
+        let recipe_id = uuid::Uuid::new_v4().to_string();
 
         sqlx::query(
             r#"
-            INSERT INTO recipes (id, user_id, recipe)
-            VALUES (?, ?, ?);
-            "#,
+        INSERT INTO recipes (recipe_id, user_id, title, servings)
+        VALUES (?,?,?,?)
+        "#,
         )
-        .bind(&id)
+        .bind(&recipe_id)
         .bind(user_id)
-        .bind(blob)
+        .bind(recipe.title)
+        .bind(recipe.servings)
         .execute(&self.pool)
-        .await
-        .context("Failed to insert recipe")?;
+        .await?;
 
-        Ok(id)
+        Ok(recipe_id)
     }
 
     async fn select_by_id(&self, recipe_id: &str) -> Result<Recipe> {
@@ -119,42 +96,5 @@ impl RecipeRepository for MySqlGateway {
         .context("Failed to delete recipe")?;
 
         Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_surreal_gateway() {
-        let recipe = Recipe {
-            ingredients: vec![
-                "1 1/2 pounds ground beef".to_string(),
-                "1/2 cup breadcrumbs".to_string(),
-            ],
-            instructions: vec![
-                "Preheat the oven to 350°F (175°C).".to_string(),
-                "In a large bowl, combine all the ingredients.".to_string(),
-            ],
-            title: "Classic Meatloaf".to_string(),
-        };
-
-        let db_config = DatabaseConfig {
-            host: "localhost:3306".to_string(),
-            password: "my-secret-pw".to_string(),
-            db_name: "mysql".to_string(),
-            user_name: "root".to_string(),
-        };
-
-        let repo = MySqlGateway::new(&db_config).await;
-        repo._create_recipe_table().await;
-
-        // Test insert
-        let id = repo.insert(recipe, "jon@gmail").await.unwrap();
-
-        // Test select by recipe id
-        let recipe = repo.select_by_id(id.as_str()).await.unwrap();
-        assert_eq!(recipe.title, "Classic Meatloaf");
     }
 }

@@ -6,6 +6,38 @@ pub struct Recipe {
     pub title: String,
     pub ingredients: Vec<String>,
     pub instructions: Vec<String>,
+    pub servings: f32,
+}
+
+pub struct RecipeModel {
+    pub row_id: u64,
+    pub recipe_id: String,
+    pub user_id: String,
+    pub title: String,
+    pub created_at: String,
+    pub updated_at: String,
+    pub favorite: bool,
+}
+
+pub struct IngredientModel {
+    pub ingredient_id: u64,
+    pub recipe_id: String,
+    pub name: String,
+    pub amount: f64,
+    pub unit: String,
+}
+
+pub struct DirectionModel {
+    pub direction_id: u64,
+    pub recipe_id: String,
+    pub info: String,
+    pub step_order: u16,
+}
+
+pub struct TagsModel {
+    pub tag_id: u64,
+    pub recipe_id: String,
+    pub name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]

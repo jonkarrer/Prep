@@ -1,5 +1,5 @@
 CREATE TABLE tags (
     tag_id INT PRIMARY KEY AUTO_INCREMENT,
     recipe_id CHAR(36) NOT NULL,
-    name VARCHAR(60) NOT NULL
+    name VARCHAR(255) NOT NULL
 )

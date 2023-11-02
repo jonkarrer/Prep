@@ -9,6 +9,29 @@ pub struct Recipe {
     pub servings: f32,
 }
 
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct WebDirection {
+    pub step_order: u16,
+    pub info: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct WebIngredient {
+    pub name: String,
+    pub amount: f32,
+    pub unit: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct WebRecipe {
+    pub title: String,
+    pub servings: f32,
+    pub tags: Vec<String>,
+    pub favorite: bool,
+    pub directions: Vec<WebDirection>,
+    pub ingredients: Vec<WebIngredient>,
+}
+
 pub struct RecipeModel {
     pub row_id: u64,
     pub recipe_id: String,

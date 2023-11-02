@@ -30,7 +30,7 @@ async fn main() -> anyhow::Result<()> {
 
         sqlx::query!(
             r#"
-            INSERT INTO recipes (recipe_id, user_id, title, servings)
+            INSERT INTO recipes (recipe_id, user_id, recipe_title, servings)
             VALUES (?,?,?,?)
             "#,
             recipe_id,
@@ -44,7 +44,7 @@ async fn main() -> anyhow::Result<()> {
         for ingredient in recipe.ingredients {
             sqlx::query!(
                 r#"
-                INSERT INTO ingredients (recipe_id, name, amount, unit)
+                INSERT INTO ingredients (recipe_id, ingredient_name, amount, unit)
                 VALUES (?,?,?,?)
                 "#,
                 recipe_id,
@@ -59,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
         for direction in recipe.directions {
             sqlx::query!(
                 r#"
-                INSERT INTO directions (recipe_id, info, step_order)
+                INSERT INTO directions (recipe_id, direction_info, step_order)
                 VALUES (?,?,?)
                 "#,
                 recipe_id,
@@ -73,7 +73,7 @@ async fn main() -> anyhow::Result<()> {
         for tag in recipe.tags {
             sqlx::query!(
                 r#"
-                INSERT INTO tags (recipe_id, name)
+                INSERT INTO tags (recipe_id, tag_name)
                 VALUES (?,?)
                 "#,
                 recipe_id,

@@ -5,48 +5,48 @@
   "favorite": false,
   "directions": [
     {
-      "order": 0,
+      "step_order": 0,
       "info": "Pre measure all ingredients, place them in little bowls."
     },
     {
-      "order": 1,
+      "step_order": 1,
       "info": "Sift flour, ginger, cinnamon, baking soda, and salt into a large bowl."
     },
     {
-      "order": 5,
+      "step_order": 5,
       "info": "Gather meez and prepare to make batter."
     },
     {
-      "order": 6,
+      "step_order": 6,
       "info": "Beat butter an sugar with your stand mixer on medium speed until light and fluffy."
     },
     {
-      "order": 7,
+      "step_order": 7,
       "info": "Add molasses, egg, and vanilla. Mix well."
     },
     {
-      "order": 8,
+      "step_order": 8,
       "info": "Gradually beat in flour mixture on low speed until well mixed."
     },
     {
-      "order": 9,
+      "step_order": 9,
       "info": "Press the dough into a thick flat disk."
     },
     {
-      "order": 10,
+      "step_order": 10,
       "info": "Wrap in plastic wrap for 4 hours or overnight."
     },
-    { "order": 5, "info": "Preheat oven to 350 deg." },
+    { "step_order": 5, "info": "Preheat oven to 350 deg." },
     {
-      "order": 11,
+      "step_order": 11,
       "info": "Roll out dough on a lightly floured surface a fourth of an inch thick."
     },
     {
-      "order": 12,
+      "step_order": 12,
       "info": "Cut into desired shapes. Place 1in  apart on parchment covered baking sheet."
     },
     {
-      "order": 13,
+      "step_order": 13,
       "info": "Bake 8-10 minutes or until edges of cookies brown."
     }
   ],

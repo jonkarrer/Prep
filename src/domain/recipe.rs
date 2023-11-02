@@ -11,7 +11,7 @@ pub struct Recipe {
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct WebDirection {
-    pub order: usize,
+    pub step_order: u16,
     pub info: String,
 }
 

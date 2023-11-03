@@ -5,7 +5,7 @@ use sqlx::FromRow;
 pub struct Recipe {
     pub title: String,
     pub ingredients: Vec<String>,
-    pub instructions: Vec<String>,
+    pub directions: Vec<String>,
     pub servings: f32,
 }
 

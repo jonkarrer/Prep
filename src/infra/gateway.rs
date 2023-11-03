@@ -1,5 +1,5 @@
 use crate::configuration::DatabaseConfig;
-use crate::domain::RecipeRecord;
+use crate::domain::{NewRecipe, RecipeRecord};
 use crate::{application::RecipeRepository, domain::Recipe};
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -25,9 +25,7 @@ impl MySqlGateway {
 
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
-    type RecipeId = String;
-
-    async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<Self::RecipeId> {
+    async fn insert(&self, recipe: NewRecipe, user_id: &str) -> Result<String> {
         let recipe_id = uuid::Uuid::new_v4().to_string();
 
         sqlx::query(

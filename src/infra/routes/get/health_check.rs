@@ -1,4 +1,4 @@
-use poem::{get, test::TestClient, Result, Route};
+use poem::Result;
 
 #[poem::handler]
 pub async fn health_check() -> Result<String> {
@@ -8,6 +8,7 @@ pub async fn health_check() -> Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use poem::{get, test::TestClient, Route};
 
     #[tokio::test]
     async fn test_route_health_check() {

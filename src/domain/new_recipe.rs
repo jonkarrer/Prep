@@ -22,3 +22,34 @@ pub struct NewRecipe {
     pub directions: Vec<NewDirection>,
     pub ingredients: Vec<NewIngredient>,
 }
+
+pub fn get_test_recipe() -> NewRecipe {
+    NewRecipe {
+        title: "Oatmeal".to_string(),
+        servings: 2.0,
+        favorite: true,
+        tags: vec!["vegan".to_string()],
+        ingredients: vec![
+            NewIngredient {
+                name: "oats".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+            NewIngredient {
+                name: "milk".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+        ],
+        directions: vec![
+            NewDirection {
+                info: "boil and stir".to_string(),
+                step_order: 1,
+            },
+            NewDirection {
+                info: "enjoy and stir".to_string(),
+                step_order: 1,
+            },
+        ],
+    }
+}

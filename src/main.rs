@@ -1,7 +1,7 @@
-use poem::{get, handler, listener::TcpListener, test::TestClient, Result, Route, Server};
+use poem::{listener::TcpListener, Result, Server};
 use prep::{
     configuration::{get_configuration, Settings},
-    infra::app_router,
+    infra::router,
 };
 
 #[tokio::main]
@@ -14,5 +14,5 @@ async fn main() -> Result<(), std::io::Error> {
     } = get_configuration();
     let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
-    Server::new(listener).run(app_router()).await
+    Server::new(listener).run(router()).await
 }

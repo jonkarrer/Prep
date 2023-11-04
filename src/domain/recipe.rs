@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
-pub struct Recipe {
+pub struct AiGeneratedRecipe {
     pub title: String,
     pub ingredients: Vec<String>,
     pub directions: Vec<String>,
@@ -48,6 +48,60 @@ pub struct RecipeRecord {
     pub recipe: serde_json::Value,
 }
 
-pub fn convert_to_recipe(content: &str) -> Recipe {
+pub fn convert_to_recipe(content: &str) -> AiGeneratedRecipe {
     serde_json::from_str(&content).expect("Failed to parse dat")
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Direction {
+    pub step_order: u16,
+    pub info: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Ingredient {
+    pub name: String,
+    pub amount: f32,
+    pub unit: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Recipe {
+    pub title: String,
+    pub servings: f32,
+    pub tags: Vec<String>,
+    pub favorite: bool,
+    pub directions: Vec<Direction>,
+    pub ingredients: Vec<Ingredient>,
+}
+
+pub fn get_test_recipe() -> Recipe {
+    Recipe {
+        title: "Oatmeal".to_string(),
+        servings: 2.0,
+        favorite: true,
+        tags: vec!["vegan".to_string()],
+        ingredients: vec![
+            Ingredient {
+                name: "oats".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+            Ingredient {
+                name: "milk".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+        ],
+        directions: vec![
+            Direction {
+                info: "boil and stir".to_string(),
+                step_order: 1,
+            },
+            Direction {
+                info: "enjoy and stir".to_string(),
+                step_order: 1,
+            },
+        ],
+    }
 }

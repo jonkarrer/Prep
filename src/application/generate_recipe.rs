@@ -1,9 +1,9 @@
 use anyhow::Result;
 use std::env;
 
-use crate::domain::{convert_to_recipe, ApiResponse, Recipe};
+use crate::domain::{convert_to_recipe, AiGeneratedRecipe, ApiResponse};
 
-pub fn generate_recipe(recipe_name: &str) -> Result<Recipe> {
+pub fn generate_recipe(recipe_name: &str) -> Result<AiGeneratedRecipe> {
     dotenvy::dotenv().expect("Could not find .env");
     // URL
     let url = "https://api.openai.com/v1/chat/completions";

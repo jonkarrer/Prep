@@ -1,6 +1,6 @@
+use crate::application::repository::RecipeRepository;
 use crate::configuration::DatabaseConfig;
-use crate::domain::{NewRecipe, RecipeRecord};
-use crate::{application::RecipeRepository, domain::Recipe};
+use crate::domain::{Recipe, RecipeRecord};
 use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
@@ -25,7 +25,7 @@ impl MySqlGateway {
 
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
-    async fn insert(&self, recipe: NewRecipe, user_id: &str) -> Result<String> {
+    async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
             .begin()

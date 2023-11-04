@@ -1,18 +1,17 @@
-use crate::domain::NewRecipe;
+use crate::domain::Recipe;
 use poem::web::Json;
 use poem::{handler, Result};
 
 #[handler]
-pub async fn new_recipe(Json(recipe): Json<NewRecipe>) -> Result<String> {
+pub async fn new_recipe(Json(recipe): Json<Recipe>) -> Result<String> {
     println!("recipe: {:?}", &recipe);
     Ok(recipe.title)
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::get_test_recipe;
-
     use super::*;
+    use crate::domain::get_test_recipe;
     use poem::{post, test::TestClient, Route};
 
     #[tokio::test]

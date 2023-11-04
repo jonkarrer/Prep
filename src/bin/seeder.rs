@@ -1,12 +1,12 @@
-use prep::{configuration::get_configuration, domain::NewRecipe};
+use prep::{configuration::get_configuration, domain::Recipe};
 use sqlx::MySqlPool;
 use std::fs;
 
-fn get_recipe_seed_data() -> Vec<NewRecipe> {
+fn get_recipe_seed_data() -> Vec<Recipe> {
     let raw_data =
         fs::read_to_string("database/clean_recipes.json").expect("Could not find seed data file");
 
-    let deserialized_data: Vec<NewRecipe> =
+    let deserialized_data: Vec<Recipe> =
         serde_json::from_str(&raw_data).expect("Failed to deserialize");
 
     deserialized_data

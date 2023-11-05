@@ -212,16 +212,17 @@ impl UserRepository for MySqlGateway {
         let user_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             r#"
-            INSERT INTO users (user_name, email, credentials_id)
-            VALUES (?,?,?)
+            INSERT INTO users (user_id, user_name, email, credential_id)
+            VALUES (?,?,?,?)
             "#,
         )
+        .bind(&user_id)
         .bind(user_name)
         .bind(email)
         .bind(credentials_id)
         .execute(&self.pool)
         .await
-        .context("Failed to create user from args")?;
+        .context("Failed to create user in database")?;
 
         Ok(user_id)
     }

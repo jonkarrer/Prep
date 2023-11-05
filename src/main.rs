@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use poem::{listener::TcpListener, Result, Server};
 use prep::{
     configuration::{get_configuration, Settings},

@@ -404,8 +404,6 @@ dependencies = [
 [[package]]
 name = "brize_auth"
 version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5eebd06e2b793d9fc2a5867668d842dab2de8d4f90baf5f8173e643460203e31"
 dependencies = [
  "anyhow",
  "argon2",

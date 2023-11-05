@@ -31,7 +31,7 @@ mod tests {
         let test_client = TestClient::new(app);
 
         let resp = test_client
-            .get("/recipe/ef8d87c5-5983-4495-a638-62f8ea5cffe9")
+            .get("/recipe/e947f008-2835-4e6f-9b80-edeb1ce096c9")
             .send()
             .await;
 

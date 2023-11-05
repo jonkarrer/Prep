@@ -1,21 +1,17 @@
 use poem::{
     handler,
     http::{HeaderMap, StatusCode},
-    web::{Json, Path},
     Error, Result,
 };
 
 use crate::{
     application::{decode_bearer_token, register_new_user},
-    configuration::{get_configuration, Settings},
-    infra::MySqlGateway,
+    infra::database,
 };
 
 #[handler]
-pub async fn register_user(headers: &HeaderMap) -> Result<String> {
-    let Settings { database, .. } = get_configuration();
-    let repo = MySqlGateway::new(&database).await;
-
+pub async fn handle_register_user(headers: &HeaderMap) -> Result<String> {
+    let repo = database().await;
     match headers.get("Authorization") {
         Some(header_value) => {
             let bearer_token_string = header_value.to_str().map_err(|_| {
@@ -50,15 +46,13 @@ pub async fn register_user(headers: &HeaderMap) -> Result<String> {
 
 #[cfg(test)]
 mod tests {
-    use std::fmt::format;
-
     use super::*;
     use base64::{engine::general_purpose, Engine};
     use poem::{post, test::TestClient, Route};
 
     #[tokio::test]
     async fn test_route_register_user() {
-        let app = Route::new().at("/register_user", post(register_user));
+        let app = Route::new().at("/register_user", post(handle_register_user));
         let test_client = TestClient::new(app);
 
         let random_str = &uuid::Uuid::new_v4().to_string();

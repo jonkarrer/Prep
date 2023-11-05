@@ -1,9 +1,4 @@
-use crate::{
-    application::repository::RecipeRepository,
-    configuration::{get_configuration, Settings},
-    domain::Recipe,
-    infra::MySqlGateway,
-};
+use crate::{application::repository::RecipeRepository, domain::Recipe, infra::database};
 use poem::{
     handler,
     web::{Json, Path},
@@ -11,10 +6,8 @@ use poem::{
 };
 
 #[handler]
-pub async fn recipe_by_id(recipe_id: Path<String>) -> Result<Json<Recipe>> {
-    let Settings { database, .. } = get_configuration();
-    let repo = MySqlGateway::new(&database).await;
-
+pub async fn handle_get_recipe_by_id(recipe_id: Path<String>) -> Result<Json<Recipe>> {
+    let repo = database().await;
     let recipe = repo.select_by_id(&recipe_id).await?;
 
     Ok(Json(recipe))
@@ -27,7 +20,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_route_get_recipe_by_id() {
-        let app = Route::new().at("/recipe/:id", get(recipe_by_id));
+        let app = Route::new().at("/recipe/:id", get(handle_get_recipe_by_id));
         let test_client = TestClient::new(app);
 
         let resp = test_client

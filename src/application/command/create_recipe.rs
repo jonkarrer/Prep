@@ -4,7 +4,7 @@ use crate::{
 };
 use anyhow::Result;
 
-pub async fn create_recipe_from_args<R: RecipeRepository>(
+pub async fn create_recipe<R: RecipeRepository>(
     repo: &R,
     recipe: RecipeArgs,
     user_id: &str,

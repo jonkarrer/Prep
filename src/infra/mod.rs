@@ -3,3 +3,6 @@ pub use gateway::*;
 
 mod routes;
 pub use routes::*;
+
+mod database;
+pub use database::*;

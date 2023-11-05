@@ -11,7 +11,6 @@ pub struct User {
     user_id: String,
     email: String,
     credential_id: String,
-    user_name: String,
     password_reset_token: Option<String>,
     password_reset_expiry: Option<String>,
     last_login: Option<String>,
@@ -23,6 +22,6 @@ pub struct User {
 
 #[async_trait::async_trait]
 pub trait UserRepository {
-    async fn create(&self, user_name: &str, email: &str, credentials_id: &str) -> Result<String>;
+    async fn create(&self, email: &str, credentials_id: &str) -> Result<String>;
     // async fn select_by_id(&self, user_id: &str) -> Result<User>;
 }

@@ -3,7 +3,6 @@ CREATE TABLE users (
     user_id CHAR(36) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     credential_id CHAR(36) NOT NULL,
-    user_name VARCHAR(255) NOT NULL,
     password_reset_token VARCHAR(255) DEFAULT NULL,
     password_reset_expiry TIMESTAMP DEFAULT NULL,
     last_login TIMESTAMP DEFAULT NULL,

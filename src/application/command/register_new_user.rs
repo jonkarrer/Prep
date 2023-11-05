@@ -2,16 +2,15 @@ use anyhow::Result;
 use brize_auth::{Auth, AuthConfig, DatabaseConfig, Expiry, GatewayType, SessionType};
 use serde::{Deserialize, Serialize};
 
-use crate::application::repository::{User, UserRepository};
+use crate::application::{
+    repository::{User, UserRepository},
+    BasicAuth,
+};
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct UserArgs {
-    pub user_name: String,
-    pub password: String,
-    pub email: String,
-}
-
-pub async fn register_new_user<U: UserRepository>(repo: &U, user_args: UserArgs) -> Result<String> {
+pub async fn register_new_user<U: UserRepository>(
+    repo: &U,
+    basic_auth: BasicAuth,
+) -> Result<String> {
     let db_config = DatabaseConfig {
         host: "localhost:3306".to_string(),
         db_name: "mysql".to_string(),
@@ -26,14 +25,12 @@ pub async fn register_new_user<U: UserRepository>(repo: &U, user_args: UserArgs)
 
     let mut auth = Auth::new(config).await.unwrap();
 
-    let credentials_id: String = auth.register(&user_args.email, &user_args.password).await?;
+    let credentials_id: String = auth
+        .register(&basic_auth.email, &basic_auth.password)
+        .await?;
 
     let user_id = repo
-        .create(
-            &user_args.user_name,
-            &user_args.email,
-            credentials_id.as_str(),
-        )
+        .create(&basic_auth.email, credentials_id.as_str())
         .await?;
 
     Ok(user_id)

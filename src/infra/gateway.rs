@@ -208,16 +208,15 @@ impl RecipeRepository for MySqlGateway {
 
 #[async_trait::async_trait]
 impl UserRepository for MySqlGateway {
-    async fn create(&self, user_name: &str, email: &str, credentials_id: &str) -> Result<String> {
+    async fn create(&self, email: &str, credentials_id: &str) -> Result<String> {
         let user_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             r#"
-            INSERT INTO users (user_id, user_name, email, credential_id)
-            VALUES (?,?,?,?)
+            INSERT INTO users (user_id, email, credential_id)
+            VALUES (?,?,?)
             "#,
         )
         .bind(&user_id)
-        .bind(user_name)
         .bind(email)
         .bind(credentials_id)
         .execute(&self.pool)

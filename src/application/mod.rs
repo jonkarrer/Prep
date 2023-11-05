@@ -5,3 +5,6 @@ pub mod repository;
 
 mod command;
 pub use command::*;
+
+mod service;
+pub use service::*;

@@ -1,0 +1,55 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct DirectionArgs {
+    pub step_order: u16,
+    pub details: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct IngredientArgs {
+    pub name: String,
+    pub amount: f32,
+    pub unit: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RecipeArgs {
+    pub title: String,
+    pub servings: f32,
+    pub tags: Vec<String>,
+    pub favorite: bool,
+    pub directions: Vec<DirectionArgs>,
+    pub ingredients: Vec<IngredientArgs>,
+}
+
+pub fn get_test_recipe_args() -> RecipeArgs {
+    RecipeArgs {
+        title: "Oatmeal".to_string(),
+        servings: 2.0,
+        favorite: true,
+        tags: vec!["vegan".to_string()],
+        ingredients: vec![
+            IngredientArgs {
+                name: "oats".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+            IngredientArgs {
+                name: "milk".to_string(),
+                amount: 2.0,
+                unit: "cups".to_string(),
+            },
+        ],
+        directions: vec![
+            DirectionArgs {
+                details: "boil and stir".to_string(),
+                step_order: 1,
+            },
+            DirectionArgs {
+                details: "enjoy and stir".to_string(),
+                step_order: 1,
+            },
+        ],
+    }
+}

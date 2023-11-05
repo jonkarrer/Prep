@@ -1,7 +1,21 @@
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 use std::env;
 
-use crate::domain::{convert_to_recipe, AiGeneratedRecipe, ApiResponse};
+use crate::domain::ApiResponse;
+
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct AiGeneratedRecipe {
+    pub title: String,
+    pub ingredients: Vec<String>,
+    pub directions: Vec<String>,
+    pub servings: f32,
+}
+
+pub fn convert_to_recipe(content: &str) -> AiGeneratedRecipe {
+    serde_json::from_str(&content).expect("Failed to parse dat")
+}
 
 pub fn generate_recipe(recipe_name: &str) -> Result<AiGeneratedRecipe> {
     dotenvy::dotenv().expect("Could not find .env");

@@ -1,2 +1,2 @@
-mod insert_new_recipe;
-pub use insert_new_recipe::*;
+mod store_user_recipe;
+pub use store_user_recipe::*;

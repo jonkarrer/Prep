@@ -1,9 +1,10 @@
 use crate::application::repository::RecipeRepository;
 use crate::configuration::DatabaseConfig;
-use crate::domain::{Recipe, RecipeRecord};
+use crate::domain::{Direction, Ingredient, Recipe, RecipeArgs, Tag};
 use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
+use sqlx::FromRow;
 
 pub struct MySqlGateway {
     pub pool: MySqlPool,
@@ -25,7 +26,7 @@ impl MySqlGateway {
 
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
-    async fn insert(&self, recipe: Recipe, user_id: &str) -> Result<String> {
+    async fn insert(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
             .begin()
@@ -67,19 +68,19 @@ impl RecipeRepository for MySqlGateway {
         for direction in recipe.directions {
             sqlx::query(
                 r#"
-                insert into directions (recipe_id, direction_info, step_order)
+                insert into directions (recipe_id, direction_details, step_order)
                 values (?,?,?)
                 "#,
             )
             .bind(&recipe_id)
-            .bind(direction.info)
+            .bind(direction.details)
             .bind(direction.step_order)
             .execute(&mut *transaction)
             .await?;
         }
 
         // insert into tags table
-        for tag in recipe.tags {
+        for tag_name in recipe.tags {
             sqlx::query(
                 r#"
                 insert into tags (recipe_id, tag_name)
@@ -87,7 +88,7 @@ impl RecipeRepository for MySqlGateway {
                 "#,
             )
             .bind(&recipe_id)
-            .bind(tag)
+            .bind(tag_name)
             .execute(&mut *transaction)
             .await?;
         }
@@ -101,19 +102,75 @@ impl RecipeRepository for MySqlGateway {
     }
 
     async fn select_by_id(&self, recipe_id: &str) -> Result<Recipe> {
-        let recipe_record: RecipeRecord = sqlx::query_as(
+        #[derive(FromRow)]
+        struct RecipeDetails {
+            pub recipe_id: String,
+            pub recipe_title: String,
+            pub servings: f32,
+            pub favorite: bool,
+        }
+        let RecipeDetails {
+            recipe_title,
+            recipe_id,
+            servings,
+            favorite,
+        } = sqlx::query_as(
             r#"
-            SELECT id, user_id, recipe 
+            SELECT recipe_id, recipe_title, servings, favorite
             FROM recipes
-            WHERE id = ?
+            WHERE recipe_id = ?
             "#,
         )
-        .bind(recipe_id)
+        .bind(&recipe_id)
         .fetch_one(&self.pool)
         .await
-        .context("Failed to get recipe by id")?;
+        .context("Failed to select recipe details by id")?;
 
-        let recipe: Recipe = serde_json::from_value(recipe_record.recipe)?;
+        let ingredients: Vec<Ingredient> = sqlx::query_as(
+            r#"
+            SELECT ingredient_id, ingredient_name, amount, unit
+            FROM ingredients
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select ingredients by id")?;
+
+        let directions: Vec<Direction> = sqlx::query_as(
+            r#"
+            SELECT direction_id, step_order, direction_details
+            FROM directions
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select directions by id")?;
+
+        let tags: Vec<Tag> = sqlx::query_as(
+            r#"
+            SELECT tag_id, tag_name
+            FROM tags
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select directions by id")?;
+
+        let recipe = Recipe {
+            recipe_id,
+            recipe_title,
+            servings,
+            favorite,
+            ingredients,
+            directions,
+            tags,
+        };
 
         Ok(recipe)
     }
@@ -150,5 +207,26 @@ impl RecipeRepository for MySqlGateway {
         .context("Failed to delete recipe")?;
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        configuration::{get_configuration, Settings},
+        domain::get_test_recipe_args,
+    };
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_recipe_repository() {
+        let Settings { database, .. } = get_configuration();
+        let repo = MySqlGateway::new(&database).await;
+
+        let recipe_args = get_test_recipe_args();
+        let recipe_id = repo.insert(recipe_args, "test_user_id").await.unwrap();
+        let recipe = repo.select_by_id(&recipe_id).await.unwrap();
+        assert_eq!(&recipe.recipe_title, "Oatmeal");
     }
 }

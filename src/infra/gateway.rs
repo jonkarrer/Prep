@@ -1,4 +1,4 @@
-use crate::application::repository::RecipeRepository;
+use crate::application::repository::{RecipeRepository, UserRepository};
 use crate::configuration::DatabaseConfig;
 use crate::domain::{Direction, Ingredient, Recipe, RecipeArgs, Tag};
 use anyhow::{Context, Result};
@@ -26,19 +26,18 @@ impl MySqlGateway {
 
 #[async_trait::async_trait]
 impl RecipeRepository for MySqlGateway {
-    async fn insert(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
+    async fn create_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
             .begin()
             .await
             .expect("transaction failed to start");
 
-        // insert into recipe table
         let recipe_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             r#"
-            insert into recipes (recipe_id, user_id, recipe_title, servings)
-            values (?,?,?,?)
+            INSERT INTO recipes (recipe_id, user_id, recipe_title, servings)
+            VALUES (?,?,?,?)
             "#,
         )
         .bind(&recipe_id)
@@ -48,12 +47,11 @@ impl RecipeRepository for MySqlGateway {
         .execute(&self.pool)
         .await?;
 
-        // insert into ingredients table
         for ingredient in recipe.ingredients {
             sqlx::query(
                 r#"
-                insert into ingredients (recipe_id, ingredient_name, amount, unit)
-                values (?,?,?,?)
+                INSERT INTO ingredients (recipe_id, ingredient_name, amount, unit)
+                VALUES (?,?,?,?)
                 "#,
             )
             .bind(&recipe_id)
@@ -64,12 +62,11 @@ impl RecipeRepository for MySqlGateway {
             .await?;
         }
 
-        // insert into deirections table
         for direction in recipe.directions {
             sqlx::query(
                 r#"
-                insert into directions (recipe_id, direction_details, step_order)
-                values (?,?,?)
+                INSERT INTO directions (recipe_id, direction_details, step_order)
+                VALUES (?,?,?)
                 "#,
             )
             .bind(&recipe_id)
@@ -79,12 +76,11 @@ impl RecipeRepository for MySqlGateway {
             .await?;
         }
 
-        // insert into tags table
         for tag_name in recipe.tags {
             sqlx::query(
                 r#"
-                insert into tags (recipe_id, tag_name)
-                values (?,?)
+                INSERT INTO tags (recipe_id, tag_name)
+                VALUES (?,?)
                 "#,
             )
             .bind(&recipe_id)
@@ -210,6 +206,26 @@ impl RecipeRepository for MySqlGateway {
     }
 }
 
+#[async_trait::async_trait]
+impl UserRepository for MySqlGateway {
+    async fn create(&self, user_name: &str, email: &str, credentials_id: &str) -> Result<String> {
+        let user_id = uuid::Uuid::new_v4().to_string();
+        sqlx::query(
+            r#"
+            INSERT INTO users (user_name, email, credentials_id)
+            VALUES (?,?,?)
+            "#,
+        )
+        .bind(user_name)
+        .bind(email)
+        .bind(credentials_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to create user from args")?;
+
+        Ok(user_id)
+    }
+}
 #[cfg(test)]
 mod tests {
     use crate::{
@@ -225,7 +241,10 @@ mod tests {
         let repo = MySqlGateway::new(&database).await;
 
         let recipe_args = get_test_recipe_args();
-        let recipe_id = repo.insert(recipe_args, "test_user_id").await.unwrap();
+        let recipe_id = repo
+            .create_from_args(recipe_args, "test_user_id")
+            .await
+            .unwrap();
         let recipe = repo.select_by_id(&recipe_id).await.unwrap();
         assert_eq!(&recipe.recipe_title, "Oatmeal");
     }

@@ -1,4 +1,4 @@
-use crate::application::store_user_recipe;
+use crate::application::create_recipe_from_args;
 use crate::configuration::{get_configuration, Settings};
 use crate::domain::{Recipe, RecipeArgs};
 use crate::infra::MySqlGateway;
@@ -9,7 +9,7 @@ use poem::{handler, Result};
 pub async fn create_recipe(Json(recipe): Json<RecipeArgs>) -> Result<Json<Recipe>> {
     let Settings { database, .. } = get_configuration();
     let repo = MySqlGateway::new(&database).await;
-    let recipe = store_user_recipe(&repo, recipe, "route_user_test").await?;
+    let recipe = create_recipe_from_args(&repo, recipe, "route_user_test").await?;
 
     Ok(Json(recipe))
 }

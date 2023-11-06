@@ -5,7 +5,7 @@ pub enum UserRoles {
     Admin,
     Editor,
 }
-
+#[allow(dead_code)]
 pub struct User {
     row_id: u32,
     user_id: String,

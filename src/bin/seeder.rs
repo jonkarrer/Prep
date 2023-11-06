@@ -1,4 +1,4 @@
-use prep::{application::helper::configuration, domain::RecipeArgs};
+use prep::{application::helper::get_configuration, domain::RecipeArgs};
 use sqlx::MySqlPool;
 use std::fs;
 
@@ -14,7 +14,7 @@ fn get_recipe_seed_data() -> Vec<RecipeArgs> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let configuration = configuration();
+    let configuration = get_configuration();
     let db_configs = configuration.database_config;
     let pool = MySqlPool::connect(db_configs.connection_string().as_str())
         .await

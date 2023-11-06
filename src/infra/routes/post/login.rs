@@ -1,9 +1,10 @@
-use crate::application::{decode_bearer_token, login_user};
 use poem::{
     handler,
     http::{HeaderMap, StatusCode},
     Error, Result,
 };
+
+use crate::infra::{authentication::init_auth_client, service::decode_bearer_token};
 
 #[handler]
 pub async fn handle_login(headers: &HeaderMap) -> Result<String> {
@@ -23,9 +24,9 @@ pub async fn handle_login(headers: &HeaderMap) -> Result<String> {
             let encoded_token = &bearer_token_string["Bearer ".len()..];
             let basic_auth = decode_bearer_token(encoded_token)?;
 
-            let session_id = login_user(basic_auth).await?;
-
-            Ok(session_id)
+            let mut auth = init_auth_client().await?;
+            let session_token: String = auth.login(&basic_auth.email, &basic_auth.password).await?;
+            Ok(session_token)
         }
 
         None => Err(Error::from_string(

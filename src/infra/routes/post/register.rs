@@ -1,3 +1,9 @@
+use std::sync::Arc;
+
+use crate::{
+    application::repository::UserRepository,
+    infra::{authentication::init_auth_client, service::decode_bearer_token},
+};
 use poem::{
     handler,
     http::{HeaderMap, StatusCode},
@@ -5,15 +11,10 @@ use poem::{
     Error, Result,
 };
 
-use crate::{
-    application::{decode_bearer_token, register_new_user},
-    infra::MySqlDatabase,
-};
-
 #[handler]
 pub async fn handle_register_user(
     headers: &HeaderMap,
-    repo: Data<&MySqlDatabase>,
+    repo: Data<&Arc<dyn UserRepository>>,
 ) -> Result<String> {
     match headers.get("Authorization") {
         Some(header_value) => {
@@ -33,7 +34,15 @@ pub async fn handle_register_user(
             let encoded_token = &bearer_token_string["Bearer ".len()..];
             let basic_auth = decode_bearer_token(encoded_token)?;
 
-            let user_id = register_new_user(repo.0, basic_auth).await?;
+            let mut auth = init_auth_client().await?;
+
+            let credentials_id = auth
+                .register(&basic_auth.email, &basic_auth.password)
+                .await?;
+
+            let user_id = repo
+                .create(&basic_auth.email, credentials_id.as_str())
+                .await?;
 
             return Ok(user_id);
         }

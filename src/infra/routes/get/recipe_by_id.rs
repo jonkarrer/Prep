@@ -1,15 +1,15 @@
+use crate::{application::repository::RecipeRepository, domain::Recipe};
 use poem::{
     handler,
     web::{Data, Json, Path},
     Result,
 };
-
-use crate::{application::repository::RecipeRepository, domain::Recipe, infra::MySqlDatabase};
+use std::sync::Arc;
 
 #[handler]
 pub async fn handle_get_recipe_by_id(
     recipe_id: Path<String>,
-    repo: Data<&MySqlDatabase>,
+    repo: Data<&Arc<dyn RecipeRepository>>,
 ) -> Result<Json<Recipe>> {
     let recipe = repo.select_by_id(&recipe_id).await?;
 

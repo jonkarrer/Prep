@@ -1,7 +1,8 @@
 #![forbid(unsafe_code)]
-use poem::{listener::TcpListener, Result, Server};
+use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Result, Server};
 use prep::{
-    application::helper::{configuration, Settings},
+    application::helper::get_configuration,
+    domain::config::Settings,
     infra::{router, MySqlDatabase},
 };
 
@@ -12,12 +13,14 @@ async fn main() -> Result<(), std::io::Error> {
         application_port,
         application_host,
         database_config,
-    } = configuration();
+    } = get_configuration();
 
     let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
     let database = MySqlDatabase::new(&database_config).await;
-    let router = router(database);
+    let router = router();
 
-    Server::new(listener).run(router).await
+    Server::new(listener)
+        .run(router.with(AddData::new(database)))
+        .await
 }

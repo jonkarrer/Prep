@@ -1,20 +1,21 @@
 use crate::{
-    application::create_recipe,
+    application::repository::RecipeRepository,
     domain::{Recipe, RecipeArgs},
-    infra::MySqlDatabase,
 };
 use poem::{
     handler,
     web::{Data, Json},
     Result,
 };
+use std::sync::Arc;
 
 #[handler]
 pub async fn handle_create_recipe(
     Json(recipe): Json<RecipeArgs>,
-    repo: Data<&MySqlDatabase>,
+    repo: Data<&Arc<dyn RecipeRepository>>,
 ) -> Result<Json<Recipe>> {
-    let recipe = create_recipe(repo.0, recipe, "route_user_test").await?;
+    let recipe_id = repo.create_from_args(recipe, "user_test_id").await?;
+    let recipe = repo.select_by_id(&recipe_id).await?;
 
     Ok(Json(recipe))
 }

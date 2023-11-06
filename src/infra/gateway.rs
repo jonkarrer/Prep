@@ -1,4 +1,3 @@
-use crate::application::interface::DatabaseGateway;
 use crate::application::repository::{RecipeRepository, UserRepository};
 use crate::domain::config::DatabaseConfig;
 use crate::domain::{Direction, Ingredient, Recipe, RecipeArgs, Tag};
@@ -7,13 +6,13 @@ use serde_json::Value;
 use sqlx::mysql::MySqlPool;
 use sqlx::FromRow;
 
+#[derive(Clone)]
 pub struct MySqlDatabase {
     pub pool: MySqlPool,
 }
 
-#[async_trait::async_trait]
-impl DatabaseGateway for MySqlDatabase {
-    async fn new(config: &DatabaseConfig) -> Self {
+impl MySqlDatabase {
+    pub async fn new(config: &DatabaseConfig) -> Self {
         let addr = format!(
             "mysql://{}:{}@{}:{}/{}",
             config.user_name, config.password, config.host, config.port, config.db_name

@@ -9,3 +9,5 @@ pub use open_ai::*;
 
 mod model;
 pub use model::*;
+
+pub mod config;

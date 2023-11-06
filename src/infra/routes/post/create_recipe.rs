@@ -1,14 +1,20 @@
 use crate::{
     application::create_recipe,
     domain::{Recipe, RecipeArgs},
-    infra::database,
+    infra::MySqlDatabase,
 };
-use poem::{handler, web::Json, Result};
+use poem::{
+    handler,
+    web::{Data, Json},
+    Result,
+};
 
 #[handler]
-pub async fn handle_create_recipe(Json(recipe): Json<RecipeArgs>) -> Result<Json<Recipe>> {
-    let repo = database().await;
-    let recipe = create_recipe(&repo, recipe, "route_user_test").await?;
+pub async fn handle_create_recipe(
+    Json(recipe): Json<RecipeArgs>,
+    repo: Data<&MySqlDatabase>,
+) -> Result<Json<Recipe>> {
+    let recipe = create_recipe(repo.0, recipe, "route_user_test").await?;
 
     Ok(Json(recipe))
 }

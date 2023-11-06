@@ -1,17 +1,19 @@
+use crate::application::interface::DatabaseGateway;
 use crate::application::repository::{RecipeRepository, UserRepository};
-use crate::configuration::DatabaseConfig;
+use crate::domain::config::DatabaseConfig;
 use crate::domain::{Direction, Ingredient, Recipe, RecipeArgs, Tag};
 use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
 use sqlx::FromRow;
 
-pub struct MySqlGateway {
+pub struct MySqlDatabase {
     pub pool: MySqlPool,
 }
 
-impl MySqlGateway {
-    pub async fn new(config: &DatabaseConfig) -> Self {
+#[async_trait::async_trait]
+impl DatabaseGateway for MySqlDatabase {
+    async fn new(config: &DatabaseConfig) -> Self {
         let addr = format!(
             "mysql://{}:{}@{}:{}/{}",
             config.user_name, config.password, config.host, config.port, config.db_name
@@ -25,7 +27,7 @@ impl MySqlGateway {
 }
 
 #[async_trait::async_trait]
-impl RecipeRepository for MySqlGateway {
+impl RecipeRepository for MySqlDatabase {
     async fn create_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
@@ -207,7 +209,7 @@ impl RecipeRepository for MySqlGateway {
 }
 
 #[async_trait::async_trait]
-impl UserRepository for MySqlGateway {
+impl UserRepository for MySqlDatabase {
     async fn create(&self, email: &str, credentials_id: &str) -> Result<String> {
         let user_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
@@ -228,17 +230,14 @@ impl UserRepository for MySqlGateway {
 }
 #[cfg(test)]
 mod tests {
-    use crate::{
-        configuration::{get_configuration, Settings},
-        domain::get_test_recipe_args,
-    };
+    use crate::{application::helper::get_configuration, domain::get_test_recipe_args};
 
     use super::*;
 
     #[tokio::test]
     async fn test_recipe_repository() {
-        let Settings { database, .. } = get_configuration();
-        let repo = MySqlGateway::new(&database).await;
+        let configs = get_configuration();
+        let repo = MySqlDatabase::new(&configs.database_config).await;
 
         let recipe_args = get_test_recipe_args();
         let recipe_id = repo

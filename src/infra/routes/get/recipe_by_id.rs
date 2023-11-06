@@ -1,13 +1,16 @@
-use crate::{application::repository::RecipeRepository, domain::Recipe, infra::database};
 use poem::{
     handler,
-    web::{Json, Path},
+    web::{Data, Json, Path},
     Result,
 };
 
+use crate::{application::repository::RecipeRepository, domain::Recipe, infra::MySqlDatabase};
+
 #[handler]
-pub async fn handle_get_recipe_by_id(recipe_id: Path<String>) -> Result<Json<Recipe>> {
-    let repo = database().await;
+pub async fn handle_get_recipe_by_id(
+    recipe_id: Path<String>,
+    repo: Data<&MySqlDatabase>,
+) -> Result<Json<Recipe>> {
     let recipe = repo.select_by_id(&recipe_id).await?;
 
     Ok(Json(recipe))

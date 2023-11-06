@@ -1,8 +1,8 @@
 #![forbid(unsafe_code)]
 use poem::{listener::TcpListener, Result, Server};
 use prep::{
-    configuration::{get_configuration, Settings},
-    infra::router,
+    application::helper::{configuration, Settings},
+    infra::{router, MySqlDatabase},
 };
 
 #[tokio::main]
@@ -11,12 +11,13 @@ async fn main() -> Result<(), std::io::Error> {
     let Settings {
         application_port,
         application_host,
-        ..
-    } = get_configuration();
+        database_config,
+    } = configuration();
 
     let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
-    let router = router();
+    let database = MySqlDatabase::new(&database_config).await;
+    let router = router(database);
 
     Server::new(listener).run(router).await
 }

@@ -5,7 +5,7 @@ use brize_auth::{
     mysql::MySqlGateway,
 };
 
-pub async fn auth() -> Result<Auth<MySqlGateway, MySqlGateway>> {
+pub async fn init_auth_client() -> Result<Auth<MySqlGateway, MySqlGateway>> {
     let db_config = DatabaseConfig {
         host: "localhost".to_string(),
         db_name: "mysql".to_string(),

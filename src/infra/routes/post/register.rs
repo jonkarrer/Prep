@@ -1,17 +1,20 @@
 use poem::{
     handler,
     http::{HeaderMap, StatusCode},
+    web::Data,
     Error, Result,
 };
 
 use crate::{
     application::{decode_bearer_token, register_new_user},
-    infra::database,
+    infra::MySqlDatabase,
 };
 
 #[handler]
-pub async fn handle_register_user(headers: &HeaderMap) -> Result<String> {
-    let repo = database().await;
+pub async fn handle_register_user(
+    headers: &HeaderMap,
+    repo: Data<&MySqlDatabase>,
+) -> Result<String> {
     match headers.get("Authorization") {
         Some(header_value) => {
             let bearer_token_string = header_value.to_str().map_err(|_| {
@@ -30,7 +33,7 @@ pub async fn handle_register_user(headers: &HeaderMap) -> Result<String> {
             let encoded_token = &bearer_token_string["Bearer ".len()..];
             let basic_auth = decode_bearer_token(encoded_token)?;
 
-            let user_id = register_new_user(&repo, basic_auth).await?;
+            let user_id = register_new_user(repo.0, basic_auth).await?;
 
             return Ok(user_id);
         }

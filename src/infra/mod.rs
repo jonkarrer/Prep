@@ -1,5 +1,5 @@
-mod gateway;
-pub use gateway::*;
+mod database;
+pub use database::*;
 
 mod routes;
 pub use routes::*;

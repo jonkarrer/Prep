@@ -1,5 +1,5 @@
 use crate::{
-    application::repository::RecipeRepository,
+    application::interface::RecipeRepository,
     domain::{Recipe, RecipeArgs},
 };
 use poem::{

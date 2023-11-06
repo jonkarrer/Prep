@@ -1,4 +1,4 @@
-use crate::{application::repository::RecipeRepository, domain::Recipe};
+use crate::{application::interface::RecipeRepository, domain::Recipe};
 use poem::{
     handler,
     web::{Data, Json, Path},

@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use crate::{
-    application::repository::UserRepository,
-    infra::{authentication::init_auth_client, service::decode_bearer_token},
+    application::interface::UserRepository,
+    infra::{authentication::auth, service::decode_bearer_token},
 };
 use poem::{
     handler,
@@ -34,7 +34,7 @@ pub async fn handle_register_user(
             let encoded_token = &bearer_token_string["Bearer ".len()..];
             let basic_auth = decode_bearer_token(encoded_token)?;
 
-            let mut auth = init_auth_client().await?;
+            let mut auth = auth().await;
 
             let credentials_id = auth
                 .register(&basic_auth.email, &basic_auth.password)

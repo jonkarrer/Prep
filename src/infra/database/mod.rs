@@ -1,18 +1,26 @@
-use crate::application::repository::{RecipeRepository, UserRepository};
-use crate::domain::config::DatabaseConfig;
-use crate::domain::{Direction, Ingredient, Recipe, RecipeArgs, Tag};
+use crate::application::{
+    helper::get_configuration,
+    interface::{Database, DatabaseConn, RecipeRepository, UserRepository},
+};
+use crate::domain::{
+    config::{DatabaseConfig, Settings},
+    Direction, Ingredient, Recipe, RecipeArgs, Tag,
+};
 use anyhow::{Context, Result};
 use serde_json::Value;
-use sqlx::mysql::MySqlPool;
-use sqlx::FromRow;
+use sqlx::{mysql::MySqlPool, FromRow};
 
-#[derive(Clone)]
-pub struct MySqlDatabase {
-    pub pool: MySqlPool,
+pub async fn db() -> Database<MySqlPool> {
+    let Settings {
+        database_config, ..
+    } = get_configuration();
+
+    Database::new(&database_config).await
 }
 
-impl MySqlDatabase {
-    pub async fn new(config: &DatabaseConfig) -> Self {
+#[async_trait::async_trait]
+impl DatabaseConn<MySqlPool> for Database<MySqlPool> {
+    async fn new(config: &DatabaseConfig) -> Database<MySqlPool> {
         let addr = format!(
             "mysql://{}:{}@{}:{}/{}",
             config.user_name, config.password, config.host, config.port, config.db_name
@@ -21,12 +29,12 @@ impl MySqlDatabase {
             .await
             .expect("Failed connection with database");
 
-        Self { pool }
+        Database { pool }
     }
 }
 
 #[async_trait::async_trait]
-impl RecipeRepository for MySqlDatabase {
+impl RecipeRepository for Database<MySqlPool> {
     async fn create_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
@@ -208,7 +216,7 @@ impl RecipeRepository for MySqlDatabase {
 }
 
 #[async_trait::async_trait]
-impl UserRepository for MySqlDatabase {
+impl UserRepository for Database<MySqlPool> {
     async fn create(&self, email: &str, credentials_id: &str) -> Result<String> {
         let user_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
@@ -236,7 +244,7 @@ mod tests {
     #[tokio::test]
     async fn test_recipe_repository() {
         let configs = get_configuration();
-        let repo = MySqlDatabase::new(&configs.database_config).await;
+        let repo = Database::new(&configs.database_config).await;
 
         let recipe_args = get_test_recipe_args();
         let recipe_id = repo

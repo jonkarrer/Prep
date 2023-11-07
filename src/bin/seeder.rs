@@ -1,4 +1,8 @@
-use prep::{configuration::get_configuration, domain::RecipeArgs};
+use prep::{
+    application::{helper::get_configuration, interface::UserRepository},
+    domain::entity::RecipeArgs,
+    infra::{authentication::auth, db},
+};
 use sqlx::MySqlPool;
 use std::fs;
 
@@ -12,19 +16,23 @@ fn get_recipe_seed_data() -> Vec<RecipeArgs> {
     deserialized_data
 }
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn seed_with_recipes() -> anyhow::Result<()> {
     let configuration = get_configuration();
-    let db_configs = configuration.database;
+    let db_configs = configuration.database_config;
     let pool = MySqlPool::connect(db_configs.connection_string().as_str())
         .await
         .expect("Failed connection with database");
 
-    let seed_data = get_recipe_seed_data();
-    let user_id = uuid::Uuid::new_v4().to_string();
+    // create one seed user
+    let mut auth = auth().await;
+    let usr = "seed_user@gmail.com";
+    let creds_id = auth.register(usr, "seeder_password").await?;
+    let user_id = db().await.create_user(usr, &creds_id).await?;
 
     // begin transaction
+    let seed_data = get_recipe_seed_data();
     let mut transaction = pool.begin().await.expect("Transaction failed to start");
+
     for recipe in seed_data {
         let recipe_id = uuid::Uuid::new_v4().to_string();
 
@@ -89,5 +97,30 @@ async fn main() -> anyhow::Result<()> {
         .await
         .expect("Failed to commit transaction");
 
+    Ok(())
+}
+
+async fn seed_with_users() -> anyhow::Result<()> {
+    let users = vec![
+        ("usr1@mail.com", "usr1password"),
+        ("usr2@mail.com", "usr2password"),
+        ("usr3@mail.com", "usr4password"),
+        ("usr5@mail.com", "usr5password"),
+        ("usr6@mail.com", "usr6password"),
+    ];
+
+    let mut auth = auth().await;
+    for (email, pass) in users {
+        let creds_id = auth.register(email, pass).await?;
+        db().await.create_user(email, &creds_id).await?;
+    }
+
+    Ok(())
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    seed_with_recipes().await?;
+    seed_with_users().await?;
     Ok(())
 }

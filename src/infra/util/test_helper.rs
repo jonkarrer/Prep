@@ -1,26 +1,29 @@
-use serde::{Deserialize, Serialize};
+use crate::{
+    application::interface::Database,
+    domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
+    infra::db,
+};
+use poem::{
+    middleware::{AddData, AddDataEndpoint},
+    test::TestClient,
+    EndpointExt, Route, RouteMethod,
+};
+use sqlx::{MySql, Pool};
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct DirectionArgs {
-    pub step_order: u16,
-    pub details: String,
+pub fn init_test_client(route: &str, handler: RouteMethod) -> TestClient<Route> {
+    let app = Route::new().at(route, handler);
+    TestClient::new(app)
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct IngredientArgs {
-    pub name: String,
-    pub amount: f32,
-    pub unit: String,
-}
+pub async fn init_test_client_with_db(
+    route: &str,
+    handler: RouteMethod,
+) -> TestClient<AddDataEndpoint<Route, Database<Pool<MySql>>>> {
+    let app = Route::new()
+        .at(route, handler)
+        .with(AddData::new(db().await));
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct RecipeArgs {
-    pub title: String,
-    pub servings: f32,
-    pub tags: Vec<String>,
-    pub favorite: bool,
-    pub directions: Vec<DirectionArgs>,
-    pub ingredients: Vec<IngredientArgs>,
+    TestClient::new(app)
 }
 
 pub fn get_test_recipe_args() -> RecipeArgs {

@@ -1,21 +1,23 @@
 use crate::{
-    application::repository::RecipeRepository,
-    configuration::{get_configuration, Settings},
-    domain::Recipe,
-    infra::MySqlGateway,
+    application::interface::{Database, RecipeRepository},
+    domain::entity::Recipe,
 };
 use poem::{
     handler,
-    web::{Json, Path},
-    Result,
+    web::{Data, Json, Path},
+    Error, Result,
 };
+use sqlx::MySqlPool;
 
 #[handler]
-pub async fn recipe_by_id(recipe_id: Path<String>) -> Result<Json<Recipe>> {
-    let Settings { database, .. } = get_configuration();
-    let repo = MySqlGateway::new(&database).await;
-
-    let recipe = repo.select_by_id(&recipe_id).await?;
+pub async fn handle_get_recipe_by_id(
+    recipe_id: Path<String>,
+    repo: Data<&Database<MySqlPool>>,
+) -> Result<Json<Recipe>> {
+    let recipe = repo
+        .select_by_id(&recipe_id)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
     Ok(Json(recipe))
 }
@@ -23,15 +25,16 @@ pub async fn recipe_by_id(recipe_id: Path<String>) -> Result<Json<Recipe>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use poem::{get, test::TestClient, Route};
+    use crate::infra::test_helper::init_test_client_with_db;
+    use poem::get;
 
     #[tokio::test]
     async fn test_route_get_recipe_by_id() {
-        let app = Route::new().at("/recipe/:id", get(recipe_by_id));
-        let test_client = TestClient::new(app);
+        let test_client =
+            init_test_client_with_db("/recipe/:id", get(handle_get_recipe_by_id)).await;
 
         let resp = test_client
-            .get("/recipe/ef8d87c5-5983-4495-a638-62f8ea5cffe9")
+            .get("/recipe/30457f09-012c-4668-803e-fb84c04ff1e4")
             .send()
             .await;
 

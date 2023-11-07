@@ -1,34 +1,47 @@
-use crate::application::store_user_recipe;
-use crate::configuration::{get_configuration, Settings};
-use crate::domain::{Recipe, RecipeArgs};
-use crate::infra::MySqlGateway;
-use poem::web::Json;
-use poem::{handler, Result};
+use crate::{
+    application::interface::{Database, RecipeRepository},
+    domain::entity::{Recipe, RecipeArgs},
+};
+use poem::{
+    handler,
+    web::{Data, Json},
+    Error, Result,
+};
+use sqlx::MySqlPool;
 
 #[handler]
-pub async fn create_recipe(Json(recipe): Json<RecipeArgs>) -> Result<Json<Recipe>> {
-    let Settings { database, .. } = get_configuration();
-    let repo = MySqlGateway::new(&database).await;
-    let recipe = store_user_recipe(&repo, recipe, "route_user_test").await?;
+pub async fn handle_create_recipe(
+    Json(recipe): Json<RecipeArgs>,
+    repo: Data<&Database<MySqlPool>>,
+) -> Result<Json<Recipe>> {
+    let recipe_id = repo
+        .create_recipe_from_args(recipe, "user_test_id")
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
+
+    let recipe = repo
+        .select_by_id(&recipe_id)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
     Ok(Json(recipe))
 }
 
 #[cfg(test)]
 mod tests {
+    use poem::post;
+
     use super::*;
-    use crate::domain::get_test_recipe_args;
-    use poem::{post, test::TestClient, Route};
+    use crate::infra::test_helper::{get_test_recipe_args, init_test_client_with_db};
 
     #[tokio::test]
     async fn test_route_create_recipe() {
         let test_recipe = get_test_recipe_args();
-        let app = Route::new().at("/create_recipe", post(create_recipe));
-        let test_client = TestClient::new(app);
+        let test_client = init_test_client_with_db("/new_recipe", post(handle_create_recipe)).await;
 
         let payload = serde_json::to_string(&test_recipe).unwrap();
         let resp = test_client
-            .post("/create_recipe")
+            .post("/new_recipe")
             .body(payload)
             .content_type("application/json")
             .send()

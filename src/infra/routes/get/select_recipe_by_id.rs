@@ -10,7 +10,7 @@ use poem::{
 use sqlx::MySqlPool;
 
 #[handler]
-pub async fn handle_get_recipe_by_id(
+pub async fn handle_select_recipe_by_id(
     recipe_id: Path<String>,
     repo: Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
@@ -29,12 +29,12 @@ mod tests {
     use poem::get;
 
     #[tokio::test]
-    async fn test_route_get_recipe_by_id() {
-        let test_client =
-            init_test_client_with_db("/recipe/:id", get(handle_get_recipe_by_id)).await;
+    async fn test_route_select_recipe_by_id() {
+        let path = "/recipe/select/:id";
+        let test_client = init_test_client_with_db(path, get(handle_select_recipe_by_id)).await;
 
         let resp = test_client
-            .get("/recipe/30457f09-012c-4668-803e-fb84c04ff1e4")
+            .get("/recipe/select/a11aaa36-0114-4bdf-8e40-5c266705b7ad")
             .send()
             .await;
 

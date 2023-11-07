@@ -1,7 +1,5 @@
-use std::sync::Arc;
-
 use crate::{
-    application::interface::UserRepository,
+    application::interface::{Database, UserRepository},
     infra::{authentication::auth, service::decode_bearer_token},
 };
 use poem::{
@@ -10,11 +8,12 @@ use poem::{
     web::Data,
     Error, Result,
 };
+use sqlx::MySqlPool;
 
 #[handler]
 pub async fn handle_register_user(
     headers: &HeaderMap,
-    repo: Data<&Arc<dyn UserRepository>>,
+    repo: Data<&Database<MySqlPool>>,
 ) -> Result<String> {
     match headers.get("Authorization") {
         Some(header_value) => {
@@ -38,11 +37,17 @@ pub async fn handle_register_user(
 
             let credentials_id = auth
                 .register(&basic_auth.email, &basic_auth.password)
-                .await?;
+                .await
+                .map_err(|e| {
+                    Error::from_string(format!("{e}"), poem::http::StatusCode::CONFLICT)
+                })?;
 
             let user_id = repo
                 .create(&basic_auth.email, credentials_id.as_str())
-                .await?;
+                .await
+                .map_err(|e| {
+                    Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY)
+                })?;
 
             return Ok(user_id);
         }
@@ -59,13 +64,14 @@ pub async fn handle_register_user(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::infra::test_helper::init_test_client_with_db;
     use base64::{engine::general_purpose, Engine};
-    use poem::{post, test::TestClient, Route};
+    use poem::post;
 
     #[tokio::test]
     async fn test_route_register_user() {
-        let app = Route::new().at("/register_user", post(handle_register_user));
-        let test_client = TestClient::new(app);
+        let test_client =
+            init_test_client_with_db("/register_user", post(handle_register_user)).await;
 
         let random_str = &uuid::Uuid::new_v4().to_string();
         let email = &random_str[..10];

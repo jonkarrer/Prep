@@ -1,10 +1,10 @@
 use crate::application::{
     helper::get_configuration,
-    interface::{Database, DatabaseConn, RecipeRepository, UserRepository},
+    interface::{Database, RecipeRepository, UserRepository},
 };
 use crate::domain::{
     config::{DatabaseConfig, Settings},
-    Direction, Ingredient, Recipe, RecipeArgs, Tag,
+    entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag},
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -18,8 +18,7 @@ pub async fn db() -> Database<MySqlPool> {
     Database::new(&database_config).await
 }
 
-#[async_trait::async_trait]
-impl DatabaseConn<MySqlPool> for Database<MySqlPool> {
+impl Database<MySqlPool> {
     async fn new(config: &DatabaseConfig) -> Database<MySqlPool> {
         let addr = format!(
             "mysql://{}:{}@{}:{}/{}",
@@ -237,9 +236,8 @@ impl UserRepository for Database<MySqlPool> {
 }
 #[cfg(test)]
 mod tests {
-    use crate::{application::helper::get_configuration, domain::get_test_recipe_args};
-
     use super::*;
+    use crate::{application::helper::get_configuration, infra::test_helper::get_test_recipe_args};
 
     #[tokio::test]
     async fn test_recipe_repository() {

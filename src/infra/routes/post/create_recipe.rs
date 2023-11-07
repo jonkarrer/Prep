@@ -1,36 +1,43 @@
 use crate::{
-    application::interface::RecipeRepository,
-    domain::{Recipe, RecipeArgs},
+    application::interface::{Database, RecipeRepository},
+    domain::entity::{Recipe, RecipeArgs},
 };
 use poem::{
     handler,
     web::{Data, Json},
-    Result,
+    Error, Result,
 };
-use std::sync::Arc;
+use sqlx::MySqlPool;
 
 #[handler]
 pub async fn handle_create_recipe(
     Json(recipe): Json<RecipeArgs>,
-    repo: Data<&Arc<dyn RecipeRepository>>,
+    repo: Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
-    let recipe_id = repo.create_from_args(recipe, "user_test_id").await?;
-    let recipe = repo.select_by_id(&recipe_id).await?;
+    let recipe_id = repo
+        .create_from_args(recipe, "user_test_id")
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
+
+    let recipe = repo
+        .select_by_id(&recipe_id)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
     Ok(Json(recipe))
 }
 
 #[cfg(test)]
 mod tests {
+    use poem::post;
+
     use super::*;
-    use crate::domain::get_test_recipe_args;
-    use poem::{post, test::TestClient, Route};
+    use crate::infra::test_helper::{get_test_recipe_args, init_test_client_with_db};
 
     #[tokio::test]
     async fn test_route_create_recipe() {
         let test_recipe = get_test_recipe_args();
-        let app = Route::new().at("/new_recipe", post(handle_create_recipe));
-        let test_client = TestClient::new(app);
+        let test_client = init_test_client_with_db("/new_recipe", post(handle_create_recipe)).await;
 
         let payload = serde_json::to_string(&test_recipe).unwrap();
         let resp = test_client

@@ -1,4 +1,4 @@
-use prep::{application::helper::get_configuration, domain::RecipeArgs};
+use prep::{application::helper::get_configuration, domain::entity::RecipeArgs};
 use sqlx::MySqlPool;
 use std::fs;
 

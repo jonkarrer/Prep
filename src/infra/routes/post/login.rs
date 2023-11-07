@@ -35,3 +35,34 @@ pub async fn handle_login(headers: &HeaderMap) -> Result<String> {
         )),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::infra::test_helper::init_test_client_with_db;
+    use base64::{engine::general_purpose, Engine};
+    use poem::post;
+
+    #[tokio::test]
+    async fn test_route_login() {
+        let path = "/usr/login";
+        let test_client = init_test_client_with_db(path, post(handle_login)).await;
+
+        let email = "seed_user@gmail.com";
+        let password = "seeder_password";
+
+        let raw_token = format!("{}|{}", email, password);
+        let encoded_token = general_purpose::STANDARD.encode(raw_token.as_bytes());
+        let bearer_token = format!("Bearer {}", encoded_token);
+
+        let resp = test_client
+            .post(path)
+            .header("Authorization", bearer_token)
+            .send()
+            .await;
+
+        resp.assert_status_is_ok();
+
+        // TODO select from session table with the returned id
+    }
+}

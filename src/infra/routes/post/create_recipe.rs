@@ -15,7 +15,7 @@ pub async fn handle_create_recipe(
     repo: Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
     let recipe_id = repo
-        .create_from_args(recipe, "user_test_id")
+        .create_recipe_from_args(recipe, "user_test_id")
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 

@@ -43,7 +43,7 @@ pub async fn handle_register_user(
                 })?;
 
             let user_id = repo
-                .create(&basic_auth.email, credentials_id.as_str())
+                .create_user(&basic_auth.email, credentials_id.as_str())
                 .await
                 .map_err(|e| {
                     Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY)
@@ -70,8 +70,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_route_register_user() {
-        let test_client =
-            init_test_client_with_db("/register_user", post(handle_register_user)).await;
+        let path = "/usr/register";
+        let test_client = init_test_client_with_db(path, post(handle_register_user)).await;
 
         let random_str = &uuid::Uuid::new_v4().to_string();
         let email = &random_str[..10];
@@ -81,15 +81,15 @@ mod tests {
         let encoded_token = general_purpose::STANDARD.encode(raw_token.as_bytes());
         let bearer_token = format!("Bearer {}", encoded_token);
 
-        let mut resp = test_client
-            .post("/register_user")
-            .content_type("application/json")
+        let resp = test_client
+            .post(path)
             .header("Authorization", bearer_token)
             .send()
             .await;
 
-        let id: String = resp.0.take_body().into_string().await.unwrap();
-        dbg!(id);
         resp.assert_status_is_ok();
+
+        // TODO select by id in db to confirm registration
+        // let id: String = resp.0.take_body().into_string().await.unwrap();
     }
 }

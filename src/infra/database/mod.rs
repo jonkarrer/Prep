@@ -34,7 +34,7 @@ impl Database<MySqlPool> {
 
 #[async_trait::async_trait]
 impl RecipeRepository for Database<MySqlPool> {
-    async fn create_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
+    async fn create_recipe_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
         let mut transaction = self
             .pool
             .begin()
@@ -216,7 +216,7 @@ impl RecipeRepository for Database<MySqlPool> {
 
 #[async_trait::async_trait]
 impl UserRepository for Database<MySqlPool> {
-    async fn create(&self, email: &str, credentials_id: &str) -> Result<String> {
+    async fn create_user(&self, email: &str, credentials_id: &str) -> Result<String> {
         let user_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             r#"
@@ -246,7 +246,7 @@ mod tests {
 
         let recipe_args = get_test_recipe_args();
         let recipe_id = repo
-            .create_from_args(recipe_args, "test_user_id")
+            .create_recipe_from_args(recipe_args, "test_user_id")
             .await
             .unwrap();
         let recipe = repo.select_by_id(&recipe_id).await.unwrap();

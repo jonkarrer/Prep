@@ -12,7 +12,7 @@ use sqlx::MySqlPool;
 #[handler]
 pub async fn handle_create_recipe(
     Json(recipe): Json<RecipeArgs>,
-    repo: Data<&Database<MySqlPool>>,
+    Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
     let recipe_id = repo
         .create_recipe_from_args(recipe, "user_test_id")

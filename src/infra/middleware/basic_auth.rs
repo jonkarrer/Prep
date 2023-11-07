@@ -49,7 +49,7 @@ impl<E: Endpoint> Endpoint for BasicAuthImpl<E> {
                 // AddData to endpoints that use this middleware
                 req.extensions_mut().insert(basic_auth);
 
-                // o to next request if all is good
+                // go to next request if all is good
                 self.0.call(req).await
             }
 

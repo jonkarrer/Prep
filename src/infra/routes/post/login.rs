@@ -9,6 +9,14 @@ pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<St
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
 
+    // HTTP/1.1 200 OK
+    // Set-Cookie: sessionid=abc123; Path=/; Secure; HttpOnly; SameSite=Strict
+    // Content-Type: application/json
+
+    // {
+    //     "success": "Logged in successfully"
+    // }
+
     Ok(session_token)
 }
 

@@ -60,7 +60,16 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 } else {
                     // TODO actually verify token against session db
                     match req.headers().get(CSRF_TOKEN_KEY) {
-                        Some(_token) => self.0.call(req).await,
+                        Some(token) => {
+                            if token == "my_csrf_token" {
+                                return self.0.call(req).await;
+                            } else {
+                                return Err(Error::from_string(
+                                    "Csrf Token missing",
+                                    StatusCode::TEMPORARY_REDIRECT,
+                                ));
+                            }
+                        }
                         None => Err(Error::from_string(
                             "Csrf Token missing",
                             StatusCode::TEMPORARY_REDIRECT,

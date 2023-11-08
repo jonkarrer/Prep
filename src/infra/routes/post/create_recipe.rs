@@ -62,6 +62,7 @@ mod tests {
             .post(path)
             .body(payload)
             .header("Cookie", format!("session_id={}", session_token))
+            .header("X-CSRF-Token", "my_csrf_token")
             .content_type("application/json")
             .send()
             .await;

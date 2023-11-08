@@ -18,6 +18,7 @@ impl<E: Endpoint> Middleware<E> for AuthGuard {
 
 // declare name of token to extract
 const SESSION_COOKIE_KEY: &str = "session_id";
+const CSRF_TOKEN_KEY: &str = "X-CSRF-TOKEN";
 
 // impl Endpoint trait for custom endpoint
 #[poem::async_trait]
@@ -47,7 +48,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 // validate session
                 let mut auth = auth().await;
                 let user_id = auth.validate_session(&session_token).await.map_err(|e| {
-                    Error::from_string(format!("{e}"), StatusCode::TEMPORARY_REDIRECT)
+                    Error::from_string(format!("{}", e), StatusCode::TEMPORARY_REDIRECT)
                 })?;
 
                 // add userid to endpoints that use this middleware
@@ -57,9 +58,16 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 if ["GET", "HEAD", "OPTIONS", "TRACE"].contains(&req.method().as_str()) {
                     return self.0.call(req).await;
                 } else {
+                    // TODO actually verify token against session db
+                    match req.headers().get(CSRF_TOKEN_KEY) {
+                        Some(_token) => self.0.call(req).await,
+                        None => Err(Error::from_string(
+                            "Csrf Token missing",
+                            StatusCode::TEMPORARY_REDIRECT,
+                        )),
+                    }
                 }
                 // go to next request if all is good
-                self.0.call(req).await
             }
 
             None => Err(Error::from_string(

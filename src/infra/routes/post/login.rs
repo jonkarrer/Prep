@@ -3,27 +3,24 @@ use poem::{handler, http::StatusCode, web::Data, Error, Response, Result};
 
 #[handler]
 pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<Response> {
-    let csrf_token = "my_csrf_token";
     let mut auth = auth().await;
     let session_token: String = auth
         .login(&basic_auth.email, &basic_auth.password)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
+    let csrf_token = "my_csrf_token";
 
     let mut response = Response::builder()
+        .header(
+            "Set-Cookie",
+            format!(
+                "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                session_token
+            ),
+        )
+        .header("X-CSRF-Token", csrf_token)
         .status(StatusCode::OK)
-        .body("Log in success");
-
-    // let session_cookie = Cookie::new_with_str("session_id", session_token)
-    //     .set_secure(true)
-    //     .set_http_only(true);
-    // HTTP/1.1 200 OK
-    // Set-Cookie: sessionid=abc123; Path=/; Secure; HttpOnly; SameSite=Strict
-    // Content-Type: application/json
-
-    // {
-    //     "success": "Logged in successfully"
-    // }
+        .body("Login Successful");
 
     Ok(response)
 }
@@ -33,13 +30,13 @@ mod tests {
     use super::*;
     use crate::infra::middleware::BasicAuth;
     use base64::{engine::general_purpose, Engine};
-    use poem::{post, test::TestClient, EndpointExt, Route};
+    use poem::{get, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
     async fn test_route_login() {
         // build route
         let path = "/usr/login";
-        let ep = Route::new().at(path, post(handle_login)).with(BasicAuth);
+        let ep = Route::new().at(path, get(handle_login)).with(BasicAuth);
         let test_client = TestClient::new(ep);
 
         // set test creds, this matches the seeder
@@ -53,13 +50,14 @@ mod tests {
 
         // run test
         let resp = test_client
-            .post(path)
+            .get(path)
             .header("Authorization", bearer_token)
             .send()
             .await;
 
         // assert results
         resp.assert_status_is_ok();
+        resp.assert_text("Login Successful").await;
 
         // TODO select from session table with the returned id
     }

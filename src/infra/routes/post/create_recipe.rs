@@ -30,12 +30,7 @@ pub async fn handle_create_recipe(
 
 #[cfg(test)]
 mod tests {
-    use poem::{
-        middleware::{AddData, CookieJarManager},
-        post,
-        test::TestClient,
-        EndpointExt, Route,
-    };
+    use poem::{middleware::AddData, post, test::TestClient, EndpointExt, Route};
 
     use super::*;
     use crate::infra::{
@@ -51,8 +46,8 @@ mod tests {
         let ep = Route::new()
             .at(path, post(handle_create_recipe))
             .with(AddData::new(db().await))
-            .with(AuthGuard)
-            .with(CookieJarManager::new());
+            .with(AuthGuard);
+
         let test_client = TestClient::new(ep);
 
         // get a session token

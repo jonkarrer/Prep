@@ -26,12 +26,7 @@ pub async fn handle_select_recipe_by_id(
 mod tests {
     use super::*;
     use crate::infra::{db, middleware::AuthGuard, test_helper::get_test_session_token};
-    use poem::{
-        get,
-        middleware::{AddData, CookieJarManager},
-        test::TestClient,
-        EndpointExt, Route,
-    };
+    use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
     async fn test_route_select_recipe_by_id() {
@@ -40,8 +35,8 @@ mod tests {
         let ep = Route::new()
             .at(path, get(handle_select_recipe_by_id))
             .with(AddData::new(db().await))
-            .with(AuthGuard)
-            .with(CookieJarManager::new());
+            .with(AuthGuard);
+
         let test_client = TestClient::new(ep);
 
         // get a session token

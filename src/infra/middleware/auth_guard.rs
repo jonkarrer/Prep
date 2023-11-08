@@ -25,11 +25,23 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
     type Output = E::Output;
 
     async fn call(&self, mut req: Request) -> Result<Self::Output> {
-        let cookies = req.cookie();
-        match cookies.get(SESSION_COOKIE_KEY) {
-            Some(cookie) => {
-                // get full string then extract just the uuid
-                let session_str = cookie.to_string();
+        match req.headers().get("Cookie") {
+            Some(header_value) => {
+                // turn cookie header value into a str
+                let cookies_str = header_value.to_str().map_err(|_| {
+                    Error::from_string("Invalid Cookie header", StatusCode::BAD_REQUEST)
+                })?;
+
+                // find session_id in cookie str
+                let session_str = cookies_str
+                    .split(";")
+                    .find(|x| x.contains(SESSION_COOKIE_KEY))
+                    .ok_or(Error::from_string(
+                        "Session id not found in cookie",
+                        StatusCode::BAD_REQUEST,
+                    ))?;
+
+                // parse out the token
                 let session_token = &session_str["session_id=".len()..];
 
                 // validate session
@@ -41,6 +53,11 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 // add userid to endpoints that use this middleware
                 req.extensions_mut().insert(UserId(user_id));
 
+                // Skip CSRF check for safe methods like GET, HEAD, OPTIONS, TRACE
+                if ["GET", "HEAD", "OPTIONS", "TRACE"].contains(&req.method().as_str()) {
+                    return self.0.call(req).await;
+                } else {
+                }
                 // go to next request if all is good
                 self.0.call(req).await
             }

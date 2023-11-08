@@ -1,14 +1,22 @@
 use crate::infra::{authentication::auth, service::BasicAuthParams};
-use poem::{handler, http::StatusCode, web::Data, Error, Result};
+use poem::{handler, http::StatusCode, web::Data, Error, Response, Result};
 
 #[handler]
-pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<String> {
+pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<Response> {
+    let csrf_token = "my_csrf_token";
     let mut auth = auth().await;
     let session_token: String = auth
         .login(&basic_auth.email, &basic_auth.password)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
 
+    let mut response = Response::builder()
+        .status(StatusCode::OK)
+        .body("Log in success");
+
+    // let session_cookie = Cookie::new_with_str("session_id", session_token)
+    //     .set_secure(true)
+    //     .set_http_only(true);
     // HTTP/1.1 200 OK
     // Set-Cookie: sessionid=abc123; Path=/; Secure; HttpOnly; SameSite=Strict
     // Content-Type: application/json
@@ -17,7 +25,7 @@ pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<St
     //     "success": "Logged in successfully"
     // }
 
-    Ok(session_token)
+    Ok(response)
 }
 
 #[cfg(test)]

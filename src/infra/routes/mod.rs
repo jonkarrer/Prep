@@ -1,18 +1,22 @@
 mod get;
 mod post;
-use poem::{get, post, Route};
+use poem::{get, post, EndpointExt, Route};
 
 use self::get::{handle_select_recipe_by_id, health_check};
 use self::post::{handle_create_recipe, handle_login, handle_register_user};
 
+use super::middleware::{AuthGuard, BasicAuth};
+
 pub fn router() -> Route {
     let recipe_routes = Route::new()
         .at("/select/:id", get(handle_select_recipe_by_id))
-        .at("/create", post(handle_create_recipe));
+        .at("/create", post(handle_create_recipe))
+        .with(AuthGuard);
 
     let user_routes = Route::new()
         .at("/register", post(handle_register_user))
-        .at("/login", post(handle_login));
+        .at("/login", post(handle_login))
+        .with(BasicAuth);
 
     let app = Route::new()
         .nest("/recipe", recipe_routes)

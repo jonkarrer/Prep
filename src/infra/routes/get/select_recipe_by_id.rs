@@ -12,7 +12,7 @@ use sqlx::MySqlPool;
 #[handler]
 pub async fn handle_select_recipe_by_id(
     recipe_id: Path<String>,
-    repo: Data<&Database<MySqlPool>>,
+    Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
     let recipe = repo
         .select_by_id(&recipe_id)
@@ -25,16 +25,33 @@ pub async fn handle_select_recipe_by_id(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::test_helper::init_test_client_with_db;
-    use poem::get;
+    use crate::infra::{db, middleware::AuthGuard, test_helper::get_test_session_token};
+    use poem::{
+        get,
+        middleware::{AddData, CookieJarManager},
+        test::TestClient,
+        EndpointExt, Route,
+    };
 
     #[tokio::test]
     async fn test_route_select_recipe_by_id() {
+        // build route
         let path = "/recipe/select/:id";
-        let test_client = init_test_client_with_db(path, get(handle_select_recipe_by_id)).await;
+        let ep = Route::new()
+            .at(path, get(handle_select_recipe_by_id))
+            .with(AddData::new(db().await))
+            .with(AuthGuard)
+            .with(CookieJarManager::new());
+        let test_client = TestClient::new(ep);
 
+        // get a session token
+        let session_token = get_test_session_token().await;
+
+        // ! will fail on a new seed. Id will be stale
+        // TODO create a test helper that gets the id for the Gingerbread recipe
         let resp = test_client
             .get("/recipe/select/a11aaa36-0114-4bdf-8e40-5c266705b7ad")
+            .header("Cookie", format!("session_id={}", session_token))
             .send()
             .await;
 

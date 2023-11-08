@@ -1,6 +1,6 @@
 use crate::{
     application::interface::{Database, RecipeRepository},
-    domain::entity::{Recipe, RecipeArgs},
+    domain::entity::{Recipe, RecipeArgs, UserId},
 };
 use poem::{
     handler,
@@ -13,9 +13,10 @@ use sqlx::MySqlPool;
 pub async fn handle_create_recipe(
     Json(recipe): Json<RecipeArgs>,
     Data(repo): Data<&Database<MySqlPool>>,
+    Data(user_id): Data<&UserId>,
 ) -> Result<Json<Recipe>> {
     let recipe_id = repo
-        .create_recipe_from_args(recipe, "user_test_id")
+        .create_recipe_from_args(recipe, &user_id.0)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
@@ -29,20 +30,43 @@ pub async fn handle_create_recipe(
 
 #[cfg(test)]
 mod tests {
-    use poem::post;
+    use poem::{
+        middleware::{AddData, CookieJarManager},
+        post,
+        test::TestClient,
+        EndpointExt, Route,
+    };
 
     use super::*;
-    use crate::infra::test_helper::{get_test_recipe_args, init_test_client_with_db};
+    use crate::infra::{
+        db,
+        middleware::AuthGuard,
+        test_helper::{get_test_recipe_args, get_test_session_token},
+    };
 
     #[tokio::test]
     async fn test_route_create_recipe() {
-        let test_recipe = get_test_recipe_args();
-        let test_client = init_test_client_with_db("/new_recipe", post(handle_create_recipe)).await;
+        // build route
+        let path = "/recipe/create";
+        let ep = Route::new()
+            .at(path, post(handle_create_recipe))
+            .with(AddData::new(db().await))
+            .with(AuthGuard)
+            .with(CookieJarManager::new());
+        let test_client = TestClient::new(ep);
 
+        // get a session token
+        let session_token = get_test_session_token().await;
+
+        // create fake recipe
+        let test_recipe = get_test_recipe_args();
         let payload = serde_json::to_string(&test_recipe).unwrap();
+
+        // run test
         let resp = test_client
-            .post("/new_recipe")
+            .post(path)
             .body(payload)
+            .header("Cookie", format!("session_id={}", session_token))
             .content_type("application/json")
             .send()
             .await;
@@ -50,7 +74,6 @@ mod tests {
         resp.assert_status_is_ok();
 
         let json: Recipe = resp.json().await.value().deserialize();
-
         assert_eq!(json.recipe_title, "Oatmeal");
     }
 }

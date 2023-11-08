@@ -1,5 +1,9 @@
 #![forbid(unsafe_code)]
-use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Result, Server};
+use poem::{
+    listener::TcpListener,
+    middleware::{AddData, CookieJarManager},
+    EndpointExt, Result, Server,
+};
 use prep::{
     application::helper::get_configuration,
     domain::config::Settings,
@@ -18,9 +22,10 @@ async fn main() -> Result<(), std::io::Error> {
     let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
     let db = db().await;
-    let router = router();
+    let router = router()
+        .with(AddData::new(db))
+        .with(Log)
+        .with(CookieJarManager::new());
 
-    Server::new(listener)
-        .run(router.with(AddData::new(db)).with(Log))
-        .await
+    Server::new(listener).run(router).await
 }

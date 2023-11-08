@@ -3,7 +3,7 @@ use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Result, Serv
 use prep::{
     application::helper::get_configuration,
     domain::config::Settings,
-    infra::{db, router},
+    infra::{db, middleware::Log, router},
 };
 
 #[tokio::main]
@@ -18,9 +18,7 @@ async fn main() -> Result<(), std::io::Error> {
     let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
     let db = db().await;
-    let router = router();
+    let router = router().with(AddData::new(db)).with(Log);
 
-    Server::new(listener)
-        .run(router.with(AddData::new(db)))
-        .await
+    Server::new(listener).run(router).await
 }

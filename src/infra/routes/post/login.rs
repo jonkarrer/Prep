@@ -1,67 +1,63 @@
-use poem::{
-    handler,
-    http::{HeaderMap, StatusCode},
-    Error, Result,
-};
-
-use crate::infra::{authentication::auth, service::decode_bearer_token};
+use crate::infra::{authentication::auth, service::BasicAuthParams};
+use poem::{handler, http::StatusCode, web::Data, Error, Response, Result};
 
 #[handler]
-pub async fn handle_login(headers: &HeaderMap) -> Result<String> {
-    match headers.get("Authorization") {
-        Some(header_value) => {
-            let bearer_token_string = header_value.to_str().map_err(|_| {
-                Error::from_string("Invalid Authorization header", StatusCode::BAD_REQUEST)
-            })?;
+pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<Response> {
+    let mut auth = auth().await;
+    let session_token: String = auth
+        .login(&basic_auth.email, &basic_auth.password)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
+    let csrf_token = "my_csrf_token";
 
-            if !bearer_token_string.starts_with("Bearer ") {
-                return Err(Error::from_string(
-                    "Invalid Authorization header format",
-                    StatusCode::BAD_REQUEST,
-                ));
-            }
+    let mut response = Response::builder()
+        .header(
+            "Set-Cookie",
+            format!(
+                "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                session_token
+            ),
+        )
+        .header("X-CSRF-Token", csrf_token)
+        .status(StatusCode::OK)
+        .body("Login Successful");
 
-            let encoded_token = &bearer_token_string["Bearer ".len()..];
-            let basic_auth = decode_bearer_token(encoded_token)?;
-
-            let mut auth = auth().await;
-            let session_token: String = auth.login(&basic_auth.email, &basic_auth.password).await?;
-            Ok(session_token)
-        }
-
-        None => Err(Error::from_string(
-            "Authorization header not found",
-            StatusCode::BAD_REQUEST,
-        )),
-    }
+    Ok(response)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::test_helper::init_test_client_with_db;
+    use crate::infra::middleware::BasicAuth;
     use base64::{engine::general_purpose, Engine};
-    use poem::post;
+    use poem::{get, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
     async fn test_route_login() {
+        // build route
         let path = "/usr/login";
-        let test_client = init_test_client_with_db(path, post(handle_login)).await;
+        let ep = Route::new().at(path, get(handle_login)).with(BasicAuth);
+        let test_client = TestClient::new(ep);
 
+        // set test creds, this matches the seeder
         let email = "seed_user@gmail.com";
         let password = "seeder_password";
 
+        // encode creds
         let raw_token = format!("{}|{}", email, password);
         let encoded_token = general_purpose::STANDARD.encode(raw_token.as_bytes());
         let bearer_token = format!("Bearer {}", encoded_token);
 
+        // run test
         let resp = test_client
-            .post(path)
+            .get(path)
             .header("Authorization", bearer_token)
             .send()
             .await;
 
+        // assert results
         resp.assert_status_is_ok();
+        resp.assert_text("Login Successful").await;
 
         // TODO select from session table with the returned id
     }

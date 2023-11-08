@@ -1,29 +1,14 @@
 use crate::{
-    application::interface::Database,
     domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
-    infra::db,
+    infra::authentication::auth,
 };
-use poem::{
-    middleware::{AddData, AddDataEndpoint},
-    test::TestClient,
-    EndpointExt, Route, RouteMethod,
-};
-use sqlx::{MySql, Pool};
 
-pub fn init_test_client(route: &str, handler: RouteMethod) -> TestClient<Route> {
-    let app = Route::new().at(route, handler);
-    TestClient::new(app)
-}
-
-pub async fn init_test_client_with_db(
-    route: &str,
-    handler: RouteMethod,
-) -> TestClient<AddDataEndpoint<Route, Database<Pool<MySql>>>> {
-    let app = Route::new()
-        .at(route, handler)
-        .with(AddData::new(db().await));
-
-    TestClient::new(app)
+pub async fn get_test_session_token() -> String {
+    // get a session token
+    let email = "seed_user@gmail.com";
+    let password = "seeder_password";
+    let mut auth = auth().await;
+    auth.login(email, password).await.unwrap()
 }
 
 pub fn get_test_recipe_args() -> RecipeArgs {

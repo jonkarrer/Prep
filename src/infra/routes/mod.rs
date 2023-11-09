@@ -15,8 +15,7 @@ pub fn router() -> Route {
 
     let user_routes = Route::new()
         .at("/register", get(handle_register_user))
-        .at("/login", get(handle_login))
-        .with(BasicAuth);
+        .at("/login", post(handle_login));
 
     let app = Route::new()
         .nest("/recipe", recipe_routes)

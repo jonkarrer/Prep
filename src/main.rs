@@ -28,6 +28,12 @@ async fn main() -> Result<(), std::io::Error> {
                 .show_files_listing()
                 .index_file("index.html"),
         )
+        .at(
+            "/dashboard",
+            StaticFilesEndpoint::new("./")
+                .show_files_listing()
+                .index_file("./templates/index.html"),
+        )
         .with(AddData::new(db))
         .with(Log);
 

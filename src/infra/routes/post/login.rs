@@ -1,14 +1,26 @@
 use crate::infra::{authentication::auth, service::BasicAuthParams};
-use poem::{handler, http::StatusCode, web::Data, Error, Response, Result};
+use poem::{
+    handler,
+    http::StatusCode,
+    web::{Data, Form},
+    Error, Response, Result,
+};
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+pub struct LoginRequest {
+    csrf_token: String,
+    email: String,
+    password: String,
+}
 
 #[handler]
-pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<Response> {
+pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
     let mut auth = auth().await;
     let session_token: String = auth
-        .login(&basic_auth.email, &basic_auth.password)
+        .login(&req.email, &req.password)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
-    let csrf_token = "my_csrf_token";
 
     let mut response = Response::builder()
         .header(
@@ -18,8 +30,9 @@ pub async fn handle_login(Data(basic_auth): Data<&BasicAuthParams>) -> Result<Re
                 session_token
             ),
         )
-        .header("X-CSRF-Token", csrf_token)
-        .status(StatusCode::OK)
+        .header("X-CSRF-Token", req.csrf_token)
+        .header("Location", "/dashboard")
+        .status(StatusCode::SEE_OTHER)
         .body("Login Successful");
 
     Ok(response)
@@ -30,13 +43,13 @@ mod tests {
     use super::*;
     use crate::infra::middleware::BasicAuth;
     use base64::{engine::general_purpose, Engine};
-    use poem::{get, test::TestClient, EndpointExt, Route};
+    use poem::{post, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
     async fn test_route_login() {
         // build route
         let path = "/usr/login";
-        let ep = Route::new().at(path, get(handle_login)).with(BasicAuth);
+        let ep = Route::new().at(path, post(handle_login));
         let test_client = TestClient::new(ep);
 
         // set test creds, this matches the seeder
@@ -50,7 +63,7 @@ mod tests {
 
         // run test
         let resp = test_client
-            .get(path)
+            .post(path)
             .header("Authorization", bearer_token)
             .send()
             .await;

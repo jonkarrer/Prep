@@ -18,7 +18,7 @@ impl<E: Endpoint> Middleware<E> for AuthGuard {
 
 // declare name of token to extract
 const SESSION_COOKIE_KEY: &str = "session_id";
-const CSRF_TOKEN_KEY: &str = "X-CSRF-TOKEN";
+// const CSRF_TOKEN_KEY: &str = "X-CSRF-TOKEN";
 
 // impl Endpoint trait for custom endpoint
 #[poem::async_trait]
@@ -47,36 +47,38 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
 
                 // validate session
                 let mut auth = auth().await;
-                let user_id = auth.validate_session(&session_token).await.map_err(|e| {
-                    Error::from_string(format!("{}", e), StatusCode::TEMPORARY_REDIRECT)
-                })?;
+                let user_id = auth
+                    .validate_session_token(&session_token)
+                    .await
+                    .map_err(|e| {
+                        Error::from_string(format!("{}", e), StatusCode::TEMPORARY_REDIRECT)
+                    })?;
+
+                // Check CSRF for unsafe methods, skip these safe ones
+                // if !["GET", "HEAD", "OPTIONS", "TRACE"].contains(&req.method().as_str()) {
+                //     match req.headers().get(CSRF_TOKEN_KEY) {
+                //         Some(csrf_token) => {
+                //             if auth
+                //                 .validate_csrf_token(session_token, csrf_token)
+                //                 .await
+                //                 .is_err()
+                //             {
+                //                 return Err(Error::from_string(
+                //                     "CSRF Token invalid",
+                //                     StatusCode::TEMPORARY_REDIRECT,
+                //                 ));
+                //             };
+                //         }
+                //         None => Err(Error::from_string(
+                //             "CSRF Token missing",
+                //             StatusCode::TEMPORARY_REDIRECT,
+                //         )),
+                //     };
+                // }
 
                 // add userid to endpoints that use this middleware
                 req.extensions_mut().insert(UserId(user_id));
-
-                // Skip CSRF check for safe methods like GET, HEAD, OPTIONS, TRACE
-                if ["GET", "HEAD", "OPTIONS", "TRACE"].contains(&req.method().as_str()) {
-                    return self.0.call(req).await;
-                } else {
-                    // TODO actually verify token against session db
-                    match req.headers().get(CSRF_TOKEN_KEY) {
-                        Some(token) => {
-                            if token == "my_csrf_token" {
-                                return self.0.call(req).await;
-                            } else {
-                                return Err(Error::from_string(
-                                    "Csrf Token missing",
-                                    StatusCode::TEMPORARY_REDIRECT,
-                                ));
-                            }
-                        }
-                        None => Err(Error::from_string(
-                            "Csrf Token missing",
-                            StatusCode::TEMPORARY_REDIRECT,
-                        )),
-                    }
-                }
-                // go to next request if all is good
+                return self.0.call(req).await;
             }
 
             None => Err(Error::from_string(

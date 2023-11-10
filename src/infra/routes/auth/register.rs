@@ -6,7 +6,7 @@ use poem::{handler, http::StatusCode, web::Data, Error, Response, Result};
 use sqlx::MySqlPool;
 
 #[handler]
-pub async fn handle_register_user(
+pub async fn handle_register(
     Data(repo): Data<&Database<MySqlPool>>,
     Data(basic_auth): Data<&BasicAuthParams>,
 ) -> Result<Response> {
@@ -21,11 +21,10 @@ pub async fn handle_register_user(
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_GATEWAY))?;
 
-    let session_token: String = auth
+    let (session_token, csrf_token) = auth
         .login(&basic_auth.email, &basic_auth.password)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
-    let csrf_token = "my_csrf_token";
 
     let mut response = Response::builder()
         .header(
@@ -55,7 +54,7 @@ mod tests {
         // build route
         let path = "/usr/register";
         let ep = Route::new()
-            .at(path, get(handle_register_user))
+            .at(path, get(handle_register))
             .with(BasicAuth)
             .with(AddData::new(db().await));
         let test_client = TestClient::new(ep);

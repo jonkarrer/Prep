@@ -3,7 +3,7 @@ use crate::{
     infra::authentication::auth,
 };
 
-pub async fn get_test_session_token() -> String {
+pub async fn get_test_session_tokens() -> (String, String) {
     // get a session token
     let email = "seed_user@gmail.com";
     let password = "seeder_password";

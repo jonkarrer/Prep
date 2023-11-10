@@ -8,7 +8,7 @@
   </head>
   <body>
     <form action="/usr/login" method="post">
-      <input type="hidden" name="csrf_token" value="my_csrf_token" />
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
       <div>
         <label>Username:<input type="text" name="email" /></label>
       </div>

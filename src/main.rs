@@ -1,7 +1,9 @@
 #![forbid(unsafe_code)]
 use poem::{
-    endpoint::StaticFilesEndpoint, listener::TcpListener, middleware::AddData, EndpointExt, Result,
-    Server,
+    endpoint::{StaticFileEndpoint, StaticFilesEndpoint},
+    listener::TcpListener,
+    middleware::AddData,
+    EndpointExt, Result, Server,
 };
 use prep::{
     application::helper::get_configuration,
@@ -24,15 +26,13 @@ async fn main() -> Result<(), std::io::Error> {
     let router = router()
         .nest(
             "/",
-            StaticFilesEndpoint::new("./")
+            StaticFilesEndpoint::new("./src/web")
                 .show_files_listing()
                 .index_file("index.html"),
         )
         .at(
             "/dashboard",
-            StaticFilesEndpoint::new("./")
-                .show_files_listing()
-                .index_file("./templates/index.html"),
+            StaticFileEndpoint::new("./src/web/templates/dashboard.html"),
         )
         .with(AddData::new(db))
         .with(Log);

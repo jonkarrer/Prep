@@ -25,7 +25,7 @@ pub async fn handle_select_recipe_by_id(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::{db, middleware::AuthGuard, test_helper::get_test_session_token};
+    use crate::infra::{db, middleware::AuthGuard, test_helper::get_test_session_tokens};
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
@@ -40,7 +40,7 @@ mod tests {
         let test_client = TestClient::new(ep);
 
         // get a session token
-        let session_token = get_test_session_token().await;
+        let (session_token, csrf_token) = get_test_session_tokens().await;
 
         // ! will fail on a new seed. Id will be stale
         // TODO create a test helper that gets the id for the Gingerbread recipe

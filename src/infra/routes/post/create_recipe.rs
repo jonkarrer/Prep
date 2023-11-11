@@ -61,7 +61,7 @@ mod tests {
         let resp = test_client
             .post(path)
             .body(payload)
-            .header("Cookie", format!("session_id={}", session.id))
+            .header("Cookie", format!("session_id={}", session.session_id))
             .header("X-CSRF-Token", session.csrf_token)
             .content_type("application/json")
             .send()

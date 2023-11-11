@@ -46,7 +46,7 @@ mod tests {
         // TODO create a test helper that gets the id for the Gingerbread recipe
         let resp = test_client
             .get("/recipe/select/a11aaa36-0114-4bdf-8e40-5c266705b7ad")
-            .header("Cookie", format!("session_id={}", session.id))
+            .header("Cookie", format!("session_id={}", session.session_id))
             .send()
             .await;
 

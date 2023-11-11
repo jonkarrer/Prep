@@ -24,7 +24,7 @@ async fn seed_with_recipes() -> anyhow::Result<()> {
         .expect("Failed connection with database");
 
     // create one seed user
-    let mut auth = auth().await;
+    let auth = auth().await;
     let usr = "seed_user@gmail.com";
     let creds_id = auth.register(usr, "seeder_password").await?;
     let user_id = db().await.create_user(usr, &creds_id).await?;
@@ -109,7 +109,7 @@ async fn seed_with_users() -> anyhow::Result<()> {
         ("usr6@mail.com", "usr6password"),
     ];
 
-    let mut auth = auth().await;
+    let auth = auth().await;
     for (email, pass) in users {
         let creds_id = auth.register(email, pass).await?;
         db().await.create_user(email, &creds_id).await?;

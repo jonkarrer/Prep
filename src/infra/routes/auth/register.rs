@@ -48,7 +48,7 @@ pub async fn handle_register(
             "Set-Cookie",
             format!(
                 "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
-                session.id
+                session.session_id
             ),
         )
         .header(
@@ -60,7 +60,7 @@ pub async fn handle_register(
         )
         .header("Location", "/dashboard")
         .status(StatusCode::SEE_OTHER)
-        .body("Login Successful");
+        .body("Registration Successful");
 
     Ok(response)
 }

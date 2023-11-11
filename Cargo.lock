@@ -172,12 +172,10 @@ dependencies = [
  "argon2",
  "async-trait",
  "base64",
- "dotenvy",
  "rand",
  "serde",
  "serde_json",
  "sqlx",
- "tokio",
  "uuid",
 ]
 

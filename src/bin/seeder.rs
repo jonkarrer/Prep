@@ -1,7 +1,7 @@
 use prep::{
     application::{helper::get_configuration, interface::UserRepository},
     domain::entity::RecipeArgs,
-    infra::{authentication::auth, db},
+    infra::{authentication::auth, database::db},
 };
 use sqlx::MySqlPool;
 use std::fs;

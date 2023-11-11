@@ -8,7 +8,7 @@ use poem::{
 use prep::{
     application::helper::get_configuration,
     domain::config::Settings,
-    infra::{db, middleware::Log, router},
+    infra::{database::db, middleware::Log, router},
 };
 
 #[tokio::main]

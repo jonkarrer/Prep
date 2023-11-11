@@ -1,4 +1,4 @@
-use crate::{domain::entity::UserId, infra::authentication::auth};
+use crate::infra::authentication::session;
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
 
 // declare name of middleware
@@ -46,38 +46,18 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 let session_token = &session_str["session_id=".len()..];
 
                 // validate session
-                let mut auth = auth().await;
-                let user_id = auth
-                    .validate_session_token(&session_token)
+                let session_details = session()
+                    .await
+                    .validate_session(&session_token)
                     .await
                     .map_err(|e| {
                         Error::from_string(format!("{}", e), StatusCode::TEMPORARY_REDIRECT)
                     })?;
 
-                // Check CSRF for unsafe methods, skip these safe ones
-                // if !["GET", "HEAD", "OPTIONS", "TRACE"].contains(&req.method().as_str()) {
-                //     match req.headers().get(CSRF_TOKEN_KEY) {
-                //         Some(csrf_token) => {
-                //             if auth
-                //                 .validate_csrf_token(session_token, csrf_token)
-                //                 .await
-                //                 .is_err()
-                //             {
-                //                 return Err(Error::from_string(
-                //                     "CSRF Token invalid",
-                //                     StatusCode::TEMPORARY_REDIRECT,
-                //                 ));
-                //             };
-                //         }
-                //         None => Err(Error::from_string(
-                //             "CSRF Token missing",
-                //             StatusCode::TEMPORARY_REDIRECT,
-                //         )),
-                //     };
-                // }
+                // pass session details to handler
+                req.extensions_mut().insert(session_details);
 
-                // add userid to endpoints that use this middleware
-                req.extensions_mut().insert(UserId(user_id));
+                // call next route
                 return self.0.call(req).await;
             }
 

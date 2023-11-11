@@ -1,10 +1,13 @@
-use crate::application::{
-    helper::get_configuration,
-    interface::{Database, RecipeRepository, UserRepository},
-};
 use crate::domain::{
     config::{DatabaseConfig, Settings},
     entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag},
+};
+use crate::{
+    application::{
+        helper::get_configuration,
+        interface::{Database, RecipeRepository, UserRepository},
+    },
+    domain::entity::User,
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -232,6 +235,38 @@ impl UserRepository for Database<MySqlPool> {
         .context("Failed to create user in database")?;
 
         Ok(user_id)
+    }
+
+    async fn get_user_by_email(&self, email: &str) -> Result<User> {
+        let user: User = sqlx::query_as(
+            r#"
+            SELECT user_id, email, profile_pic_url, role
+            FROM users
+            WHERE email = ?
+            "#,
+        )
+        .bind(email)
+        .fetch_one(&self.pool)
+        .await
+        .context("Failed to find user_id by email in database")?;
+
+        Ok(user)
+    }
+
+    async fn get_user_by_id(&self, user_id: &str) -> Result<User> {
+        let user: User = sqlx::query_as(
+            r#"
+            SELECT user_id, email, profile_pic_url, role
+            FROM users
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(user_id)
+        .fetch_one(&self.pool)
+        .await
+        .context("Failed to find user_id by email in database")?;
+
+        Ok(user)
     }
 }
 #[cfg(test)]

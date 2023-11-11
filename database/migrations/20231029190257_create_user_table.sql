@@ -9,5 +9,5 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     profile_pic_url VARCHAR(255) DEFAULT NULL,
-    role ENUM('user', 'admin', 'editor') DEFAULT 'user'
+    role VARCHAR(60) DEFAULT "admin"
 )

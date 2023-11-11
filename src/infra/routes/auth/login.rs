@@ -1,31 +1,58 @@
-use crate::infra::authentication::auth;
+use crate::{
+    application::interface::UserRepository,
+    infra::{
+        authentication::{auth, session},
+        database::db,
+    },
+};
+use brize_auth::config::Expiry;
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
-    csrf_token: String,
     email: String,
     password: String,
 }
 
 #[handler]
 pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
-    let mut auth = auth().await;
-    let (session_token, csrf_token) = auth
-        .login(&req.email, &req.password)
+    // Pass auth check
+    auth()
         .await
-        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
+        .verify_credentials(&req.email, &req.password)
+        .await
+        .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+
+    // Get user_id
+    let user = db()
+        .await
+        .get_user_by_email(&req.email)
+        .await
+        .map_err(|_| Error::from_status(StatusCode::CONFLICT))?;
+
+    // Start session
+    let session = session()
+        .await
+        .start_session(&user.user_id, Expiry::Month(1))
+        .await
+        .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
 
     let mut response = Response::builder()
         .header(
             "Set-Cookie",
             format!(
                 "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
-                session_token
+                session.id
             ),
         )
-        .header("X-CSRF-Token", csrf_token)
+        .header(
+            "Set-Cookie",
+            format!(
+                "csrf_token={}; Path=/; Secure; SameSite=Strict",
+                session.csrf_token
+            ),
+        )
         .header("Location", "/dashboard")
         .status(StatusCode::SEE_OTHER)
         .body("Login Successful");
@@ -48,12 +75,7 @@ mod tests {
         // set test creds, this matches the seeder
         let email = "seed_user@gmail.com";
         let password = "seeder_password";
-        let csrf_token = "my_csrf_tokn";
-        let form_data = [
-            ("email", email),
-            ("password", password),
-            ("csrf_token", csrf_token),
-        ];
+        let form_data = [("email", email), ("password", password)];
 
         // run test
         let resp = test_client

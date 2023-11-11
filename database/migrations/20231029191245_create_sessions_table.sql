@@ -3,5 +3,5 @@ CREATE TABLE user_sessions (
     created_at BIGINT UNSIGNED NOT NULL,
     expires_at BIGINT UNSIGNED NOT NULL,
     user_identity VARCHAR(255) NOT NULL,
-    csrf_token CHAR(36) NOT NULL
+    csrf_token CHAR(44) NOT NULL
 )

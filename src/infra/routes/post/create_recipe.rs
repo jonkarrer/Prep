@@ -34,9 +34,9 @@ mod tests {
 
     use super::*;
     use crate::infra::{
-        db,
+        database::db,
         middleware::AuthGuard,
-        test_helper::{get_test_recipe_args, get_test_session_tokens},
+        test_helper::{get_test_recipe_args, get_test_session},
     };
 
     #[tokio::test]
@@ -51,7 +51,7 @@ mod tests {
         let test_client = TestClient::new(ep);
 
         // get a session token
-        let (session_token, csrf_token) = get_test_session_tokens().await;
+        let session = get_test_session().await.unwrap();
 
         // create fake recipe
         let test_recipe = get_test_recipe_args();
@@ -61,8 +61,8 @@ mod tests {
         let resp = test_client
             .post(path)
             .body(payload)
-            .header("Cookie", format!("session_id={}", session_token))
-            .header("X-CSRF-Token", csrf_token)
+            .header("Cookie", format!("session_id={}", session.id))
+            .header("X-CSRF-Token", session.csrf_token)
             .content_type("application/json")
             .send()
             .await;

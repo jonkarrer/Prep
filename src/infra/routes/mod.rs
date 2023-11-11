@@ -16,7 +16,7 @@ pub fn router() -> Route {
         .with(AuthGuard);
 
     let user_routes = Route::new()
-        .at("/register", get(handle_register))
+        .at("/register", post(handle_register))
         .at("/login", post(handle_login));
 
     let app = Route::new()

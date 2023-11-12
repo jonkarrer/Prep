@@ -4,7 +4,7 @@ mod post;
 use poem::endpoint::{StaticFileEndpoint, StaticFilesEndpoint};
 use poem::{get, post, EndpointExt, Route};
 
-use self::auth::{handle_login, handle_register};
+use self::auth::{handle_login, handle_logout, handle_register};
 use self::get::{handle_select_recipe_by_id, health_check};
 use self::post::handle_create_recipe;
 
@@ -24,7 +24,8 @@ pub fn router() -> Route {
         .at(
             "/login",
             get(StaticFileEndpoint::new("src/web/templates/login.html")).post(handle_login),
-        );
+        )
+        .at("/logout", post(handle_logout).with(AuthGuard));
 
     let user_routes = Route::new()
         .at(

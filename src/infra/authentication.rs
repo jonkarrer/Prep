@@ -1,10 +1,7 @@
 use crate::{application::helper::get_configuration, domain::config::Settings};
-use brize_auth::{
-    auth_client::AuthClient, config::DatabaseConfig, mysql::MySqlGateway,
-    session_client::SessionClient,
-};
+use brize_auth::{config::DatabaseConfig, mysql::MySqlGateway, AuthClient, SessionClient};
 
-pub async fn auth() -> AuthClient<MySqlGateway> {
+pub async fn auth_client() -> AuthClient<MySqlGateway> {
     let Settings {
         database_config, ..
     } = get_configuration();
@@ -21,7 +18,7 @@ pub async fn auth() -> AuthClient<MySqlGateway> {
     AuthClient::new(&db_config).await
 }
 
-pub async fn session() -> SessionClient<MySqlGateway> {
+pub async fn session_client() -> SessionClient<MySqlGateway> {
     let Settings {
         database_config, ..
     } = get_configuration();

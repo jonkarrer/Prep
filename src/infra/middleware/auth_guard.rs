@@ -1,5 +1,6 @@
-use crate::infra::authentication::session;
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
+
+use crate::infra::authentication::session_client;
 
 // declare name of middleware
 pub struct AuthGuard;
@@ -41,7 +42,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 let session_token = &session_str["session_id=".len()..];
 
                 // validate session
-                let session_details = session()
+                let session_details = session_client()
                     .await
                     .validate_session(&session_token)
                     .await

@@ -1,7 +1,7 @@
 use crate::{
     application::interface::UserRepository,
     infra::{
-        authentication::{auth, session},
+        authentication::{auth_client, session_client},
         database::db,
     },
 };
@@ -18,7 +18,7 @@ pub struct LoginRequest {
 #[handler]
 pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
     // Pass auth check
-    auth()
+    auth_client()
         .await
         .verify_credentials(&req.email, &req.password)
         .await
@@ -32,7 +32,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .map_err(|_| Error::from_status(StatusCode::CONFLICT))?;
 
     // Start session
-    let session = session()
+    let session = session_client()
         .await
         .start_session(&user.user_id, Expiry::Month(1))
         .await

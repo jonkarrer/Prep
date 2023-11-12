@@ -1,7 +1,7 @@
 use crate::{
     application::interface::UserRepository,
     domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
-    infra::{authentication::session, database::db},
+    infra::{authentication::session_client, database::db},
 };
 use anyhow::Result;
 use brize_auth::{config::Expiry, entity::Session};
@@ -13,7 +13,7 @@ pub async fn get_test_session() -> Result<Session> {
     let user = db().await.get_user_by_email(&email).await?;
 
     // Start session
-    session()
+    session_client()
         .await
         .start_session(&user.user_id, Expiry::Month(1))
         .await

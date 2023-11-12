@@ -1,6 +1,6 @@
 use crate::{
     application::interface::{Database, UserRepository},
-    infra::authentication::{auth, session},
+    infra::authentication::{auth_client, session_client},
 };
 use brize_auth::config::Expiry;
 use poem::{
@@ -24,7 +24,7 @@ pub async fn handle_register(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Response> {
     // Register creds
-    let creds_id = auth()
+    let creds_id = auth_client()
         .await
         .register(&req.email, &req.password)
         .await
@@ -37,7 +37,7 @@ pub async fn handle_register(
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_GATEWAY))?;
 
     // Start session
-    let session = session()
+    let session = session_client()
         .await
         .start_session(&user_id, Expiry::Month(1))
         .await

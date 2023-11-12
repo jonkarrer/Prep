@@ -1,7 +1,8 @@
 use crate::{
     application::interface::{Database, RecipeRepository},
-    domain::entity::{Recipe, RecipeArgs, UserId},
+    domain::entity::{Recipe, RecipeArgs},
 };
+use brize_auth::entity::Session;
 use poem::{
     handler,
     web::{Data, Json},
@@ -13,10 +14,10 @@ use sqlx::MySqlPool;
 pub async fn handle_create_recipe(
     Json(recipe): Json<RecipeArgs>,
     Data(repo): Data<&Database<MySqlPool>>,
-    Data(user_id): Data<&UserId>,
+    Data(session): Data<&Session>,
 ) -> Result<Json<Recipe>> {
     let recipe_id = repo
-        .create_recipe_from_args(recipe, &user_id.0)
+        .create_recipe_from_args(recipe, &session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 

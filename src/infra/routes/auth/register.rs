@@ -96,7 +96,6 @@ mod tests {
             .await;
 
         // assert result
-        // resp.assert_status_is_ok();
         resp.assert_text("Registration Successful").await;
 
         // TODO select by id in db to confirm registration

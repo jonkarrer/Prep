@@ -86,7 +86,6 @@ mod tests {
             .await;
 
         // assert results
-        // resp.assert_status_is_ok();
         resp.assert_text("Login Successful").await;
 
         // TODO select from session table with the returned id

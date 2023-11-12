@@ -33,10 +33,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 let session_str = cookies
                     .split(";")
                     .find(|x| x.contains(SESSION_COOKIE_KEY))
-                    .ok_or(Error::from_string(
-                        "Session id not found in cookie",
-                        StatusCode::BAD_REQUEST,
-                    ))?;
+                    .ok_or(Error::from_status(StatusCode::UNAUTHORIZED))?;
 
                 // parse out the token
                 let session_token = &session_str["session_id=".len()..];
@@ -46,7 +43,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                     .await
                     .validate_session(&session_token)
                     .await
-                    .map_err(|e| Error::from_string(format!("{}", e), StatusCode::UNAUTHORIZED))?;
+                    .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
                 if ["GET", "OPTIONS", "HEAD"].contains(&req.method().as_str()) {
                     // pass session details to handler
@@ -54,9 +51,10 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                     // call next route
                     return self.0.call(req).await;
                 } else {
-                    let con_type = req.content_type().ok_or(0).map_err(|e| {
-                        Error::from_string(format!("{}", e), StatusCode::BAD_REQUEST)
-                    })?;
+                    let con_type = req
+                        .content_type()
+                        .ok_or(0)
+                        .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
                     if con_type == "application/json" {
                         let csrf_token = req.header(CSRF_TOKEN_KEY).ok_or(0).map_err(|e| {
@@ -75,10 +73,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                 }
             }
 
-            None => Err(Error::from_string(
-                "Cookie does not have a session_id key",
-                StatusCode::BAD_REQUEST,
-            )),
+            None => Err(Error::from_status(StatusCode::UNAUTHORIZED)),
         }
     }
 }

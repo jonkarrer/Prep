@@ -38,10 +38,7 @@ pub fn router() -> Route {
         .nest("/recipe", recipe_routes)
         .nest("/auth", auth_routes)
         .nest("/usr", user_routes)
-        .nest(
-            "/",
-            StaticFilesEndpoint::new("./src/web").index_file("index.html"),
-        )
+        .nest("/", StaticFilesEndpoint::new("./src/web"))
         .at("/health_check", get(health_check));
 
     app

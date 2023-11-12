@@ -34,7 +34,7 @@ pub async fn handle_logout(
             "csrf_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
         )
         .header("Location", "/auth/login")
-        .status(StatusCode::SEE_OTHER)
+        .status(StatusCode::FOUND)
         .body("Logout Successful");
 
         Ok(response)

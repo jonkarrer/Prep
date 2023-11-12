@@ -59,7 +59,7 @@ pub async fn handle_register(
             ),
         )
         .header("Location", "/usr/dashboard")
-        .status(StatusCode::SEE_OTHER)
+        .status(StatusCode::FOUND)
         .body("Registration Successful");
 
     Ok(response)

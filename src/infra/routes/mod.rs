@@ -4,7 +4,7 @@ mod post;
 use poem::endpoint::{StaticFileEndpoint, StaticFilesEndpoint};
 use poem::{get, post, EndpointExt, Route};
 
-use self::auth::{handle_login, handle_logout, handle_register};
+pub use self::auth::{handle_login, handle_logout, handle_register};
 use self::get::{handle_select_recipe_by_id, health_check};
 use self::post::handle_create_recipe;
 
@@ -38,10 +38,7 @@ pub fn router() -> Route {
         .nest("/recipe", recipe_routes)
         .nest("/auth", auth_routes)
         .nest("/usr", user_routes)
-        .nest(
-            "/",
-            StaticFilesEndpoint::new("./src/web").index_file("index.html"),
-        )
+        .nest("/", StaticFilesEndpoint::new("./src/web"))
         .at("/health_check", get(health_check));
 
     app

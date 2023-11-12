@@ -54,7 +54,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
             ),
         )
         .header("Location", "/usr/dashboard")
-        .status(StatusCode::SEE_OTHER)
+        .status(StatusCode::FOUND)
         .body("Login Successful");
 
     Ok(response)

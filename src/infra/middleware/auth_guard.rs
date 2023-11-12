@@ -45,9 +45,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                     .await
                     .validate_session(&session_token)
                     .await
-                    .map_err(|e| {
-                        Error::from_string(format!("{}", e), StatusCode::TEMPORARY_REDIRECT)
-                    })?;
+                    .map_err(|e| Error::from_string(format!("{}", e), StatusCode::UNAUTHORIZED))?;
 
                 if ["GET", "OPTIONS", "HEAD"].contains(&req.method().as_str()) {
                     // pass session details to handler

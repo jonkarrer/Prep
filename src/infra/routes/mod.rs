@@ -1,6 +1,7 @@
 mod auth;
 mod get;
 mod post;
+use poem::endpoint::{StaticFileEndpoint, StaticFilesEndpoint};
 use poem::{get, post, EndpointExt, Route};
 
 use self::auth::{handle_login, handle_register};
@@ -15,14 +16,24 @@ pub fn router() -> Route {
         .at("/create", post(handle_create_recipe))
         .with(AuthGuard);
 
-    let user_routes = Route::new()
-        .at("/register", post(handle_register))
-        .at("/login", post(handle_login));
+    let auth_routes = Route::new()
+        .at(
+            "/register",
+            get(StaticFileEndpoint::new("src/web/templates/register.html")).post(handle_register),
+        )
+        .at(
+            "/login",
+            get(StaticFileEndpoint::new("src/web/templates/login.html")).post(handle_login),
+        );
 
     let app = Route::new()
         .nest("/recipe", recipe_routes)
-        .nest("/usr", user_routes)
-        .at("/health_check", get(health_check));
+        .nest("/auth", auth_routes)
+        .at("/health_check", get(health_check))
+        .at(
+            "/",
+            StaticFileEndpoint::new("src/web/index.html").with(AuthGuard),
+        );
 
     app
 }

@@ -53,7 +53,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
                 session.csrf_token
             ),
         )
-        .header("Location", "/dashboard")
+        .header("Location", "/usr/dashboard")
         .status(StatusCode::SEE_OTHER)
         .body("Login Successful");
 

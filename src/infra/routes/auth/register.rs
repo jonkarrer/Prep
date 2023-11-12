@@ -58,7 +58,7 @@ pub async fn handle_register(
                 session.csrf_token
             ),
         )
-        .header("Location", "/dashboard")
+        .header("Location", "/usr/dashboard")
         .status(StatusCode::SEE_OTHER)
         .body("Registration Successful");
 

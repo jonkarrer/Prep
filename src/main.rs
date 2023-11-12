@@ -40,7 +40,6 @@ async fn main() -> Result<(), std::io::Error> {
     let listener = TcpListener::bind(address);
     let db = db().await;
     let router = router()
-        .nest("/static", StaticFilesEndpoint::new("./src/web"))
         .with(AddData::new(db))
         .with(Log)
         .around(catch_auth_error);

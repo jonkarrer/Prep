@@ -26,14 +26,22 @@ pub fn router() -> Route {
             get(StaticFileEndpoint::new("src/web/templates/login.html")).post(handle_login),
         );
 
+    let user_routes = Route::new()
+        .at(
+            "/dashboard",
+            get(StaticFileEndpoint::new("src/web/templates/dashboard.html")).post(handle_register),
+        )
+        .with(AuthGuard);
+
     let app = Route::new()
         .nest("/recipe", recipe_routes)
         .nest("/auth", auth_routes)
-        .at("/health_check", get(health_check))
-        .at(
+        .nest("/usr", user_routes)
+        .nest(
             "/",
-            StaticFileEndpoint::new("src/web/index.html").with(AuthGuard),
-        );
+            StaticFilesEndpoint::new("./src/web").index_file("index.html"),
+        )
+        .at("/health_check", get(health_check));
 
     app
 }

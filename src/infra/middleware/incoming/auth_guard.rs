@@ -1,11 +1,10 @@
+use crate::{app::util::cookie_extractor, infra::authentication::session_client};
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
 
-use crate::infra::authentication::session_client;
-
-// declare name of middleware
+// name of middleware
 pub struct AuthGuard;
 
-// declare wrapper for custom endpoint
+// wrapper for custom endpoint
 pub struct AuthGuardImpl<E>(E);
 
 // impl Middlware trait for middleware struct
@@ -17,11 +16,10 @@ impl<E: Endpoint> Middleware<E> for AuthGuard {
     }
 }
 
-// declare name of token to extract
 const SESSION_COOKIE_KEY: &str = "session_id";
-const CSRF_TOKEN_KEY: &str = "X-CSRF-TOKEN";
+const CSRF_TOKEN_HEADER: &str = "X-CSRF-TOKEN";
 
-// impl Endpoint trait for custom endpoint
+// custom middleware that is passed to the handler
 #[poem::async_trait]
 impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
     type Output = E::Output;
@@ -29,45 +27,38 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
     async fn call(&self, mut req: Request) -> Result<Self::Output> {
         match req.header("Cookie") {
             Some(cookies) => {
-                // find session_id in cookie str
-                let session_str = cookies
-                    .split(";")
-                    .find(|x| x.contains(SESSION_COOKIE_KEY))
+                let session_token = cookie_extractor(cookies, SESSION_COOKIE_KEY)
                     .ok_or(Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-                // parse out the token
-                let session_token = &session_str["session_id=".len()..];
-
-                // validate session
-                let session_details = session_client()
+                let session = session_client()
                     .await
                     .validate_session(&session_token)
                     .await
                     .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
                 if ["GET", "OPTIONS", "HEAD"].contains(&req.method().as_str()) {
-                    // pass session details to handler
-                    req.extensions_mut().insert(session_details);
-                    // call next route
+                    req.extensions_mut().insert(session);
                     return self.0.call(req).await;
                 } else {
-                    let con_type = req
+                    let content_type = req
                         .content_type()
                         .ok_or(0)
                         .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-                    if con_type == "application/json" {
-                        let csrf_token = req.header(CSRF_TOKEN_KEY).ok_or(0).map_err(|e| {
-                            Error::from_string(format!("{}", e), StatusCode::UNAUTHORIZED)
-                        })?;
+                    if content_type == "application/json" {
+                        let csrf_token = req
+                            .header(CSRF_TOKEN_HEADER)
+                            .ok_or(0)
+                            .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-                        if !session_details.match_csrf_token(csrf_token) {
+                        if !session.match_csrf_token(csrf_token) {
                             return Err(Error::from_status(StatusCode::UNAUTHORIZED));
                         }
                     }
 
                     // pass session details to handler
-                    req.extensions_mut().insert(session_details);
+                    req.extensions_mut().insert(session);
+
                     // call next route
                     return self.0.call(req).await;
                 }

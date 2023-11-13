@@ -45,7 +45,7 @@ mod tests {
         // ! will fail on a new seed. Id will be stale
         // TODO create a test helper that gets the id for the Gingerbread recipe
         let resp = test_client
-            .get("/recipe/select/a11aaa36-0114-4bdf-8e40-5c266705b7ad")
+            .get("/recipe/select/f0458ac2-7b93-4866-971b-2a2d7f457c13")
             .header("Cookie", format!("session_id={}", session.session_id))
             .send()
             .await;

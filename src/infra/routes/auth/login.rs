@@ -38,7 +38,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .await
         .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
 
-    let mut response = Response::builder()
+    let res = Response::builder()
         .header(
             "Set-Cookie",
             format!(
@@ -55,9 +55,9 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         )
         .header("Location", "/usr/dashboard")
         .status(StatusCode::FOUND)
-        .body("Login Successful");
+        .finish();
 
-    Ok(response)
+    Ok(res)
 }
 
 #[cfg(test)]
@@ -86,7 +86,7 @@ mod tests {
             .await;
 
         // assert results
-        resp.assert_text("Login Successful").await;
+        resp.assert_status(StatusCode::FOUND);
 
         // TODO select from session table with the returned id
     }

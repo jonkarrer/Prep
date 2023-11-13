@@ -34,8 +34,7 @@ pub async fn handle_logout(
             "csrf_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
         )
         .header("Location", "/auth/login")
-        .status(StatusCode::FOUND)
-        .body("Logout Successful");
+        .status(StatusCode::FOUND).finish();
 
         Ok(response)
     } else {
@@ -53,28 +52,31 @@ mod tests {
     use poem::{post, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
-    async fn test_route_login() {
+    async fn test_route_logout() {
         // build route
-        let path = "/usr/login";
+        let path = "/usr/lougout";
         let ep = Route::new().at(path, post(handle_logout)).with(AuthGuard);
         let test_client = TestClient::new(ep);
+        let mut s = session_client().await;
 
-        // set test creds, this matches the seeder
-        let email = "seed_user@gmail.com";
-        let password = "seeder_password";
-        let form_data = [("email", email), ("password", password)];
+        // set test creds
+        let user_id = uuid::Uuid::new_v4().to_string();
+        let session = s
+            .start_session(&user_id, brize_auth::config::Expiry::Day(1))
+            .await
+            .unwrap();
 
         // run test
         let resp = test_client
             .post(path)
+            .header("Cookie", format!("session_id={}", &session.session_id))
             .content_type("application/x-www-form-urlencoded")
-            .form(&form_data)
+            .form(&[("csrf_token", session.csrf_token)])
             .send()
             .await;
 
         // assert results
-        resp.assert_text("Login Successful").await;
-
-        // TODO select from session table with the returned id
+        resp.assert_status(StatusCode::FOUND);
+        assert!(s.get_session(&session.session_id).await.is_err())
     }
 }

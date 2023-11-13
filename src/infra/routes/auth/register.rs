@@ -1,6 +1,6 @@
 use crate::{
     app::interface::{Database, UserRepository},
-    infra::authentication::{auth_client, session_client},
+    infra::clients::{auth_client, session_client},
 };
 use brize_auth::config::Expiry;
 use poem::{
@@ -67,7 +67,7 @@ pub async fn handle_register(
 
 #[cfg(test)]
 mod tests {
-    use crate::infra::database::db;
+    use crate::infra::clients::db_client;
 
     use super::*;
     use poem::{middleware::AddData, post, test::TestClient, EndpointExt, Route};
@@ -78,7 +78,7 @@ mod tests {
         let path = "/usr/register";
         let ep = Route::new()
             .at(path, post(handle_register))
-            .with(AddData::new(db().await));
+            .with(AddData::new(db_client().await));
         let test_client = TestClient::new(ep);
 
         // create random user creds

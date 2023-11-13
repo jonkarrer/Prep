@@ -25,7 +25,7 @@ pub async fn handle_get_recipe(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::{database::db, middleware::AuthGuard, test_helper::get_test_session};
+    use crate::infra::{clients::db_client, helper::get_test_session, middleware::AuthGuard};
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
@@ -34,7 +34,7 @@ mod tests {
         let path = "/recipe/select/:id";
         let ep = Route::new()
             .at(path, get(handle_get_recipe))
-            .with(AddData::new(db().await))
+            .with(AddData::new(db_client().await))
             .with(AuthGuard);
 
         let test_client = TestClient::new(ep);

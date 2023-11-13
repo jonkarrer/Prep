@@ -35,9 +35,9 @@ mod tests {
 
     use super::*;
     use crate::infra::{
-        database::db,
+        clients::db_client,
+        helper::{get_test_recipe_args, get_test_session},
         middleware::AuthGuard,
-        test_helper::{get_test_recipe_args, get_test_session},
     };
 
     #[tokio::test]
@@ -46,7 +46,7 @@ mod tests {
         let path = "/recipe/create";
         let ep = Route::new()
             .at(path, post(handle_create_recipe))
-            .with(AddData::new(db().await))
+            .with(AddData::new(db_client().await))
             .with(AuthGuard);
 
         let test_client = TestClient::new(ep);

@@ -1,28 +1,16 @@
-use crate::domain::{
-    config::{DatabaseConfig, Settings},
-    entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag},
-};
 use crate::{
     app::{
-        config::get_configuration,
+        configs::DbConfig,
         interface::{Database, RecipeRepository, UserRepository},
     },
-    domain::entity::User,
+    domain::entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag, User},
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::{mysql::MySqlPool, FromRow};
 
-pub async fn db() -> Database<MySqlPool> {
-    let Settings {
-        database_config, ..
-    } = get_configuration();
-
-    Database::new(&database_config).await
-}
-
 impl Database<MySqlPool> {
-    async fn new(config: &DatabaseConfig) -> Database<MySqlPool> {
+    pub async fn new(config: &DbConfig) -> Database<MySqlPool> {
         let addr = format!(
             "mysql://{}:{}@{}:{}/{}",
             config.user_name, config.password, config.host, config.port, config.db_name
@@ -272,12 +260,12 @@ impl UserRepository for Database<MySqlPool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{app::config::get_configuration, infra::test_helper::get_test_recipe_args};
+    use crate::{app::configs::get_db_config, infra::helper::get_test_recipe_args};
 
     #[tokio::test]
     async fn test_recipe_repository() {
-        let configs = get_configuration();
-        let repo = Database::new(&configs.database_config).await;
+        let config = get_db_config();
+        let repo = Database::new(&config).await;
 
         let recipe_args = get_test_recipe_args();
         let recipe_id = repo

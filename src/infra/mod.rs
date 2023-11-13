@@ -1,10 +1,6 @@
-mod routes;
-pub use routes::*;
-
-mod util;
-pub use util::*;
-
-pub mod authentication;
+pub mod clients;
 pub mod database;
+pub mod helper;
 pub mod middleware;
+pub mod routes;
 pub mod service;

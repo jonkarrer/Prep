@@ -1,15 +1,11 @@
 use crate::{
     app::interface::UserRepository,
-    infra::{
-        authentication::{auth_client, session_client},
-        database::db,
-    },
+    infra::clients::{auth_client, db_client, session_client},
 };
 use brize_auth::config::Expiry;
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
-use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 pub struct LoginRequest {
     email: String,
     password: String,
@@ -25,7 +21,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
     // Get user_id
-    let user = db()
+    let user = db_client()
         .await
         .get_user_by_email(&req.email)
         .await
@@ -38,6 +34,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .await
         .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
 
+    // Send response
     let res = Response::builder()
         .header(
             "Set-Cookie",

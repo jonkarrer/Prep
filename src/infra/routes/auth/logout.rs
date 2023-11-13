@@ -1,4 +1,4 @@
-use crate::infra::authentication::session_client;
+use crate::infra::clients::session_client;
 use brize_auth::entity::Session;
 use poem::{
     handler,
@@ -6,9 +6,8 @@ use poem::{
     web::{Data, Form},
     Error, Response, Result,
 };
-use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 pub struct LogoutForm {
     csrf_token: String,
 }

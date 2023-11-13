@@ -1,4 +1,4 @@
-use crate::{app::util::cookie_extractor, infra::authentication::session_client};
+use crate::{app::util::cookie_extractor, infra::clients::session_client};
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
 
 // name of middleware

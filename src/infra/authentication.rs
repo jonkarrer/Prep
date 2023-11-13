@@ -1,4 +1,4 @@
-use crate::{application::helper::get_configuration, domain::config::Settings};
+use crate::{app::config::get_configuration, domain::config::Settings};
 use brize_auth::{config::DatabaseConfig, mysql::MySqlGateway, AuthClient, SessionClient};
 
 pub async fn auth_client() -> AuthClient<MySqlGateway> {

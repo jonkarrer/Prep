@@ -1,5 +1,5 @@
 use crate::{
-    application::interface::{Database, RecipeRepository},
+    app::interface::{Database, RecipeRepository},
     domain::entity::{Recipe, RecipeArgs},
 };
 use brize_auth::entity::Session;

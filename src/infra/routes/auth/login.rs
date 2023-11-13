@@ -1,5 +1,5 @@
 use crate::{
-    application::interface::UserRepository,
+    app::interface::UserRepository,
     infra::{
         authentication::{auth_client, session_client},
         database::db,

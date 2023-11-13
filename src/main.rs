@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Result, Server};
 use prep::{
-    application::helper::get_configuration,
+    app::config::get_configuration,
     domain::config::Settings,
     infra::{
         database::db,

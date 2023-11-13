@@ -1,5 +1,5 @@
 use crate::{
-    application::interface::{Database, UserRepository},
+    app::interface::{Database, UserRepository},
     infra::authentication::{auth_client, session_client},
 };
 use brize_auth::config::Expiry;

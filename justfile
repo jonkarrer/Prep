@@ -27,6 +27,9 @@ run-migration env_config:
     && ./scripts/init_db.sh
 
 # ---- Tests ----
+test:
+    -cargo test
+    
 test-repo:
     -cargo test recipe_repository
 

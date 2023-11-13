@@ -1,5 +1,5 @@
 use prep::{
-    application::{helper::get_configuration, interface::UserRepository},
+    app::{config::get_configuration, interface::UserRepository},
     domain::entity::RecipeArgs,
     infra::{authentication::auth_client, database::db},
 };

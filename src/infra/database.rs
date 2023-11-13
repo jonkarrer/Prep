@@ -3,8 +3,8 @@ use crate::domain::{
     entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag},
 };
 use crate::{
-    application::{
-        helper::get_configuration,
+    app::{
+        config::get_configuration,
         interface::{Database, RecipeRepository, UserRepository},
     },
     domain::entity::User,
@@ -272,7 +272,7 @@ impl UserRepository for Database<MySqlPool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{application::helper::get_configuration, infra::test_helper::get_test_recipe_args};
+    use crate::{app::config::get_configuration, infra::test_helper::get_test_recipe_args};
 
     #[tokio::test]
     async fn test_recipe_repository() {

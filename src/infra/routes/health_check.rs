@@ -1,7 +1,7 @@
 use poem::Result;
 
 #[poem::handler]
-pub async fn health_check() -> Result<String> {
+pub async fn handle_health_check() -> Result<String> {
     Ok(String::from("All Good Here. Keep Going"))
 }
 
@@ -12,7 +12,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_route_health_check() {
-        let app = Route::new().at("/health_check", get(health_check));
+        let app = Route::new().at("/health_check", get(handle_health_check));
         let test_client = TestClient::new(app);
         let resp = test_client.get("/health_check").send().await;
 

@@ -1,5 +1,5 @@
 use crate::{
-    application::interface::{Database, RecipeRepository},
+    app::interface::{Database, RecipeRepository},
     domain::entity::Recipe,
 };
 use poem::{
@@ -10,7 +10,7 @@ use poem::{
 use sqlx::MySqlPool;
 
 #[handler]
-pub async fn handle_select_recipe_by_id(
+pub async fn handle_get_recipe(
     recipe_id: Path<String>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
@@ -33,7 +33,7 @@ mod tests {
         // build route
         let path = "/recipe/select/:id";
         let ep = Route::new()
-            .at(path, get(handle_select_recipe_by_id))
+            .at(path, get(handle_get_recipe))
             .with(AddData::new(db().await))
             .with(AuthGuard);
 

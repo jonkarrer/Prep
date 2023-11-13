@@ -1,5 +1,5 @@
 use crate::{
-    application::interface::UserRepository,
+    app::interface::UserRepository,
     domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
     infra::{authentication::session_client, database::db},
 };

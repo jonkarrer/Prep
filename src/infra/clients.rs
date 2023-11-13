@@ -1,9 +1,9 @@
-use crate::app::{configs::get_db_config, interface::Database};
+use crate::app::{configs::DbConfig, interface::Database};
 use brize_auth::{config::DatabaseConfig, mysql::MySqlGateway, AuthClient, SessionClient};
 use sqlx::MySqlPool;
 
 fn client_config() -> DatabaseConfig {
-    let d = get_db_config();
+    let d = DbConfig::default();
     DatabaseConfig {
         host: d.host,
         db_name: d.db_name,
@@ -23,5 +23,5 @@ pub async fn auth_client() -> AuthClient<MySqlGateway> {
 }
 
 pub async fn db_client() -> Database<MySqlPool> {
-    Database::new(&get_db_config()).await
+    Database::new(&DbConfig::default()).await
 }

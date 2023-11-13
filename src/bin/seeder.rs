@@ -1,5 +1,5 @@
 use prep::{
-    app::{configs::get_db_config, interface::UserRepository},
+    app::{configs::DbConfig, interface::UserRepository},
     domain::entity::RecipeArgs,
     infra::clients::{auth_client, db_client},
 };
@@ -17,7 +17,7 @@ fn get_recipe_seed_data() -> Vec<RecipeArgs> {
 }
 
 async fn seed_with_recipes() -> anyhow::Result<()> {
-    let db_configs = get_db_config();
+    let db_configs = DbConfig::default();
     let pool = MySqlPool::connect(db_configs.connection_string().as_str())
         .await
         .expect("Failed connection with database");

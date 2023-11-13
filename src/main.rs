@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Result, Server};
 use prep::{
-    app::configs::{get_settings, Settings},
+    app::configs::Settings,
     infra::{
         clients::db_client,
         middleware::{ErrorCatcher, Log},
@@ -12,12 +12,9 @@ use prep::{
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
     println!("----- Starting Server ------");
-    let Settings {
-        application_port,
-        application_host,
-    } = get_settings();
+    let settings = Settings::default();
+    let address = format!("{}:{}", settings.app_host, settings.app_port);
 
-    let address = format!("{}:{}", application_host, application_port);
     let listener = TcpListener::bind(address);
     let db = db_client().await;
     let router = router().with(AddData::new(db)).with(ErrorCatcher).with(Log);

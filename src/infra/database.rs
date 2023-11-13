@@ -260,11 +260,11 @@ impl UserRepository for Database<MySqlPool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{app::configs::get_db_config, infra::helper::get_test_recipe_args};
+    use crate::infra::helper::get_test_recipe_args;
 
     #[tokio::test]
     async fn test_recipe_repository() {
-        let config = get_db_config();
+        let config = DbConfig::default();
         let repo = Database::new(&config).await;
 
         let recipe_args = get_test_recipe_args();

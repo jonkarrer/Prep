@@ -1,8 +1,4 @@
-use crate::{
-    app::interface::UserRepository,
-    infra::clients::{auth_client, db_client, session_client},
-};
-use brize_auth::config::Expiry;
+use crate::app::case::{start_session_for_user, verify_user_credentials};
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
 
 #[derive(serde::Deserialize)]
@@ -14,25 +10,14 @@ pub struct LoginRequest {
 #[handler]
 pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
     // Pass auth check
-    auth_client()
-        .await
-        .verify_credentials(&req.email, &req.password)
+    let user_id = verify_user_credentials(&req.email, &req.password)
         .await
         .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-    // Get user_id
-    let user = db_client()
-        .await
-        .get_user_by_email(&req.email)
-        .await
-        .map_err(|_| Error::from_status(StatusCode::CONFLICT))?;
-
     // Start session
-    let session = session_client()
+    let session = start_session_for_user(&user_id.0)
         .await
-        .start_session(&user.user_id, Expiry::Month(1))
-        .await
-        .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Send response
     let res = Response::builder()

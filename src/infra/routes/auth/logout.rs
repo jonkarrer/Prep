@@ -1,10 +1,10 @@
-use crate::infra::clients::session_client;
+use crate::app::case::logout_user;
 use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
     web::{Data, Form},
-    Error, Response, Result,
+    Response, Result,
 };
 
 #[derive(serde::Deserialize)]
@@ -17,15 +17,10 @@ pub async fn handle_logout(
     Data(session): Data<&Session>,
     Form(req): Form<LogoutForm>,
 ) -> Result<Response> {
-    if session.match_csrf_token(&req.csrf_token) {
-        // Destroy session, thus logging the user out
-        session_client()
-            .await
-            .destory_session(&session.session_id)
-            .await
-            .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
-
-        let mut response = Response::builder().header(
+    let mut resp = Response::builder();
+    match logout_user(&session, &req.csrf_token).await {
+        Ok(_) => {
+            Ok(resp.header(
             "Set-Cookie",
             "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict"
         ).header(
@@ -33,19 +28,17 @@ pub async fn handle_logout(
             "csrf_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
         )
         .header("Location", "/auth/login")
-        .status(StatusCode::FOUND).finish();
+        .status(StatusCode::FOUND)
+        .finish())
 
-        Ok(response)
-    } else {
-        Ok(Response::builder()
-            .status(StatusCode::UNAUTHORIZED)
-            .body("Unauthorized"))
+        }
+        Err(_) => Ok(resp.status(StatusCode::UNAUTHORIZED).finish()),
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::infra::middleware::AuthGuard;
+    use crate::{app::clients::session_client, infra::middleware::AuthGuard};
 
     use super::*;
     use poem::{post, test::TestClient, EndpointExt, Route};

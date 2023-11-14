@@ -1,18 +1,15 @@
 use crate::{
+    app::clients::{db_client, session_client},
     app::interface::UserRepository,
     domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
-    infra::clients::{db_client, session_client},
 };
 use anyhow::Result;
 use brize_auth::{config::Expiry, entity::Session};
 
 pub async fn get_test_session() -> Result<Session> {
-    // get a session token
     let email = "seed_user@gmail.com";
-    // Get user_id
     let user = db_client().await.get_user_by_email(&email).await?;
 
-    // Start session
     session_client()
         .await
         .start_session(&user.user_id, Expiry::Month(1))

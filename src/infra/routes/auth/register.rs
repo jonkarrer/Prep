@@ -1,8 +1,7 @@
-use crate::{
-    app::interface::{Database, UserRepository},
-    infra::clients::{auth_client, session_client},
+use crate::app::{
+    case::{register_new_user, start_session_for_user},
+    interface::Database,
 };
-use brize_auth::config::Expiry;
 use poem::{
     handler,
     http::StatusCode,
@@ -23,25 +22,15 @@ pub async fn handle_register(
     Form(req): Form<RegisterRequest>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Response> {
-    // Register creds
-    let creds_id = auth_client()
-        .await
-        .register(&req.email, &req.password)
-        .await
-        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::CONFLICT))?;
-
     // Register user
-    let user_id = repo
-        .create_user(&req.email, creds_id.as_str())
+    let user_id = register_new_user(&req.email, &req.password, repo)
         .await
-        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_GATEWAY))?;
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Start session
-    let session = session_client()
+    let session = start_session_for_user(&user_id.0)
         .await
-        .start_session(&user_id, Expiry::Month(1))
-        .await
-        .map_err(|_| Error::from_status(StatusCode::BAD_GATEWAY))?;
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     let mut response = Response::builder()
         .header(
@@ -67,7 +56,7 @@ pub async fn handle_register(
 
 #[cfg(test)]
 mod tests {
-    use crate::infra::clients::db_client;
+    use crate::app::clients::db_client;
 
     use super::*;
     use poem::{middleware::AddData, post, test::TestClient, EndpointExt, Route};

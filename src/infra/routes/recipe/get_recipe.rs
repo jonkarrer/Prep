@@ -25,7 +25,8 @@ pub async fn handle_get_recipe(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::{clients::db_client, helper::get_test_session, middleware::AuthGuard};
+    use crate::app::clients::db_client;
+    use crate::infra::{helper::get_test_session, middleware::AuthGuard};
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]

@@ -1,4 +1,3 @@
-pub mod clients;
 pub mod database;
 pub mod helper;
 pub mod middleware;

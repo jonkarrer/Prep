@@ -34,8 +34,8 @@ mod tests {
     use poem::{middleware::AddData, post, test::TestClient, EndpointExt, Route};
 
     use super::*;
+    use crate::app::clients::db_client;
     use crate::infra::{
-        clients::db_client,
         helper::{get_test_recipe_args, get_test_session},
         middleware::AuthGuard,
     };

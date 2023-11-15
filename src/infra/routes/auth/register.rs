@@ -1,6 +1,9 @@
-use crate::app::{
-    case::{register_new_user, start_session_for_user},
-    interface::Database,
+use crate::{
+    app::{
+        case::{register_new_user, start_session_for_user},
+        interface::Database,
+    },
+    domain::entity::{CSRF_COOKIE_KEY, SESSION_COOKIE_KEY},
 };
 use poem::{
     handler,
@@ -25,7 +28,7 @@ pub async fn handle_register(
     // Register user
     let user_id = register_new_user(&req.email, &req.password, repo)
         .await
-        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR))?;
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Start session
     let session = start_session_for_user(&user_id.0)
@@ -36,15 +39,15 @@ pub async fn handle_register(
         .header(
             "Set-Cookie",
             format!(
-                "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
-                session.session_id
+                "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                SESSION_COOKIE_KEY, session.session_id
             ),
         )
         .header(
             "Set-Cookie",
             format!(
-                "csrf_token={}; Path=/; Secure; SameSite=Strict",
-                session.csrf_token
+                "{}={}; Path=/; Secure; SameSite=Strict",
+                CSRF_COOKIE_KEY, session.csrf_token
             ),
         )
         .header("Location", "/usr/dashboard")

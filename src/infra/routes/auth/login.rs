@@ -1,4 +1,7 @@
-use crate::app::case::{start_session_for_user, verify_user_credentials};
+use crate::{
+    app::case::{start_session_for_user, verify_user_credentials},
+    domain::entity::{CSRF_COOKIE_KEY, SESSION_COOKIE_KEY},
+};
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
 
 #[derive(serde::Deserialize)]
@@ -24,15 +27,15 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .header(
             "Set-Cookie",
             format!(
-                "session_id={}; Path=/; HttpOnly; Secure; SameSite=Strict",
-                session.session_id
+                "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                SESSION_COOKIE_KEY, session.session_id
             ),
         )
         .header(
             "Set-Cookie",
             format!(
-                "csrf_token={}; Path=/; Secure; SameSite=Strict",
-                session.csrf_token
+                "{}={}; Path=/; Secure; SameSite=Strict",
+                CSRF_COOKIE_KEY, session.csrf_token
             ),
         )
         .header("Location", "/usr/dashboard")

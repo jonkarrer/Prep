@@ -1,4 +1,8 @@
-use crate::{app::clients::session_client, app::util::cookie_extractor};
+use crate::{
+    app::clients::session_client,
+    app::util::cookie_extractor,
+    domain::entity::{CSRF_TOKEN_HEADER, SESSION_COOKIE_KEY},
+};
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
 
 // name of middleware
@@ -15,9 +19,6 @@ impl<E: Endpoint> Middleware<E> for AuthGuard {
         AuthGuardImpl(ep)
     }
 }
-
-const SESSION_COOKIE_KEY: &str = "session_id";
-const CSRF_TOKEN_HEADER: &str = "X-CSRF-TOKEN";
 
 // custom middleware that is passed to the handler
 #[poem::async_trait]

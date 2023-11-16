@@ -25,12 +25,10 @@ pub async fn handle_register(
     Form(req): Form<RegisterRequest>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Response> {
-    // Register user
     let user_id = register_new_user(&req.email, &req.password, repo)
         .await
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-    // Start session
     let session = start_session_for_user(&user_id.0)
         .await
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;

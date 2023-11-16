@@ -1,4 +1,7 @@
-use crate::app::case::logout_user;
+use crate::{
+    app::case::logout_user,
+    domain::entity::{CSRF_COOKIE_KEY, SESSION_COOKIE_KEY},
+};
 use brize_auth::entity::Session;
 use poem::{
     handler,
@@ -20,17 +23,24 @@ pub async fn handle_logout(
     let mut resp = Response::builder();
     match logout_user(&session, &req.csrf_token).await {
         Ok(_) => {
-            Ok(resp.header(
-            "Set-Cookie",
-            "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict"
-        ).header(
-            "Set-Cookie",
-            "csrf_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
-        )
-        .header("Location", "/auth/login")
-        .status(StatusCode::FOUND)
-        .finish())
-
+            Ok(
+                resp
+                .header(
+                    "Set-Cookie",
+                    format!("{}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict", 
+                    SESSION_COOKIE_KEY
+                    )
+                )
+                .header(
+                    "Set-Cookie",
+                    format!("{}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict", 
+                    CSRF_COOKIE_KEY
+                    ),
+                )
+                .header("Location", "/auth/login")
+                .status(StatusCode::FOUND)
+                .finish()
+            )
         }
         Err(_) => Ok(resp.status(StatusCode::UNAUTHORIZED).finish()),
     }

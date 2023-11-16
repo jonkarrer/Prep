@@ -13,6 +13,13 @@
   <body>
     Hello User Profile
     <div hx-get="/usr/profile/details" hx-trigger="load">Loading...</div>
+    <button
+      hx-get="/usr/profile/password_reset"
+      hx-trigger="click"
+      hx-swap="outerHTML"
+    >
+      Reset Password
+    </button>
   </body>
   <script src="/scripts/index.js"></script>
 </html>

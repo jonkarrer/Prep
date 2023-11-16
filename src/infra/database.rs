@@ -6,6 +6,7 @@ use crate::{
     domain::entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag, User},
 };
 use anyhow::{Context, Result};
+use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::{mysql::MySqlPool, FromRow};
 
@@ -255,6 +256,28 @@ impl UserRepository for Database<MySqlPool> {
         .context("Failed to find user_id by email in database")?;
 
         Ok(user)
+    }
+
+    async fn insert_reset_password_details(
+        &self,
+        reset_token: &str,
+        expiration: &DateTime<Utc>,
+        user_id: &str,
+    ) -> Result<()> {
+        sqlx::query(
+            r#"
+            UPDATE users 
+            SET password_reset_token = ?, password_reset_expiry = ?
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(reset_token)
+        .bind(expiration)
+        .bind(user_id)
+        .execute(&self.pool)
+        .await?;
+
+        Ok(())
     }
 }
 #[cfg(test)]

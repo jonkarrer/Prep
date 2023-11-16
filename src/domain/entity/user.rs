@@ -7,6 +7,6 @@ pub struct UserId(pub String);
 pub struct User {
     pub user_id: String,
     pub email: String,
-    pub profile_pic_url: Option<String>,
+    pub profile_pic_url: String,
     pub role: String,
 }

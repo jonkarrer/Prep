@@ -12,6 +12,6 @@ pub struct UserModel {
     pub last_login: Option<String>,
     pub created_at: String,
     pub updated_at: String,
-    pub profile_pic_url: Option<String>,
+    pub profile_pic_url: String,
     pub role: String,
 }

@@ -9,19 +9,10 @@
     Hello Dashboard
 
     <form action="/auth/logout" method="POST">
-      <input id="csrf_token" type="hidden" name="csrf_token" />
+      <input id="x-csrf-token" type="hidden" name="csrf_token" />
       <button type="submit">Logout</button>
     </form>
   </body>
 
-  <script>
-    const CSRF_COOKIE_KEY = "csrf_token";
-
-    let csrf_cookie = document.cookie
-      .split(";")
-      .find((item) => item.includes(CSRF_COOKIE_KEY));
-
-    let csrf_token = csrf_cookie.substring((CSRF_COOKIE_KEY + "=").length);
-    document.getElementById(CSRF_COOKIE_KEY).value = csrf_token;
-  </script>
+  <script src="/scripts/csrf_form_inject.js"></script>
 </html>

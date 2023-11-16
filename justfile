@@ -33,5 +33,9 @@ test:
 test-repo:
     -cargo test recipe_repository
 
+# Routes
 test-routes:
     -cargo test routes
+
+test-usr-route:
+    -cargo test usr

@@ -1,12 +1,14 @@
 mod auth;
 mod health_check;
 mod recipe;
+mod usr;
 use poem::endpoint::{StaticFileEndpoint, StaticFilesEndpoint};
 use poem::{get, post, EndpointExt, Route};
 
-pub use self::auth::{handle_login, handle_logout, handle_register};
+use self::auth::{handle_login, handle_logout, handle_register};
 use self::health_check::handle_health_check;
 use self::recipe::{handle_create_recipe, handle_get_recipe};
+use self::usr::handle_user_profile_details;
 
 use super::middleware::AuthGuard;
 
@@ -32,6 +34,11 @@ pub fn router() -> Route {
             "/dashboard",
             get(StaticFileEndpoint::new("src/web/templates/dashboard.html")),
         )
+        .at(
+            "/profile",
+            get(StaticFileEndpoint::new("src/web/templates/profile.html")),
+        )
+        .at("/profile/details", get(handle_user_profile_details))
         .with(AuthGuard);
 
     let app = Route::new()

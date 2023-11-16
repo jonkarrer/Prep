@@ -71,7 +71,10 @@ mod tests {
         // run test
         let resp = test_client
             .post(path)
-            .header("Cookie", format!("session_id={}", &session.session_id))
+            .header(
+                "Cookie",
+                format!("{}={}", SESSION_COOKIE_KEY, &session.session_id),
+            )
             .content_type("application/x-www-form-urlencoded")
             .form(&[("csrf_token", session.csrf_token)])
             .send()

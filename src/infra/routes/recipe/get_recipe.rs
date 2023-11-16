@@ -26,6 +26,7 @@ pub async fn handle_get_recipe(
 mod tests {
     use super::*;
     use crate::app::clients::db_client;
+    use crate::domain::entity::SESSION_COOKIE_KEY;
     use crate::infra::{helper::get_test_session, middleware::AuthGuard};
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
@@ -47,7 +48,10 @@ mod tests {
         // TODO create a test helper that gets the id for the Gingerbread recipe
         let resp = test_client
             .get("/recipe/select/f0458ac2-7b93-4866-971b-2a2d7f457c13")
-            .header("Cookie", format!("session_id={}", session.session_id))
+            .header(
+                "Cookie",
+                format!("{}={}", SESSION_COOKIE_KEY, session.session_id),
+            )
             .send()
             .await;
 

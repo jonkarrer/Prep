@@ -35,6 +35,7 @@ mod tests {
 
     use super::*;
     use crate::app::clients::db_client;
+    use crate::domain::entity::SESSION_COOKIE_KEY;
     use crate::infra::{
         helper::{get_test_recipe_args, get_test_session},
         middleware::AuthGuard,
@@ -62,7 +63,10 @@ mod tests {
         let resp = test_client
             .post(path)
             .body(payload)
-            .header("Cookie", format!("session_id={}", session.session_id))
+            .header(
+                "Cookie",
+                format!("{}={}", SESSION_COOKIE_KEY, session.session_id),
+            )
             .header("X-CSRF-Token", session.csrf_token)
             .content_type("application/json")
             .send()

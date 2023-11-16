@@ -1,9 +1,7 @@
-pub enum UserRoles {
-    User,
-    Admin,
-    Editor,
-}
+use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 
+#[derive(Deserialize, Serialize, FromRow)]
 pub struct UserModel {
     pub row_id: u32,
     pub user_id: String,
@@ -15,5 +13,5 @@ pub struct UserModel {
     pub created_at: String,
     pub updated_at: String,
     pub profile_pic_url: Option<String>,
-    pub role: UserRoles,
+    pub role: String,
 }

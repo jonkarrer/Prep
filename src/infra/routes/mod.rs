@@ -1,27 +1,45 @@
-mod get;
-mod post;
+mod auth;
+mod health_check;
+mod recipe;
+use poem::endpoint::{StaticFileEndpoint, StaticFilesEndpoint};
 use poem::{get, post, EndpointExt, Route};
 
-use self::get::{handle_select_recipe_by_id, health_check};
-use self::post::{handle_create_recipe, handle_login, handle_register_user};
+pub use self::auth::{handle_login, handle_logout, handle_register};
+use self::health_check::handle_health_check;
+use self::recipe::{handle_create_recipe, handle_get_recipe};
 
-use super::middleware::{AuthGuard, BasicAuth};
+use super::middleware::AuthGuard;
 
 pub fn router() -> Route {
     let recipe_routes = Route::new()
-        .at("/select/:id", get(handle_select_recipe_by_id))
+        .at("/select/:id", get(handle_get_recipe))
         .at("/create", post(handle_create_recipe))
         .with(AuthGuard);
 
+    let auth_routes = Route::new()
+        .at(
+            "/register",
+            get(StaticFileEndpoint::new("src/web/templates/register.html")).post(handle_register),
+        )
+        .at(
+            "/login",
+            get(StaticFileEndpoint::new("src/web/templates/login.html")).post(handle_login),
+        )
+        .at("/logout", post(handle_logout).with(AuthGuard));
+
     let user_routes = Route::new()
-        .at("/register", get(handle_register_user))
-        .at("/login", get(handle_login))
-        .with(BasicAuth);
+        .at(
+            "/dashboard",
+            get(StaticFileEndpoint::new("src/web/templates/dashboard.html")),
+        )
+        .with(AuthGuard);
 
     let app = Route::new()
         .nest("/recipe", recipe_routes)
+        .nest("/auth", auth_routes)
         .nest("/usr", user_routes)
-        .at("/health_check", get(health_check));
+        .nest("/", StaticFilesEndpoint::new("./src/web"))
+        .at("/health_check", get(handle_health_check));
 
     app
 }

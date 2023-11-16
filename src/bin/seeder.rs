@@ -1,7 +1,7 @@
 use prep::{
-    application::{helper::get_configuration, interface::UserRepository},
+    app::clients::{auth_client, db_client},
+    app::{configs::DbConfig, interface::UserRepository},
     domain::entity::RecipeArgs,
-    infra::{authentication::auth, db},
 };
 use sqlx::MySqlPool;
 use std::fs;
@@ -17,17 +17,16 @@ fn get_recipe_seed_data() -> Vec<RecipeArgs> {
 }
 
 async fn seed_with_recipes() -> anyhow::Result<()> {
-    let configuration = get_configuration();
-    let db_configs = configuration.database_config;
+    let db_configs = DbConfig::default();
     let pool = MySqlPool::connect(db_configs.connection_string().as_str())
         .await
         .expect("Failed connection with database");
 
     // create one seed user
-    let mut auth = auth().await;
+    let auth_client = auth_client().await;
     let usr = "seed_user@gmail.com";
-    let creds_id = auth.register(usr, "seeder_password").await?;
-    let user_id = db().await.create_user(usr, &creds_id).await?;
+    let creds_id = auth_client.register(usr, "seeder_password").await?;
+    let user_id = db_client().await.create_user(usr, &creds_id).await?;
 
     // begin transaction
     let seed_data = get_recipe_seed_data();
@@ -109,10 +108,10 @@ async fn seed_with_users() -> anyhow::Result<()> {
         ("usr6@mail.com", "usr6password"),
     ];
 
-    let mut auth = auth().await;
+    let auth_client = auth_client().await;
     for (email, pass) in users {
-        let creds_id = auth.register(email, pass).await?;
-        db().await.create_user(email, &creds_id).await?;
+        let creds_id = auth_client.register(email, pass).await?;
+        db_client().await.create_user(email, &creds_id).await?;
     }
 
     Ok(())

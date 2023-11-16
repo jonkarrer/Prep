@@ -1,15 +1,9 @@
+# ---- General ----
 build-app:
     ./scripts/build.sh
 
 teardown-app:
     docker compose down
-
-# ---- Tests ----
-test-gateway:
-    just start-db;
-    sleep 10;
-    -cargo test gateway
-    just stop-db;
 
 # ---- DATABASE ----
 echo-db-url:
@@ -31,3 +25,13 @@ run-migration env_config:
     export ENV_CONFIG={{env_config}} \
     && export SKIP_DOCKER=true \
     && ./scripts/init_db.sh
+
+# ---- Tests ----
+test:
+    -cargo test
+    
+test-repo:
+    -cargo test recipe_repository
+
+test-routes:
+    -cargo test routes

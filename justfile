@@ -1,4 +1,7 @@
 # ---- General ----
+run-dev:
+    cargo run --bin prep
+    
 build-app:
     ./scripts/build.sh
 

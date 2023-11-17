@@ -8,7 +8,10 @@ use poem::{get, post, EndpointExt, Route};
 use self::auth::{handle_login, handle_logout, handle_register};
 use self::health_check::handle_health_check;
 use self::recipe::{handle_create_recipe, handle_get_recipe};
-use self::usr::{handle_password_reset, handle_user_profile_details};
+use self::usr::{
+    handle_password_reset, handle_password_reset_ui, handle_update_email, handle_update_email_ui,
+    handle_user_profile_details,
+};
 
 use super::middleware::AuthGuard;
 
@@ -39,7 +42,14 @@ pub fn router() -> Route {
             get(StaticFileEndpoint::new("src/web/templates/profile.html")),
         )
         .at("/profile/details", get(handle_user_profile_details))
-        .at("/profile/password_reset", get(handle_password_reset))
+        .at(
+            "/profile/password_reset",
+            get(handle_password_reset_ui).put(handle_password_reset),
+        )
+        .at(
+            "/profile/update_email",
+            get(handle_update_email_ui).put(handle_update_email),
+        )
         .with(AuthGuard);
 
     let app = Route::new()

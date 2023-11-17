@@ -3,10 +3,9 @@ use crate::{
         configs::DbConfig,
         interface::{Database, RecipeRepository, UserRepository},
     },
-    domain::entity::{Direction, Ingredient, Recipe, RecipeArgs, Tag, User},
+    domain::entity::{Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, Tag, User},
 };
 use anyhow::{Context, Result};
-use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::{mysql::MySqlPool, FromRow};
 
@@ -258,10 +257,9 @@ impl UserRepository for Database<MySqlPool> {
         Ok(user)
     }
 
-    async fn insert_reset_password_details(
+    async fn insert_password_reset_token(
         &self,
-        reset_token: &str,
-        expiration: &DateTime<Utc>,
+        token: &PasswordResetToken,
         user_id: &str,
     ) -> Result<()> {
         sqlx::query(
@@ -271,8 +269,39 @@ impl UserRepository for Database<MySqlPool> {
             WHERE user_id = ?
             "#,
         )
-        .bind(reset_token)
-        .bind(expiration)
+        .bind(token.password_reset_token.as_str())
+        .bind(token.password_reset_expiry)
+        .bind(user_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to update reset password details")?;
+
+        Ok(())
+    }
+
+    async fn get_password_reset_token(&self, user_id: &str) -> Result<PasswordResetToken> {
+        sqlx::query_as(
+            r#"
+            SELECT password_reset_token, password_reset_expiry
+            FROM users
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(&user_id)
+        .fetch_one(&self.pool)
+        .await
+        .context("Failed to select recipe details by id")
+    }
+
+    async fn update_email(&self, new_email: &str, user_id: &str) -> Result<()> {
+        sqlx::query(
+            r#"
+            UPDATE users
+            SET email = ?
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(new_email)
         .bind(user_id)
         .execute(&self.pool)
         .await?;

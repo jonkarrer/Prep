@@ -1,7 +1,7 @@
 use crate::{
     app::clients::session_client,
     app::util::cookie_extractor,
-    domain::entity::{CSRF_TOKEN_HEADER, SESSION_COOKIE_KEY},
+    domain::constants::{CSRF_TOKEN_HEADER, SESSION_COOKIE_KEY},
 };
 use poem::{http::StatusCode, Endpoint, Error, Middleware, Request, Result};
 

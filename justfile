@@ -36,6 +36,10 @@ test:
 test-repo:
     -cargo test recipe_repository
 
+# Use Cases
+test-use-case-auth:
+    -cargo test auth_case
+
 # Routes
 test-routes:
     -cargo test routes

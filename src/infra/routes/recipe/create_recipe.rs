@@ -35,11 +35,9 @@ mod tests {
 
     use super::*;
     use crate::app::clients::db_client;
-    use crate::domain::entity::SESSION_COOKIE_KEY;
-    use crate::infra::{
-        helper::{get_test_recipe_args, get_test_session},
-        middleware::AuthGuard,
-    };
+    use crate::app::helper::{get_test_recipe_args, get_test_session};
+    use crate::domain::constants::SESSION_COOKIE_KEY;
+    use crate::infra::middleware::AuthGuard;
 
     #[tokio::test]
     async fn test_route_create_recipe() {

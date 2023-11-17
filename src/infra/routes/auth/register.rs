@@ -1,9 +1,9 @@
 use crate::{
     app::{
-        case::{register_new_user, start_session_for_user},
         interface::Database,
+        use_case::{register_new_user, start_session_for_user},
     },
-    domain::entity::SESSION_COOKIE_KEY,
+    domain::constants::SESSION_COOKIE_KEY,
 };
 use poem::{
     handler,

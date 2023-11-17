@@ -312,7 +312,7 @@ impl UserRepository for Database<MySqlPool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::infra::helper::get_test_recipe_args;
+    use crate::app::helper::get_test_recipe_args;
 
     #[tokio::test]
     async fn test_recipe_repository() {

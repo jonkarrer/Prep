@@ -1,6 +1,6 @@
 use crate::{
     app::case::{start_session_for_user, verify_user_credentials},
-    domain::entity::{CSRF_COOKIE_KEY, SESSION_COOKIE_KEY},
+    domain::entity::SESSION_COOKIE_KEY,
 };
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
 
@@ -26,13 +26,6 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
             format!(
                 "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
                 SESSION_COOKIE_KEY, session.session_id
-            ),
-        )
-        .header(
-            "Set-Cookie",
-            format!(
-                "{}={}; Path=/; Secure; SameSite=Strict",
-                CSRF_COOKIE_KEY, session.csrf_token
             ),
         )
         .header("Location", "/usr/dashboard")

@@ -6,9 +6,22 @@ use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Form},
-    Response, Result,
+    web::{Data, Form, Html},
+    IntoResponse, Response, Result,
 };
+
+#[handler]
+pub async fn handle_logout_ui(Data(session): Data<&Session>) -> Result<impl IntoResponse> {
+    Ok(Html(format!(
+        r#"
+        <form action="/auth/logout" method="POST">
+        <input type="hidden" name="csrf_token" value={} />
+        <button type="submit">Logout</button>
+        </form>
+        "#,
+        session.csrf_token
+    )))
+}
 
 #[derive(serde::Deserialize)]
 pub struct LogoutForm {

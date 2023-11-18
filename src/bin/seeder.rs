@@ -1,8 +1,10 @@
+use brize_auth::config::Expiry;
 use prep::{
     app::clients::{auth_client, db_client},
     app::{
+        clients::session_client,
         configs::DbConfig,
-        helper::{TEST_USER_NAME, TEST_USER_PASSWORD},
+        helper::{TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD},
         interface::UserRepository,
     },
     domain::entity::RecipeArgs,
@@ -125,9 +127,19 @@ async fn seed_with_users() -> anyhow::Result<()> {
     Ok(())
 }
 
+async fn seed_with_sessions() -> anyhow::Result<()> {
+    session_client()
+        .await
+        .start_session(TEST_USER_ID, Expiry::Month(1))
+        .await?;
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     seed_with_recipes().await?;
     seed_with_users().await?;
+    seed_with_sessions().await?;
     Ok(())
 }

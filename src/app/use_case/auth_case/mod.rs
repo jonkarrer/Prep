@@ -21,10 +21,12 @@ pub use update_user_email::*;
 
 #[cfg(test)]
 mod tests {
+    use brize_auth::config::Expiry;
+
     use super::*;
     use crate::app::{
-        clients::db_client,
-        helper::{TEST_USER_NAME, TEST_USER_PASSWORD},
+        clients::{db_client, session_client},
+        helper::{TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD},
         interface::UserRepository,
     };
 
@@ -38,7 +40,7 @@ mod tests {
             .await
             .unwrap();
 
-        // Test creation result
+        // Test register result
         let user = repo.get_user_by_id(&user_id.0).await.unwrap();
         assert_eq!(user.email, user_name);
     }
@@ -54,5 +56,22 @@ mod tests {
         // Test login result
         let user = repo.get_user_by_id(&session.user_id).await.unwrap();
         assert_eq!(user.email, TEST_USER_NAME);
+    }
+
+    #[tokio::test]
+    async fn test_case_logout_user() {
+        // Create a session
+        let session_client = session_client().await;
+        let session = session_client
+            .start_session(TEST_USER_ID, Expiry::Month(1))
+            .await
+            .unwrap();
+
+        // Run a logout
+        logout_user(&session, &session.csrf_token).await.unwrap();
+
+        // Test that session is no longer valid
+        let check_session = session_client.validate_session(&session.session_id).await;
+        assert!(check_session.is_err());
     }
 }

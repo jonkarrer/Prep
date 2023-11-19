@@ -6,8 +6,8 @@ use brize_auth::entity::Session;
 
 pub async fn update_user_email<T: UserRepository>(
     session: &Session,
-    form: UpdateEmailForm,
     repo: &T,
+    form: &UpdateEmailForm,
 ) -> anyhow::Result<()> {
     match session.match_csrf_token(&form.csrf_token) {
         true => {

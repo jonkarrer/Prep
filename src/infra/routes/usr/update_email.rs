@@ -30,7 +30,7 @@ pub async fn handle_update_email(
     Data(repo): Data<&Database<MySqlPool>>,
     Form(req): Form<UpdateEmailForm>,
 ) -> Result<String> {
-    update_user_email(session, req, repo)
+    update_user_email(session, repo, &req)
         .await
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 

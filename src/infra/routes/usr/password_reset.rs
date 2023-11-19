@@ -52,7 +52,6 @@ pub async fn handle_password_reset(
     Data(repo): Data<&Database<MySqlPool>>,
     Form(req): Form<UpdatePasswordForm>,
 ) -> Result<String> {
-    // TODO check all the tokens for validation and match current password with current password in db
     reset_password(session, repo, &req)
         .await
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;

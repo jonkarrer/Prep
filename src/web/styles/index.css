@@ -1,3 +1,21 @@
 * {
-  background-color: wheat;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --pri-color: #25383b;
+  --sec-color: #f3fafc;
+  --tri-color: #cbccc3;
+  --text-color: #19231c;
+}
+
+html,
+body {
+  background-color: var(--sec-color);
+}
+h1 {
+  font-size: 4rem;
+  color: var(--pri-color);
 }

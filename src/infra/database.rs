@@ -96,7 +96,7 @@ impl RecipeRepository for Database<MySqlPool> {
         Ok(recipe_id)
     }
 
-    async fn select_by_id(&self, recipe_id: &str) -> Result<Recipe> {
+    async fn select_by_recipe_id(&self, recipe_id: &str) -> Result<Recipe> {
         #[derive(FromRow)]
         struct RecipeDetails {
             pub recipe_id: String,
@@ -117,6 +117,81 @@ impl RecipeRepository for Database<MySqlPool> {
             "#,
         )
         .bind(&recipe_id)
+        .fetch_one(&self.pool)
+        .await
+        .context("Failed to select recipe details by id")?;
+
+        let ingredients: Vec<Ingredient> = sqlx::query_as(
+            r#"
+            SELECT ingredient_id, ingredient_name, amount, unit
+            FROM ingredients
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select ingredients by id")?;
+
+        let directions: Vec<Direction> = sqlx::query_as(
+            r#"
+            SELECT direction_id, step_order, direction_details
+            FROM directions
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select directions by id")?;
+
+        let tags: Vec<Tag> = sqlx::query_as(
+            r#"
+            SELECT tag_id, tag_name
+            FROM tags
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(&recipe_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select directions by id")?;
+
+        let recipe = Recipe {
+            recipe_id,
+            recipe_title,
+            servings,
+            favorite,
+            ingredients,
+            directions,
+            tags,
+        };
+
+        Ok(recipe)
+    }
+
+    async fn select_by_recipe_title(&self, recipe_title: &str, user_id: &str) -> Result<Recipe> {
+        #[derive(FromRow)]
+        struct RecipeDetails {
+            pub recipe_id: String,
+            pub recipe_title: String,
+            pub servings: f32,
+            pub favorite: bool,
+        }
+        let RecipeDetails {
+            recipe_title,
+            recipe_id,
+            servings,
+            favorite,
+        } = sqlx::query_as(
+            r#"
+            SELECT recipe_id, recipe_title, servings, favorite
+            FROM recipes
+            WHERE recipe_title = ? AND user_id = ? 
+            "#,
+        )
+        .bind(&recipe_title)
+        .bind(&user_id)
         .fetch_one(&self.pool)
         .await
         .context("Failed to select recipe details by id")?;
@@ -324,7 +399,7 @@ mod tests {
             .create_recipe_from_args(recipe_args, "test_user_id")
             .await
             .unwrap();
-        let recipe = repo.select_by_id(&recipe_id).await.unwrap();
+        let recipe = repo.select_by_recipe_id(&recipe_id).await.unwrap();
         assert_eq!(&recipe.recipe_title, "Oatmeal");
     }
 }

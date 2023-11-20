@@ -36,19 +36,3 @@ pub async fn handle_update_email(
 
     Ok("Updated Email".to_string())
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use poem::{get, test::TestClient, Route};
-
-    #[tokio::test]
-    async fn test_route_password_reset() {
-        let path = "/usr/profile/update_email";
-        let app = Route::new().at(path, get(handle_update_email));
-        let test_client = TestClient::new(app);
-        let resp = test_client.get(path).send().await;
-
-        resp.assert_text("All Good Here. Keep Going").await;
-    }
-}

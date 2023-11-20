@@ -22,7 +22,7 @@ pub async fn handle_create_recipe(
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
     let recipe = repo
-        .select_by_id(&recipe_id)
+        .select_by_recipe_id(&recipe_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 

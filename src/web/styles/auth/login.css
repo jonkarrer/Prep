@@ -1,0 +1,44 @@
+@import url("/styles/index.css");
+
+main {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+
+  width: 300px;
+  height: 550px;
+  margin: auto;
+
+  background-color: var(--sec-color);
+  border-radius: 0.5rem;
+}
+
+input {
+  width: 220px;
+  height: 2rem;
+  padding: 0 0.6rem;
+
+  border-radius: 1rem;
+  border-color: var(--text-color);
+  border: solid 1px;
+  background-color: var(--sec-color);
+}
+
+button {
+  width: 220px;
+  height: 2rem;
+  border-radius: 1rem;
+  background-color: var(--text-color);
+  color: var(--sec-color);
+  font-weight: 500;
+}
+
+h1 {
+  text-align: center;
+}

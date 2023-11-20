@@ -12,11 +12,11 @@ pub fn use_auth_routes() -> Route {
     Route::new()
         .at(
             "/register",
-            get(StaticFileEndpoint::new("src/web/templates/register.html")).post(handle_register),
+            get(StaticFileEndpoint::new("src/web/pages/auth/register.html")).post(handle_register),
         )
         .at(
             "/login",
-            get(StaticFileEndpoint::new("src/web/templates/login.html")).post(handle_login),
+            get(StaticFileEndpoint::new("src/web/pages/auth/login.html")).post(handle_login),
         )
         .at(
             "/logout",

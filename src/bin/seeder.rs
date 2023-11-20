@@ -1,6 +1,12 @@
+use brize_auth::config::Expiry;
 use prep::{
     app::clients::{auth_client, db_client},
-    app::{configs::DbConfig, interface::UserRepository},
+    app::{
+        clients::session_client,
+        configs::DbConfig,
+        helper::{TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD},
+        interface::UserRepository,
+    },
     domain::entity::RecipeArgs,
 };
 use sqlx::MySqlPool;
@@ -24,9 +30,13 @@ async fn seed_with_recipes() -> anyhow::Result<()> {
 
     // create one seed user
     let auth_client = auth_client().await;
-    let usr = "seed_user@gmail.com";
-    let creds_id = auth_client.register(usr, "seeder_password").await?;
-    let user_id = db_client().await.create_user(usr, &creds_id).await?;
+    let creds_id = auth_client
+        .register(TEST_USER_NAME, TEST_USER_PASSWORD)
+        .await?;
+    let user_id = db_client()
+        .await
+        .create_user(TEST_USER_NAME, &creds_id)
+        .await?;
 
     // begin transaction
     let seed_data = get_recipe_seed_data();
@@ -117,9 +127,19 @@ async fn seed_with_users() -> anyhow::Result<()> {
     Ok(())
 }
 
+async fn seed_with_sessions() -> anyhow::Result<()> {
+    session_client()
+        .await
+        .start_session(TEST_USER_ID, Expiry::Month(1))
+        .await?;
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     seed_with_recipes().await?;
     seed_with_users().await?;
+    seed_with_sessions().await?;
     Ok(())
 }

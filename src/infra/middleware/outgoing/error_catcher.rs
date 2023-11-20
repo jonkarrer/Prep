@@ -34,6 +34,6 @@ impl<E: Endpoint> Endpoint for ErrorCatcherImpl<E> {
 fn redirect_on_unauthorized() -> Response {
     Response::builder()
         .header("Location", "/auth/login")
-        .status(StatusCode::TEMPORARY_REDIRECT)
-        .body("Unauthorized")
+        .status(StatusCode::SEE_OTHER)
+        .finish()
 }

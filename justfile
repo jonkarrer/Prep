@@ -1,4 +1,7 @@
 # ---- General ----
+run-dev:
+    cargo run --bin prep
+    
 build-app:
     ./scripts/build.sh
 
@@ -33,5 +36,13 @@ test:
 test-repo:
     -cargo test recipe_repository
 
+# Use Cases
+test-use-case-auth:
+    -cargo test auth_case
+
+# Routes
 test-routes:
     -cargo test routes
+
+test-usr-route:
+    -cargo test usr

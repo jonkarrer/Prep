@@ -1,9 +1,9 @@
 use crate::{
     app::{
-        case::{register_new_user, start_session_for_user},
         interface::Database,
+        use_case::{register_new_user, start_session_for_user},
     },
-    domain::entity::{CSRF_COOKIE_KEY, SESSION_COOKIE_KEY},
+    domain::constants::SESSION_COOKIE_KEY,
 };
 use poem::{
     handler,
@@ -39,13 +39,6 @@ pub async fn handle_register(
             format!(
                 "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
                 SESSION_COOKIE_KEY, session.session_id
-            ),
-        )
-        .header(
-            "Set-Cookie",
-            format!(
-                "{}={}; Path=/; Secure; SameSite=Strict",
-                CSRF_COOKIE_KEY, session.csrf_token
             ),
         )
         .header("Location", "/usr/dashboard")

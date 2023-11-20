@@ -22,7 +22,7 @@ pub async fn handle_create_recipe(
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
     let recipe = repo
-        .select_by_id(&recipe_id)
+        .select_by_recipe_id(&recipe_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
 
@@ -35,11 +35,9 @@ mod tests {
 
     use super::*;
     use crate::app::clients::db_client;
-    use crate::domain::entity::SESSION_COOKIE_KEY;
-    use crate::infra::{
-        helper::{get_test_recipe_args, get_test_session},
-        middleware::AuthGuard,
-    };
+    use crate::app::helper::{get_test_recipe_args, get_test_session};
+    use crate::domain::constants::SESSION_COOKIE_KEY;
+    use crate::infra::middleware::AuthGuard;
 
     #[tokio::test]
     async fn test_route_create_recipe() {

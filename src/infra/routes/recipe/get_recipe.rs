@@ -15,9 +15,9 @@ pub async fn handle_get_recipe(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Json<Recipe>> {
     let recipe = repo
-        .select_by_id(&recipe_id)
+        .select_by_recipe_id(&recipe_id)
         .await
-        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
+        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::NOT_FOUND))?;
 
     Ok(Json(recipe))
 }
@@ -25,13 +25,15 @@ pub async fn handle_get_recipe(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::app::clients::db_client;
-    use crate::domain::entity::SESSION_COOKIE_KEY;
-    use crate::infra::{helper::get_test_session, middleware::AuthGuard};
+    use crate::app::helper::TEST_USER_NAME;
+    use crate::app::interface::UserRepository;
+    use crate::app::{clients::db_client, helper::get_test_session};
+    use crate::domain::constants::SESSION_COOKIE_KEY;
+    use crate::infra::middleware::AuthGuard;
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
-    async fn test_route_select_recipe_by_id() {
+    async fn test_route_get_recipe() {
         // build route
         let path = "/recipe/select/:id";
         let ep = Route::new()
@@ -44,10 +46,18 @@ mod tests {
         // get a session token
         let session = get_test_session().await.unwrap();
 
-        // ! will fail on a new seed. Id will be stale
-        // TODO create a test helper that gets the id for the Gingerbread recipe
+        // get the seeded gingerbread recipe
+        let repo = db_client().await;
+        let user = repo.get_user_by_email(TEST_USER_NAME).await.unwrap();
+        let test_recipe = repo
+            .select_by_recipe_title("Gingerbread", &user.user_id)
+            .await
+            .unwrap();
+
+        // use the gingerbread recipe id as a test
+        let query = format!("/recipe/select/{}", test_recipe.recipe_id);
         let resp = test_client
-            .get("/recipe/select/f0458ac2-7b93-4866-971b-2a2d7f457c13")
+            .get(query)
             .header(
                 "Cookie",
                 format!("{}={}", SESSION_COOKIE_KEY, session.session_id),

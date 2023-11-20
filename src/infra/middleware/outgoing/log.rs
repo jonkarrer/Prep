@@ -17,7 +17,7 @@ impl<E: Endpoint> Endpoint for LogImpl<E> {
     type Output = Response;
 
     async fn call(&self, req: Request) -> Result<Self::Output> {
-        println!("request: {}", req.uri().path());
+        println!("request: {} {}", req.uri().path(), req.method());
         let res = self.0.call(req).await;
 
         match res {

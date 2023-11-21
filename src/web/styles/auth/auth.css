@@ -8,7 +8,6 @@ body {
 }
 
 main {
-  position: relative;
   display: grid;
   grid-auto-flow: column;
   place-items: center;
@@ -20,11 +19,14 @@ main {
   border-radius: 0.5rem;
 }
 
+#form-container {
+  width: 100%;
+}
+
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 100%;
 }
 
 input {
@@ -41,6 +43,7 @@ input {
 
 button {
   width: 85%;
+  max-width: 220px;
   margin: auto;
   height: 2rem;
   border-radius: 1rem;
@@ -70,6 +73,7 @@ img {
 }
 
 .center_col {
+  position: relative;
   display: grid;
   place-items: center;
   gap: 1rem;
@@ -81,19 +85,17 @@ img {
   display: grid;
   place-items: center;
   gap: 1.4rem;
-  /* background-color: red; */
 }
 
 .emblem {
   position: absolute;
-  top: 45px;
+  top: -60px;
   width: 5rem;
   height: 5rem;
 }
 
 .slider {
   position: absolute;
-  width: 80%;
-  bottom: 10px;
+  bottom: -110px;
   text-align: center;
 }

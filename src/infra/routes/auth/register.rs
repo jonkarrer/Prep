@@ -8,11 +8,38 @@ use crate::{
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Form},
-    Error, Response, Result,
+    web::{Data, Form, Html},
+    Error, IntoResponse, Request, Response, Result,
 };
 use serde::Deserialize;
 use sqlx::MySqlPool;
+
+#[handler]
+pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
+    match req.header("HX-Request") {
+        Some(_) => Ok(Html(
+            r#"
+            <form action="/auth/register" method="POST">
+                <div>
+                    <input type="text" name="email" placeholder="Email Address" />
+                </div>
+                <div>
+                    <input type="password" name="password" placeholder="Password" />
+                </div>
+                <div>
+                    <input
+                        type="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm Password"
+                    />
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            "#,
+        )),
+        None => Err(Error::from_status(StatusCode::NOT_FOUND)),
+    }
+}
 
 #[derive(Deserialize)]
 pub struct RegisterRequest {

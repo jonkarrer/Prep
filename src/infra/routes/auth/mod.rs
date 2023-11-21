@@ -11,13 +11,11 @@ use register::*;
 pub fn use_auth_routes() -> Route {
     Route::new()
         .at(
-            "/register",
-            get(StaticFileEndpoint::new("src/web/pages/auth/register.html")).post(handle_register),
+            "/",
+            get(StaticFileEndpoint::new("src/web/pages/auth/auth.html")).post(handle_register),
         )
-        .at(
-            "/login",
-            get(StaticFileEndpoint::new("src/web/pages/auth/login.html")).post(handle_login),
-        )
+        .at("/register", get(handle_register_ui).post(handle_register))
+        .at("/login", get(handle_login_ui).post(handle_login))
         .at(
             "/logout",
             get(handle_logout_ui).post(handle_logout).with(AuthGuard),

@@ -1,5 +1,30 @@
 use crate::{app::use_case::login_user, domain::constants::SESSION_COOKIE_KEY};
-use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
+use poem::{
+    handler,
+    http::StatusCode,
+    web::{Form, Html},
+    Error, IntoResponse, Request, Response, Result,
+};
+
+#[handler]
+pub fn handle_login_ui(req: &Request) -> Result<impl IntoResponse> {
+    match req.header("HX-Request") {
+        Some(_) => Ok(Html(
+            r#"
+            <form action="/auth/login" method="POST">
+                <div>
+                    <input type="text" name="email" placeholder="Email Address" />
+                </div>
+                <div>
+                    <input type="password" name="password" placeholder="Password" />
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            "#,
+        )),
+        None => Err(Error::from_status(StatusCode::NOT_FOUND)),
+    }
+}
 
 #[derive(serde::Deserialize)]
 pub struct LoginRequest {

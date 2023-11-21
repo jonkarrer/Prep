@@ -41,7 +41,7 @@ pub async fn handle_register(
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )
-        .header("Location", "/usr/dashboard")
+        .header("Location", "/dash")
         .status(StatusCode::FOUND)
         .body("Registration Successful");
 

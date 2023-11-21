@@ -12,7 +12,7 @@ pub fn use_user_routes() -> AuthGuardImpl<Route> {
     Route::new()
         .at(
             "/profile",
-            get(StaticFileEndpoint::new("src/web/templates/profile.html")),
+            get(StaticFileEndpoint::new("src/web/pages/profile.html")),
         )
         .at("/profile/details", get(handle_user_profile_details))
         .at(

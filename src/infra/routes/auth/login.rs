@@ -21,7 +21,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )
-        .header("Location", "/usr/dashboard")
+        .header("Location", "/dash")
         .status(StatusCode::FOUND)
         .finish();
 

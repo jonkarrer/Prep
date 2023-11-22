@@ -12,6 +12,13 @@
     <title>Login</title>
   </head>
   <body>
+    <div id="left_panel" class="show_panel panel">
+      <video
+        autoplay
+        loop
+        src="https://assets.mixkit.co/videos/preview/mixkit-cutting-a-sandwich-in-half-for-a-healthy-lunch-26094-large.mp4"
+      ></video>
+    </div>
     <main>
       <div class="left_col">
         <img src="/assets/icons/apple-solid.svg" />
@@ -52,6 +59,13 @@
         <img src="/assets/icons/rice-bowl-solid.svg" />
       </div>
     </main>
+    <div id="right_panel" class="panel">
+      <video
+        autoplay
+        loop
+        src="https://assets.mixkit.co/videos/preview/mixkit-spoonful-of-healthy-cereal-with-milk-41147-large.mp4"
+      ></video>
+    </div>
 
     <script>
       function swapAnchorTag(e) {
@@ -60,8 +74,12 @@
 
         if (id === "sign-up-link") {
           document.getElementById("sign-in-link").style.display = "block";
+          document.getElementById("left_panel").classList.toggle("show_panel");
+          document.getElementById("right_panel").classList.toggle("show_panel");
         } else {
           document.getElementById("sign-up-link").style.display = "block";
+          document.getElementById("left_panel").classList.toggle("show_panel");
+          document.getElementById("right_panel").classList.toggle("show_panel");
         }
       }
     </script>

@@ -13,6 +13,13 @@ a {
   color: inherit;
 }
 
+a:hover {
+  cursor: pointer;
+}
+button:hover {
+  cursor: pointer;
+}
+
 :root {
   --pri-color: #25383b;
   --sec-color: #f3fafc;

@@ -49,8 +49,14 @@
           >Sign In</a
         >
         <div class="slider">
-          <p>Organize your kitchen with Prep, the generative recipe system.</p>
-          <img src="/assets/icons/three-dot-horiz-outline.svg" />
+          <p id="slider_text">
+            Organize your kitchen with Prep, the generative recipe system.
+          </p>
+          <span class="slider_dot_container">
+            <span id="dot_one" class="slider_dot-one filled-dot"></span>
+            <span id="dot_two" class="slider_dot-two"></span>
+            <span id="dot_three" class="slider_dot-three"></span>
+          </span>
         </div>
       </div>
       <div class="right_col">
@@ -82,6 +88,37 @@
           document.getElementById("right_panel").classList.toggle("show_panel");
         }
       }
+
+      function transitionSliderText(index) {
+        let textEl = document.getElementById("slider_text");
+        textEl.innerText = [
+          "Organize your kitchen with Prep, the generative recipe system.",
+          "Don't let a great dish be forgotten, let Prep save it for next time.",
+          "Prep will help you learn, understand, and execute any recipe",
+        ][index];
+      }
+
+      function transitionFilledDot(index) {
+        let dot_one = document.getElementById("dot_one");
+        let dot_two = document.getElementById("dot_two");
+        let dot_three = document.getElementById("dot_three");
+
+        let dots = [dot_one, dot_two, dot_three];
+
+        let currDot = dots[index];
+        let prevDot = dots[index - 1 === -1 ? 2 : index - 1];
+
+        currDot.classList.toggle("filled-dot");
+        prevDot.classList.toggle("filled-dot");
+      }
+
+      let i = 1;
+      setInterval(() => {
+        transitionSliderText(i);
+        transitionFilledDot(i);
+
+        i = i === 2 ? 0 : (i += 1);
+      }, 5000);
     </script>
   </body>
 </html>

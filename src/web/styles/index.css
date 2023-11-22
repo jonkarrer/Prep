@@ -26,11 +26,24 @@ button:hover {
   --tri-color: #cbccc3;
   --quad-color: #aeb3b0;
   --text-color: #19231c;
+
+  /* font-size: calc(1vw + 1vh + 0.5vmin); */
+}
+
+html {
+  font-size: 100%;
 }
 
 html,
 body {
   background-color: var(--quad-color);
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
 }
 
 h1,
@@ -40,19 +53,21 @@ h4 {
   font-family: "Raleway", sans-serif;
 }
 
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 p,
 a,
 input,
 button {
   font-family: "Montserrat", sans-serif;
-}
-
-p {
-  line-height: 1.6;
+  font-size: 1em;
 }
 
 h1 {
-  font-size: 4rem;
+  font-size: 4em;
   font-weight: 700;
   color: var(--text-color);
 }

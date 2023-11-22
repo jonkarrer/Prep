@@ -126,6 +126,35 @@ video {
   background-color: var(--text-color);
 }
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in ease-out 1s forwards;
+}
+
+@keyframes fill-in {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: var(--text-color);
+  }
+}
+
+.fill-in {
+  animation: fill-in 0.8s forwards;
+}
+
 @media (min-width: 1023px) {
   main {
     max-width: 50vw;

@@ -91,11 +91,15 @@
 
       function transitionSliderText(index) {
         let textEl = document.getElementById("slider_text");
+        textEl.classList.add("fade-in");
+
         textEl.innerText = [
           "Organize your kitchen with Prep, the generative recipe system.",
           "Don't let a great dish be forgotten, let Prep save it for next time.",
           "Prep will help you learn, understand, and execute any recipe",
         ][index];
+
+        setTimeout(() => textEl.classList.remove("fade-in"), 2000);
       }
 
       function transitionFilledDot(index) {
@@ -109,7 +113,11 @@
         let prevDot = dots[index - 1 === -1 ? 2 : index - 1];
 
         currDot.classList.toggle("filled-dot");
+        currDot.classList.add("fill-in");
+
         prevDot.classList.toggle("filled-dot");
+
+        setTimeout(() => currDot.classList.remove("fill-in"), 2000);
       }
 
       let i = 1;

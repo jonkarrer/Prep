@@ -34,10 +34,10 @@ a {
 }
 
 .Form {
-  --form-gap: 1rem;
+  --form-gap: 1.1rem;
   --form-font-size: 1em;
-  --form-height: 2.3rem;
-  --form-border-radius: 1.5rem;
+  --form-height: 2.4rem;
+  --form-border-radius: 1rem;
 
   display: grid;
   place-items: center;
@@ -57,7 +57,7 @@ a {
 .Form__container input {
   width: 100%;
   height: var(--form-height);
-  padding: 0 0.6rem;
+  padding: 0 0.8rem;
   margin: auto;
 
   border: solid 1px;
@@ -72,39 +72,45 @@ a {
   border-width: 2px;
 }
 .Form__container button {
-  margin: auto;
   max-width: 220px;
   width: 85%;
   height: var(--form-height);
+  margin: auto;
 
-  border-radius: var(--form-border-radius);
   background-color: var(--text-color);
+  border-radius: var(--form-border-radius);
 
-  color: var(--sec-color);
   font-weight: 500;
   text-align: center;
   font-size: var(--form-font-size);
+  color: var(--sec-color);
 }
 .Form__container button:hover {
   background-color: var(--pri-color);
 }
 
 .Icons {
+  --icons-size: 1.6rem;
+  --icons-gap: 1.4rem;
+
   display: grid;
   place-items: center;
-  gap: 1.4rem;
+  gap: var(--icons-gap);
   padding: 0 12px;
 }
 .Icons img {
-  width: 1.6rem;
-  height: 1.6rem;
+  width: var(--icons-size);
+  height: var(--icons-size);
 }
 
 .Emblem {
+  --emblem-size: 5rem;
+
   position: absolute;
   top: -60px;
-  width: 5rem;
-  height: 5rem;
+
+  width: var(--emblem-size);
+  height: var(--emblem-size);
 }
 
 .Slider {
@@ -119,11 +125,12 @@ a {
 }
 
 .Dot {
-  border-radius: 100%;
   width: 0.5rem;
   height: 0.5rem;
-  border: 1px solid var(--text-color);
   margin-top: 0.8rem;
+
+  border: 1px solid var(--text-color);
+  border-radius: 100%;
 }
 .Dot--filled {
   background-color: var(--text-color);
@@ -133,6 +140,9 @@ a {
   display: none;
   overflow: hidden;
   position: relative;
+
+  width: 50vw;
+  height: 100vh;
 }
 .Video video {
   width: 100%;
@@ -140,15 +150,17 @@ a {
   object-fit: cover;
 }
 .Video::after {
-  animation: grain 8s steps(10) infinite;
   content: "";
-  height: 300%;
-  left: -50%;
   position: absolute;
-  opacity: 0.2;
   top: -100%;
+  left: -50%;
+
   width: 300%;
+  height: 300%;
+
+  opacity: 0.2;
   background: url(/assets/misc/noise.svg), rgba(0, 0, 0, 1);
+  animation: grain 8s steps(10) infinite;
 }
 
 .fade-in {
@@ -219,20 +231,13 @@ a {
     max-width: 50vw;
   }
 
-  .Icons img {
-    width: 1.5rem;
-    height: 1.5rem;
+  .Icons {
+    --icons-size: 1.7rem;
   }
 
   .Emblem {
+    --emblem-size: 6rem;
     top: -70px;
-    width: 6rem;
-    height: 6rem;
-  }
-
-  .Video {
-    width: 50vw;
-    height: 100vh;
   }
 
   .show {
@@ -243,48 +248,49 @@ a {
 @media (min-width: 1280px) {
   main {
     --main-heading-font-size: 5.5em;
-    --main-text-font-size: 1em;
+    --main-text-font-size: 1.2em;
   }
 
   .Form {
-    --form-gap: 1.2rem;
-    --form-font-size: 1.1em;
-    --form-height: 2.8rem;
+    --form-gap: 1.3rem;
+    --form-font-size: 1.2em;
+    --form-height: 3rem;
+    --form-border-radius: 1.3rem;
   }
 
-  .Icons img {
-    width: 1.8rem;
-    height: 1.8rem;
+  .Icons {
+    --icons-size: 2.1rem;
   }
 
   .Emblem {
+    --emblem-size: 7rem;
     top: -80px;
-    width: 7rem;
-    height: 7rem;
+  }
+
+  .Slider {
+    bottom: -9rem;
   }
 }
 
 @media (min-width: 1440px) {
   main {
     --main-heading-font-size: 5.8em;
-    --main-text-font-size: 1.2em;
+    --main-text-font-size: 1.3em;
   }
 
   .Form {
-    --form-gap: 1.2rem;
-    --form-font-size: 1.2em;
-    --form-height: 3rem;
+    --form-gap: 1.3rem;
+    --form-font-size: 1.4em;
+    --form-height: 3.4rem;
+    --form-border-radius: 1.4rem;
   }
 
-  .Icons img {
-    width: 2rem;
-    height: 2rem;
+  .Icons {
+    --icons-size: 2.5rem;
   }
 
   .Emblem {
-    top: -80px;
-    width: 7.6rem;
-    height: 7.6rem;
+    --emblem-size: 7.6rem;
   }
 
   .Slider {
@@ -292,34 +298,33 @@ a {
   }
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 1650px) {
   main {
-    --main-heading-font-size: 5.8em;
-    --main-text-font-size: 1.2em;
+    --main-heading-font-size: 6.6em;
+    --main-text-font-size: 1.3em;
   }
 
   .Form {
     --form-gap: 1.4rem;
-    --form-font-size: 1.4em;
-    --form-height: 3.4rem;
+    --form-font-size: 1.6em;
+    --form-height: 3.9rem;
+    --form-border-radius: 1.6rem;
   }
 
+  .Form__container input {
+    padding: 0 1.2rem;
+  }
   .Form__container button {
     max-width: 250px;
   }
 
-  .Icons img {
-    width: 2.5rem;
-    height: 2.5rem;
+  .Icons {
+    --icons-size: 2.8rem;
+    --icons-gap: 2rem;
   }
 
   .Emblem {
-    top: -80px;
-    width: 8.5rem;
-    height: 8.5rem;
-  }
-
-  .Slider {
-    bottom: -9.5rem;
+    --emblem-size: 8.5rem;
+    top: -90px;
   }
 }

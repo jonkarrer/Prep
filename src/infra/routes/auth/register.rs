@@ -21,10 +21,21 @@ pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
             r#"
             <form action="/auth/register" method="POST">
                 <div>
-                    <input type="text" name="email" placeholder="Email Address" />
+                    <input type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    title="Enter your email address"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                />
                 </div>
                 <div>
-                    <input type="password" name="password" placeholder="Password" />
+                    <input 
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                    title="Must be 8 or more characters and have one number and one uppercase letter"
+                />
                 </div>
                 <div>
                     <input

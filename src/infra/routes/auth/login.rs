@@ -13,10 +13,20 @@ pub fn handle_login_ui(req: &Request) -> Result<impl IntoResponse> {
             r#"
             <form action="/auth/login" method="POST">
                 <div>
-                    <input type="text" name="email" placeholder="Email Address" />
+                    <input 
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        title="Enter an email address"
+                    />
                 </div>
                 <div>
-                    <input type="password" name="password" placeholder="Password" />
+                    <input 
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        title="Enter your password"
+                    />
                 </div>
                 <button type="submit">Login</button>
             </form>

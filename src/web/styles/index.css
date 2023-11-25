@@ -27,6 +27,7 @@ body {
 
 a {
   text-underline-offset: 4px;
+  text-decoration: underline;
   color: inherit;
 }
 

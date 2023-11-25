@@ -272,21 +272,24 @@ a {
   }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1536px) {
   main {
-    --main-heading-font-size: 5.8em;
-    --main-text-font-size: 1.3em;
+    --main-heading-font-size: 5.7em;
+    --main-text-font-size: 1.2em;
   }
 
   .Form {
     --form-gap: 1.3rem;
-    --form-font-size: 1.4em;
-    --form-height: 3.4rem;
+    --form-font-size: 1.2em;
+    --form-height: 3.2rem;
     --form-border-radius: 1.4rem;
+  }
+  .Form__container button {
+    max-width: 250px;
   }
 
   .Icons {
-    --icons-size: 2.5rem;
+    --icons-size: 2.3rem;
   }
 
   .Emblem {
@@ -298,7 +301,35 @@ a {
   }
 }
 
-@media (min-width: 1650px) {
+@media (min-width: 1800px) {
+  main {
+    --main-heading-font-size: 6em;
+    --main-text-font-size: 1.4em;
+  }
+
+  .Form {
+    --form-gap: 1.4rem;
+    --form-font-size: 1.5em;
+    --form-height: 3.5rem;
+    --form-border-radius: 1.5rem;
+  }
+
+  .Form__container input {
+    padding: 0 1.2rem;
+  }
+
+  .Icons {
+    --icons-size: 2.6rem;
+    --icons-gap: 2rem;
+  }
+
+  .Emblem {
+    --emblem-size: 8.5rem;
+    top: -90px;
+  }
+}
+
+@media (min-width: 2000px) {
   main {
     --main-heading-font-size: 6.6em;
     --main-text-font-size: 1.3em;

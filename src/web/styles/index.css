@@ -58,6 +58,54 @@ h1 {
   color: var(--text-color);
 }
 
+/*** Logo ***/
+
+.Logo {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--text-color);
+  border-radius: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Logo:hover {
+  cursor: pointer;
+  background-color: var(--pri-color);
+}
+.Logo img {
+  height: 1.1rem;
+  width: 1.1rem;
+  margin-left: 2px;
+}
+
+/*** Header ***/
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 2rem;
+}
+
+header nav {
+  font-weight: 500;
+}
+
+header nav a:first-child {
+  margin-right: 12px;
+}
+
+header nav a:hover {
+  color: var(--pri-color);
+}
+
 /************ CSS Reset ************/
 *:where(
     :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
@@ -109,11 +157,12 @@ table {
   border-collapse: collapse;
 }
 
-/* Safari - solving issue when using user-select:none on the <body> text input doesn't working
+/* Safari - solving issue when using user-select:none on the <body> text input doesn't working */
 input,
 textarea {
   -webkit-user-select: auto;
-} */
+  user-select: auto;
+}
 
 /* revert the 'white-space' property for textarea elements on Safari */
 textarea {
@@ -146,13 +195,15 @@ meter {
 /* revert for bug in Chromium browsers
    - fix for the content editable attribute will work properly.
    - webkit-user-select: auto; added for Safari in case of using user-select:none on wrapper element*/
-/* :where([contenteditable]:not([contenteditable="false"])) {
+:where([contenteditable]:not([contenteditable="false"])) {
   -moz-user-modify: read-write;
   -webkit-user-modify: read-write;
   overflow-wrap: break-word;
   -webkit-line-break: after-white-space;
+  line-break: after-white-space;
   -webkit-user-select: auto;
-} */
+  user-select: auto;
+}
 
 /* apply back the draggable feature - exist only in Chromium and Safari */
 :where([draggable="true"]) {

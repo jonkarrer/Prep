@@ -12,16 +12,17 @@
     <title>Login</title>
   </head>
   <body>
-    <div id="left_panel" class="show_panel panel">
+    <div id="left_panel" class="Video show">
       <video
         autoplay
         loop
         src="https://assets.mixkit.co/videos/preview/mixkit-cutting-a-sandwich-in-half-for-a-healthy-lunch-26094-large.mp4"
       ></video>
     </div>
+
     <main>
       <header>
-        <div class="logo_bg">
+        <div class="Logo">
           <img src="/assets/brand/prep_logo_light.svg" />
         </div>
         <nav>
@@ -29,16 +30,23 @@
           <a href="/products">Products</a>
         </nav>
       </header>
-      <div class="left_col">
+
+      <div class="Icons">
         <img src="/assets/icons/apple-solid.svg" />
         <img src="/assets/icons/cookie-outline.svg" />
         <img src="/assets/icons/herb-outline.svg" />
       </div>
-      <div class="center_col">
-        <img class="emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
+
+      <div class="Form">
+        <img class="Emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
         <h1>Prep</h1>
 
-        <div hx-get="/auth/login" hx-trigger="load" id="form-container">
+        <div
+          class="Form__container"
+          hx-get="/auth/login"
+          hx-trigger="load"
+          id="form-container"
+        >
           Loading...
         </div>
 
@@ -57,24 +65,27 @@
           style="display: none"
           >Sign In</a
         >
-        <div class="slider">
+
+        <div class="Slider">
           <p id="slider_text">
             Organize your kitchen with Prep, the generative recipe system.
           </p>
-          <span class="slider_dot_container">
-            <span id="dot_one" class="slider_dot-one filled-dot"></span>
-            <span id="dot_two" class="slider_dot-two"></span>
-            <span id="dot_three" class="slider_dot-three"></span>
+          <span class="Slider--dots_container">
+            <span id="dot_one" class="Dot Dot--filled"></span>
+            <span id="dot_two" class="Dot"></span>
+            <span id="dot_three" class="Dot"></span>
           </span>
         </div>
       </div>
-      <div class="right_col">
+
+      <div class="Icons">
         <img src="/assets/icons/fruit-bowl-outline.svg" />
         <img src="/assets/icons/lotus-solid.svg" />
         <img src="/assets/icons/rice-bowl-solid.svg" />
       </div>
     </main>
-    <div id="right_panel" class="panel">
+
+    <div id="right_panel" class="Video">
       <video
         autoplay
         loop
@@ -89,12 +100,12 @@
 
         if (id === "sign-up-link") {
           document.getElementById("sign-in-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show_panel");
-          document.getElementById("right_panel").classList.toggle("show_panel");
+          document.getElementById("left_panel").classList.toggle("show");
+          document.getElementById("right_panel").classList.toggle("show");
         } else {
           document.getElementById("sign-up-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show_panel");
-          document.getElementById("right_panel").classList.toggle("show_panel");
+          document.getElementById("left_panel").classList.toggle("show");
+          document.getElementById("right_panel").classList.toggle("show");
         }
       }
 
@@ -121,10 +132,10 @@
         let currDot = dots[index];
         let prevDot = dots[index - 1 === -1 ? 2 : index - 1];
 
-        currDot.classList.toggle("filled-dot");
+        currDot.classList.toggle("Dot--filled");
         currDot.classList.add("fill-in");
 
-        prevDot.classList.toggle("filled-dot");
+        prevDot.classList.toggle("Dot--filled");
 
         setTimeout(() => currDot.classList.remove("fill-in"), 2000);
       }

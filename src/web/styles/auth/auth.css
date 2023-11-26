@@ -115,7 +115,7 @@ a {
 
 .Slider {
   position: absolute;
-  bottom: -8rem;
+  bottom: -6.5rem;
   text-align: center;
 }
 .Slider--dots_container {
@@ -134,6 +134,15 @@ a {
 }
 .Dot--filled {
   background-color: var(--text-color);
+}
+
+@media (max-width: 321px) {
+  .Slider {
+    display: none;
+  }
+  .Icons img {
+    display: none;
+  }
 }
 
 .Video {

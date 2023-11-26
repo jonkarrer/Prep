@@ -34,12 +34,11 @@ pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
                     name="password"
                     placeholder="Password"
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                    title="Must be 8 or more characters and have one number and one uppercase letter"
+                    title="At least 8 characters with a number and uppercase letter"
                 />
                 </div>
                 <div>
                     <input
-                        type="confirm_password"
                         name="confirm_password"
                         placeholder="Confirm Password"
                     />

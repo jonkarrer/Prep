@@ -116,12 +116,6 @@ header nav a:hover {
 }
 
 /************ CSS Reset ************/
-*:where(
-    :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
-  ) {
-  all: unset;
-  display: revert;
-}
 
 /* Preferred box-sizing value */
 *,
@@ -199,30 +193,6 @@ meter {
    display:revert; revert to element instead of attribute */
 :where([hidden]) {
   display: none;
-}
-
-/* revert for bug in Chromium browsers
-   - fix for the content editable attribute will work properly.
-   - webkit-user-select: auto; added for Safari in case of using user-select:none on wrapper element*/
-:where([contenteditable]:not([contenteditable="false"])) {
-  -moz-user-modify: read-write;
-  -webkit-user-modify: read-write;
-  overflow-wrap: break-word;
-  -webkit-line-break: after-white-space;
-  line-break: after-white-space;
-  -webkit-user-select: auto;
-  user-select: auto;
-}
-
-/* apply back the draggable feature - exist only in Chromium and Safari */
-:where([draggable="true"]) {
-  -webkit-user-drag: element;
-}
-
-/* Revert Modal native behavior */
-:where(dialog:modal) {
-  all: revert;
-  box-sizing: border-box;
 }
 
 /* Remove details summary webkit styles */

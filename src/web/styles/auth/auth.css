@@ -172,6 +172,25 @@ a {
   animation: grain 8s steps(10) infinite;
 }
 
+.Toast {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+
+  width: max-content;
+  max-width: 70vw;
+  margin: auto;
+  padding: 1rem;
+
+  background-color: rgb(154, 41, 41);
+  border-radius: 1.3rem;
+
+  color: var(--sec-color);
+  font-size: 0.8em;
+  z-index: 1000;
+}
+
 .fade-in {
   animation: fade-in ease-out 1s forwards;
 }

@@ -44,9 +44,9 @@ pub struct LoginRequest {
 
 #[handler]
 pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
-    let session = login_user(&req.email, &req.password)
-        .await
-        .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+    let session = login_user(&req.email, &req.password).await.map_err(|_| {
+        Error::from_string("Username or Password is incorrect", StatusCode::BAD_REQUEST)
+    })?;
 
     let res = Response::builder()
         .header(

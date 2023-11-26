@@ -177,6 +177,7 @@ a {
   top: 2rem;
   left: 0;
   right: 0;
+  visibility: hidden;
 
   width: max-content;
   max-width: 70vw;
@@ -188,7 +189,13 @@ a {
 
   color: var(--sec-color);
   font-size: 0.8em;
+  text-align: center;
   z-index: 1000;
+}
+
+.slideInDown {
+  animation: slideInDown 0.5s ease;
+  animation-fill-mode: forwards;
 }
 
 .fade-in {
@@ -208,6 +215,18 @@ a {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -120%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
   }
 }
 

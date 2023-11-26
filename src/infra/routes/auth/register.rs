@@ -89,7 +89,7 @@ pub async fn handle_register(
                 Ok(response)
             } else {
                 return Err(Error::from_string(
-                    "Password must be a minimum 8 letters and one digit",
+                    "Password must be at least 8 letters and one digit",
                     StatusCode::BAD_REQUEST,
                 ));
             }

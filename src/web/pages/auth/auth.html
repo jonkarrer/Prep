@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="Toast" id="toast">
-      <p id="toast-message">Message about something</p>
+      <p id="toast-message">An error has occurred</p>
     </div>
 
     <div id="left_panel" class="Video show">
@@ -153,14 +153,19 @@
       }, 5000);
 
       document.body.addEventListener("htmx:responseError", function (event) {
-        // event.detail contains information about the error
-        var xhr = event.detail.xhr; // The XMLHttpRequest object
-        var status = xhr.status; // HTTP status code
-        var response = xhr.responseText; // Server response
+        let status = xhr.status; // HTTP status code
+        let response = xhr.responseText; // Server response
 
         // Handle the error
         // e.g., display the error message on the page
-        document.getElementById("toast-message").innerHTML = response;
+        let toast = document.getElementById("toast");
+        toast.classList.add("slideInDown");
+        let toastMessage = document.getElementById("toast-message");
+        toastMessage.innerText = response;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+        }, 8000);
       });
     </script>
   </body>

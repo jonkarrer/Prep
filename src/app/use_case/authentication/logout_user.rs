@@ -7,7 +7,7 @@ pub async fn logout_user(session: &Session, csrf_token: &str) -> anyhow::Result<
         true => {
             session_client()
                 .await
-                .destory_session(&session.session_id)
+                .destroy_session(&session.session_id)
                 .await
         }
         false => Err(anyhow::anyhow!("Unauthorized")),

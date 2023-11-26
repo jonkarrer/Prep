@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/auth/auth.css" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.8"
+      integrity="sha384-rgjA7mptc2ETQqXoYC3/zJvkU7K/aP44Y+z7xQuJiVnB/422P/Ak+F/AqFR7E4Wr"
+      crossorigin="anonymous"
+    ></script>
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="Toast" id="toast">
+      <p id="toast-message">An error has occurred</p>
+    </div>
+
+    <div id="left_panel" class="Video show">
+      <video
+        autoplay
+        loop
+        src="https://assets.mixkit.co/videos/preview/mixkit-cutting-a-sandwich-in-half-for-a-healthy-lunch-26094-large.mp4"
+      ></video>
+    </div>
+
+    <main>
+      <header>
+        <div class="Logo">
+          <img src="/assets/brand/prep_logo_light.svg" />
+        </div>
+        <nav>
+          <a href="/">About</a>
+          <a href="/products">Products</a>
+        </nav>
+      </header>
+
+      <div class="Icons">
+        <img src="/assets/icons/apple-solid.svg" />
+        <img src="/assets/icons/cookie-outline.svg" />
+        <img src="/assets/icons/herb-outline.svg" />
+      </div>
+
+      <div class="Form">
+        <img class="Emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
+        <h1>Prep</h1>
+
+        <div
+          class="Form__container"
+          hx-get="/auth/login"
+          hx-trigger="load"
+          id="form-container"
+        >
+          Loading...
+        </div>
+
+        <a
+          hx-get="/auth/register"
+          hx-target="#form-container"
+          onclick="swapAnchorTag(event)"
+          id="sign-up-link"
+          >Sign Up</a
+        >
+        <a
+          hx-get="/auth/login"
+          hx-target="#form-container"
+          onclick="swapAnchorTag(event)"
+          id="sign-in-link"
+          style="display: none"
+          >Sign In</a
+        >
+
+        <div class="Slider">
+          <p id="slider_text">
+            Organize your kitchen with Prep, the generative recipe system.
+          </p>
+          <span class="Slider--dots_container">
+            <span id="dot_one" class="Dot Dot--filled"></span>
+            <span id="dot_two" class="Dot"></span>
+            <span id="dot_three" class="Dot"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="Icons">
+        <img src="/assets/icons/fruit-bowl-outline.svg" />
+        <img src="/assets/icons/lotus-solid.svg" />
+        <img src="/assets/icons/rice-bowl-solid.svg" />
+      </div>
+    </main>
+
+    <div id="right_panel" class="Video">
+      <video
+        autoplay
+        loop
+        src="https://assets.mixkit.co/videos/preview/mixkit-spoonful-of-healthy-cereal-with-milk-41147-large.mp4"
+      ></video>
+    </div>
+
+    <script>
+      function swapAnchorTag(e) {
+        let id = e.target.id;
+        e.target.style.display = "none";
+
+        if (id === "sign-up-link") {
+          document.getElementById("sign-in-link").style.display = "block";
+          document.getElementById("left_panel").classList.toggle("show");
+          document.getElementById("right_panel").classList.toggle("show");
+        } else {
+          document.getElementById("sign-up-link").style.display = "block";
+          document.getElementById("left_panel").classList.toggle("show");
+          document.getElementById("right_panel").classList.toggle("show");
+        }
+      }
+
+      function transitionSliderText(index) {
+        let textEl = document.getElementById("slider_text");
+        textEl.classList.add("fade-in");
+
+        textEl.innerText = [
+          "Organize your kitchen with Prep, the generative recipe system.",
+          "Don't let a great dish be forgotten, let Prep save it for next time.",
+          "Prep will help you learn, understand, and execute any recipe",
+        ][index];
+
+        setTimeout(() => textEl.classList.remove("fade-in"), 2000);
+      }
+
+      function transitionFilledDot(index) {
+        let dot_one = document.getElementById("dot_one");
+        let dot_two = document.getElementById("dot_two");
+        let dot_three = document.getElementById("dot_three");
+
+        let dots = [dot_one, dot_two, dot_three];
+
+        let currDot = dots[index];
+        let prevDot = dots[index - 1 === -1 ? 2 : index - 1];
+
+        currDot.classList.toggle("Dot--filled");
+        currDot.classList.add("fill-in");
+
+        prevDot.classList.toggle("Dot--filled");
+
+        setTimeout(() => currDot.classList.remove("fill-in"), 2000);
+      }
+
+      let i = 1;
+      setInterval(() => {
+        transitionSliderText(i);
+        transitionFilledDot(i);
+
+        i = i === 2 ? 0 : (i += 1);
+      }, 5000);
+
+      document.body.addEventListener("htmx:responseError", function (event) {
+        let status = xhr.status; // HTTP status code
+        let response = xhr.responseText; // Server response
+
+        // Handle the error
+        // e.g., display the error message on the page
+        let toast = document.getElementById("toast");
+        toast.classList.add("slideInDown");
+        let toastMessage = document.getElementById("toast-message");
+        toastMessage.innerText = response;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+        }, 8000);
+      });
+    </script>
+  </body>
+</html>

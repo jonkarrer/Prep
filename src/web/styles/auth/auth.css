@@ -1,0 +1,408 @@
+@import url("/styles/index.css");
+
+body {
+  display: flex;
+  align-items: center;
+  height: 100svh;
+  background-color: var(--sec-color);
+}
+
+main {
+  --main-heading-font-size: 4.5em;
+  --main-text-font-size: 0.8em;
+
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  place-items: center;
+
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+h1 {
+  font-size: var(--main-heading-font-size);
+  font-weight: 700;
+  color: var(--text-color);
+  text-align: center;
+}
+p,
+a {
+  font-size: var(--main-text-font-size);
+  font-weight: 500;
+}
+
+.Form {
+  --form-gap: 1.1rem;
+  --form-font-size: 1em;
+  --form-height: 2.4rem;
+  --form-border-radius: 1rem;
+
+  display: grid;
+  place-items: center;
+  position: relative;
+  gap: var(--form-gap);
+
+  width: 100%;
+}
+.Form__container {
+  width: 100%;
+}
+.Form__container form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+}
+.Form__container input {
+  width: 100%;
+  height: var(--form-height);
+  padding: 0 0.8rem;
+  margin: auto;
+
+  border: solid 1px;
+  border-radius: var(--form-border-radius);
+  border-color: var(--text-color);
+  background-color: var(--sec-color);
+
+  font-size: var(--form-font-size);
+}
+.Form__container input:focus {
+  border-color: var(--pri-color);
+  border-width: 2px;
+}
+.Form__container button {
+  max-width: 220px;
+  width: 85%;
+  height: var(--form-height);
+  margin: auto;
+
+  background-color: var(--text-color);
+  border-radius: var(--form-border-radius);
+
+  font-weight: 500;
+  text-align: center;
+  font-size: var(--form-font-size);
+  color: var(--sec-color);
+}
+.Form__container button:hover {
+  background-color: var(--pri-color);
+}
+
+.Icons {
+  --icons-size: 1.6rem;
+  --icons-gap: 1.4rem;
+
+  display: grid;
+  place-items: center;
+  gap: var(--icons-gap);
+  padding: 0 12px;
+}
+.Icons img {
+  width: var(--icons-size);
+  height: var(--icons-size);
+}
+
+.Emblem {
+  --emblem-size: 5rem;
+
+  position: absolute;
+  top: -60px;
+
+  width: var(--emblem-size);
+  height: var(--emblem-size);
+}
+
+.Slider {
+  position: absolute;
+  bottom: -6.5rem;
+  text-align: center;
+}
+.Slider--dots_container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.Dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.8rem;
+
+  border: 1px solid var(--text-color);
+  border-radius: 100%;
+}
+.Dot--filled {
+  background-color: var(--text-color);
+}
+
+@media (max-width: 321px) {
+  .Slider {
+    display: none;
+  }
+  .Icons img {
+    display: none;
+  }
+}
+
+.Video {
+  display: none;
+  overflow: hidden;
+  position: relative;
+
+  width: 50vw;
+  height: 100vh;
+}
+.Video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.Video::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -50%;
+
+  width: 300%;
+  height: 300%;
+
+  opacity: 0.2;
+  background: url(/assets/misc/noise.svg), rgba(0, 0, 0, 1);
+  animation: grain 8s steps(10) infinite;
+}
+
+.Toast {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+
+  width: max-content;
+  max-width: 70vw;
+  margin: auto;
+  padding: 1rem;
+
+  background-color: rgb(154, 41, 41);
+  border-radius: 1.3rem;
+
+  color: var(--sec-color);
+  font-size: 0.8em;
+  text-align: center;
+  z-index: 1000;
+}
+
+.slideInDown {
+  animation: slideInDown 0.5s ease;
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation: fade-in ease-out 1s forwards;
+}
+
+.fill-in {
+  animation: fill-in 0.8s forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -120%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+}
+
+@keyframes fill-in {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: var(--text-color);
+  }
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  30% {
+    transform: translate(7%, -25%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  50% {
+    transform: translate(-15%, 10%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  70% {
+    transform: translate(0%, 15%);
+  }
+  80% {
+    transform: translate(3%, 35%);
+  }
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+@media (min-width: 1023px) {
+  main {
+    max-width: 50vw;
+  }
+
+  .Icons {
+    --icons-size: 1.7rem;
+  }
+
+  .Emblem {
+    --emblem-size: 6rem;
+    top: -70px;
+  }
+
+  .show {
+    display: block;
+  }
+}
+
+@media (min-width: 1280px) {
+  main {
+    --main-heading-font-size: 5.5em;
+    --main-text-font-size: 1.2em;
+  }
+
+  .Form {
+    --form-gap: 1.3rem;
+    --form-font-size: 1.2em;
+    --form-height: 3rem;
+    --form-border-radius: 1.3rem;
+  }
+
+  .Icons {
+    --icons-size: 2.1rem;
+  }
+
+  .Emblem {
+    --emblem-size: 7rem;
+    top: -80px;
+  }
+
+  .Slider {
+    bottom: -9rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  main {
+    --main-heading-font-size: 5.7em;
+    --main-text-font-size: 1.2em;
+  }
+
+  .Form {
+    --form-gap: 1.3rem;
+    --form-font-size: 1.2em;
+    --form-height: 3.2rem;
+    --form-border-radius: 1.4rem;
+  }
+  .Form__container button {
+    max-width: 250px;
+  }
+
+  .Icons {
+    --icons-size: 2.3rem;
+  }
+
+  .Emblem {
+    --emblem-size: 7.6rem;
+  }
+
+  .Slider {
+    bottom: -9.5rem;
+  }
+}
+
+@media (min-width: 1800px) {
+  main {
+    --main-heading-font-size: 6em;
+    --main-text-font-size: 1.4em;
+  }
+
+  .Form {
+    --form-gap: 1.4rem;
+    --form-font-size: 1.5em;
+    --form-height: 3.5rem;
+    --form-border-radius: 1.5rem;
+  }
+
+  .Form__container input {
+    padding: 0 1.2rem;
+  }
+
+  .Icons {
+    --icons-size: 2.6rem;
+    --icons-gap: 2rem;
+  }
+
+  .Emblem {
+    --emblem-size: 8.5rem;
+    top: -90px;
+  }
+}
+
+@media (min-width: 2000px) {
+  main {
+    --main-heading-font-size: 6.6em;
+    --main-text-font-size: 1.3em;
+  }
+
+  .Form {
+    --form-gap: 1.4rem;
+    --form-font-size: 1.6em;
+    --form-height: 3.9rem;
+    --form-border-radius: 1.6rem;
+  }
+
+  .Form__container input {
+    padding: 0 1.2rem;
+  }
+  .Form__container button {
+    max-width: 250px;
+  }
+
+  .Icons {
+    --icons-size: 2.8rem;
+    --icons-gap: 2rem;
+  }
+
+  .Emblem {
+    --emblem-size: 8.5rem;
+    top: -90px;
+  }
+}

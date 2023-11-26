@@ -15,11 +15,11 @@ fn client_config() -> DatabaseConfig {
 }
 
 pub async fn session_client() -> SessionClient<MySqlGateway> {
-    SessionClient::new(&client_config()).await
+    SessionClient::new_mysql_client(&client_config()).await
 }
 
 pub async fn auth_client() -> AuthClient<MySqlGateway> {
-    AuthClient::new(&client_config()).await
+    AuthClient::new_mysql_client(&client_config()).await
 }
 
 pub async fn db_client() -> Database<MySqlPool> {

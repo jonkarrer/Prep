@@ -1,5 +1,40 @@
 use crate::{app::use_case::login_user, domain::constants::SESSION_COOKIE_KEY};
-use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
+use poem::{
+    handler,
+    http::StatusCode,
+    web::{Form, Html},
+    Error, IntoResponse, Request, Response, Result,
+};
+
+#[handler]
+pub fn handle_login_ui(req: &Request) -> Result<impl IntoResponse> {
+    match req.header("HX-Request") {
+        Some(_) => Ok(Html(
+            r#"
+            <form hx-post="/auth/login">
+                <div>
+                    <input 
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        title="Enter an email address"
+                    />
+                </div>
+                <div>
+                    <input 
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        title="Enter your password"
+                    />
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            "#,
+        )),
+        None => Err(Error::from_status(StatusCode::NOT_FOUND)),
+    }
+}
 
 #[derive(serde::Deserialize)]
 pub struct LoginRequest {
@@ -9,9 +44,9 @@ pub struct LoginRequest {
 
 #[handler]
 pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
-    let session = login_user(&req.email, &req.password)
-        .await
-        .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+    let session = login_user(&req.email, &req.password).await.map_err(|_| {
+        Error::from_string("Username or Password is incorrect", StatusCode::BAD_REQUEST)
+    })?;
 
     let res = Response::builder()
         .header(
@@ -21,7 +56,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )
-        .header("Location", "/usr/dashboard")
+        .header("Location", "/dash")
         .status(StatusCode::FOUND)
         .finish();
 

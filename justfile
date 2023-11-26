@@ -30,7 +30,7 @@ run-migration env_config:
     && ./scripts/init_db.sh
 
 # ---- Tests ----
-test:
+test-all:
     -cargo test
     
 test-repo:

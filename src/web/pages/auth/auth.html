@@ -45,13 +45,22 @@
         <img class="Emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
         <h1>Prep</h1>
 
-        <div
-          class="Form__container"
-          hx-get="/auth/login"
-          hx-trigger="load"
-          id="form-container"
-        >
-          Loading...
+        <div class="Form__container" id="form-container">
+          <form action="/auth/login" method="POST" id="auth-form">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              title="Enter an email address"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              title="Enter your password"
+            />
+            <button type="submit">Login</button>
+          </form>
         </div>
 
         <a
@@ -152,20 +161,33 @@
         i = i === 2 ? 0 : (i += 1);
       }, 5000);
 
-      document.body.addEventListener("htmx:responseError", function (event) {
-        let status = xhr.status; // HTTP status code
-        let response = xhr.responseText; // Server response
+      let form = document.getElementById("auth-form");
+      console.log("form", form);
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-        // Handle the error
-        // e.g., display the error message on the page
-        let toast = document.getElementById("toast");
-        toast.classList.add("slideInDown");
-        let toastMessage = document.getElementById("toast-message");
-        toastMessage.innerText = response;
+        let formData = new FormData(event.target);
 
-        setTimeout(() => {
-          toast.classList.remove("slideInDown");
-        }, 8000);
+        fetch(event.target.action, {
+          method: event.target.method,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams(formData).toString(),
+        }).then((res) => {
+          let status = res.status;
+
+          res.text().then((text) => {
+            let toast = document.getElementById("toast");
+            toast.classList.add("slideInDown");
+            let toastMessage = document.getElementById("toast-message");
+            toastMessage.innerText = text;
+
+            setTimeout(() => {
+              toast.classList.remove("slideInDown");
+            }, 8000);
+          });
+        });
       });
     </script>
   </body>

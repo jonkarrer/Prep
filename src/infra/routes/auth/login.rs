@@ -11,7 +11,7 @@ pub fn handle_login_ui(req: &Request) -> Result<impl IntoResponse> {
     match req.header("HX-Request") {
         Some(_) => Ok(Html(
             r#"
-            <form hx-post="/auth/login">
+            <form action="/auth/login" method="POST" id="auth-form">
                 <div>
                     <input 
                         type="email"

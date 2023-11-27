@@ -20,7 +20,7 @@ pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
     match req.header("HX-Request") {
         Some(_) => Ok(Html(
             r#"
-            <form hx-post="/auth/register">
+            <form action="/auth/register" method="POST">
                 <div>
                     <input type="email"
                     name="email"

@@ -46,3 +46,8 @@ test-routes:
 
 test-usr-route:
     -cargo test usr
+
+
+# Scripts
+hit-recipe-api:
+    bun ./scripts/spoontacular_api.js

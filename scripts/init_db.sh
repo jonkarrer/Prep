@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # print each command before it is executed
 set -x
 # stop on any error from any command in a pipeline. 

@@ -332,7 +332,7 @@ a:hover {
 @media (min-width: 1536px) {
   main {
     --main-heading-font-size: 5.7em;
-    --main-text-font-size: 1.2em;
+    --main-text-font-size: 1em;
   }
 
   .Stack {
@@ -361,7 +361,7 @@ a:hover {
 @media (min-width: 1800px) {
   main {
     --main-heading-font-size: 6em;
-    --main-text-font-size: 1.2em;
+    --main-text-font-size: 1em;
   }
 
   .Stack {

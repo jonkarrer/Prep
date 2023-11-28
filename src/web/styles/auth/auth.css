@@ -33,7 +33,7 @@ a {
   font-weight: 500;
 }
 
-.Form {
+.Stack {
   --form-gap: 1.1rem;
   --form-font-size: 1em;
   --form-height: 2.4rem;
@@ -46,15 +46,17 @@ a {
 
   width: 100%;
 }
-.Form__container {
-  width: 100%;
-}
-.Form__container form {
-  display: flex;
+.Stack form {
+  display: none;
   flex-direction: column;
   gap: var(--form-gap);
+
+  width: 100%;
 }
-.Form__container input {
+.Stack form.show {
+  display: flex;
+}
+.Stack input {
   width: 100%;
   height: var(--form-height);
   padding: 0 0.8rem;
@@ -67,11 +69,11 @@ a {
 
   font-size: var(--form-font-size);
 }
-.Form__container input:focus {
+.Stack input:focus {
   border-color: var(--pri-color);
   border-width: 2px;
 }
-.Form__container button {
+.Stack button {
   max-width: 220px;
   width: 85%;
   height: var(--form-height);
@@ -85,8 +87,15 @@ a {
   font-size: var(--form-font-size);
   color: var(--sec-color);
 }
-.Form__container button:hover {
+.Stack button:hover {
   background-color: var(--pri-color);
+}
+
+.Link {
+  display: none;
+}
+.Link.show {
+  display: block;
 }
 
 .Icons {
@@ -287,7 +296,7 @@ a {
     top: -70px;
   }
 
-  .show {
+  .Video.show {
     display: block;
   }
 }
@@ -298,7 +307,7 @@ a {
     --main-text-font-size: 1.2em;
   }
 
-  .Form {
+  .Stack {
     --form-gap: 1.3rem;
     --form-font-size: 1.2em;
     --form-height: 3rem;
@@ -325,13 +334,13 @@ a {
     --main-text-font-size: 1.2em;
   }
 
-  .Form {
+  .Stack {
     --form-gap: 1.3rem;
     --form-font-size: 1.2em;
     --form-height: 3.2rem;
     --form-border-radius: 1.4rem;
   }
-  .Form__container button {
+  .Stack button {
     max-width: 250px;
   }
 
@@ -354,14 +363,14 @@ a {
     --main-text-font-size: 1.4em;
   }
 
-  .Form {
+  .Stack {
     --form-gap: 1.4rem;
     --form-font-size: 1.5em;
     --form-height: 3.5rem;
     --form-border-radius: 1.5rem;
   }
 
-  .Form__container input {
+  .Stack input {
     padding: 0 1.2rem;
   }
 
@@ -382,17 +391,17 @@ a {
     --main-text-font-size: 1.3em;
   }
 
-  .Form {
+  .Stack {
     --form-gap: 1.4rem;
     --form-font-size: 1.6em;
     --form-height: 3.9rem;
     --form-border-radius: 1.6rem;
   }
 
-  .Form__container input {
+  .Stack input {
     padding: 0 1.2rem;
   }
-  .Form__container button {
+  .Stack button {
     max-width: 250px;
   }
 

@@ -41,41 +41,49 @@
         <img src="/assets/icons/herb-outline.svg" />
       </div>
 
-      <div class="Form">
+      <div class="Stack">
         <img class="Emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
         <h1>Prep</h1>
 
-        <div class="Form__container" id="form-container">
-          <form action="/auth/login" method="POST" id="auth-form">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              title="Enter an email address"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              title="Enter your password"
-            />
-            <button type="submit">Login</button>
-          </form>
-        </div>
+        <form action="/auth/login" method="POST" id="login_form" class="show">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            title="Enter an email address"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            title="Enter your password"
+          />
+          <button type="submit">Login</button>
+        </form>
 
-        <a
-          hx-get="/auth/register"
-          hx-target="#form-container"
-          onclick="swapAnchorTag(event)"
-          id="sign-up-link"
+        <form action="/auth/register" method="POST" id="register_form">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            title="Enter your email address"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            title="At least 8 characters with a number and uppercase letter"
+          />
+
+          <input name="confirm_password" placeholder="Confirm Password" />
+
+          <button type="submit">Register</button>
+        </form>
+
+        <a class="Link show" onclick="swapAnchorTag(event)" id="sign_up_link"
           >Sign Up</a
         >
-        <a
-          hx-get="/auth/login"
-          hx-target="#form-container"
-          onclick="swapAnchorTag(event)"
-          id="sign-in-link"
-          style="display: none"
+        <a class="Link" onclick="swapAnchorTag(event)" id="sign_in_link"
           >Sign In</a
         >
 
@@ -107,18 +115,28 @@
     </div>
 
     <script>
+      let loginForm = document.getElementById("login_form");
+      let registerForm = document.getElementById("register_form");
+
       function swapAnchorTag(e) {
         let id = e.target.id;
-        e.target.style.display = "none";
 
-        if (id === "sign-up-link") {
-          document.getElementById("sign-in-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show");
-          document.getElementById("right_panel").classList.toggle("show");
+        if (id === "sign_up_link") {
+          document.getElementById("sign_in_link").classList.add("show");
+          document.getElementById("right_panel").classList.add("show");
+          registerForm.classList.add("show");
+
+          document.getElementById("sign_up_link").classList.remove("show");
+          document.getElementById("left_panel").classList.remove("show");
+          loginForm.classList.remove("show");
         } else {
-          document.getElementById("sign-up-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show");
-          document.getElementById("right_panel").classList.toggle("show");
+          document.getElementById("sign_up_link").classList.add("show");
+          document.getElementById("left_panel").classList.add("show");
+          loginForm.classList.add("show");
+
+          document.getElementById("sign_in_link").classList.remove("show");
+          document.getElementById("right_panel").classList.remove("show");
+          registerForm.classList.remove("show");
         }
       }
 
@@ -161,9 +179,7 @@
         i = i === 2 ? 0 : (i += 1);
       }, 5000);
 
-      let form = document.getElementById("auth-form");
-      console.log("form", form);
-      form.addEventListener("submit", (event) => {
+      function submitForm(event) {
         event.preventDefault();
 
         let formData = new FormData(event.target);
@@ -188,7 +204,10 @@
             }, 8000);
           });
         });
-      });
+      }
+
+      loginForm.addEventListener("submit", submitForm);
+      registerForm.addEventListener("submit", submitForm);
     </script>
   </body>
 </html>

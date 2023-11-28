@@ -100,10 +100,6 @@
       </div>
     </main>
 
-    <div id="right_panel" class="Video">
-      <img src="/assets/left_panel.png" alt="" />
-    </div>
-
     <script>
       const loginForm = document.getElementById("login_form");
       const registerForm = document.getElementById("register_form");
@@ -112,26 +108,20 @@
 
       const signInLink = document.getElementById("sign_in_link");
       const signUpLink = document.getElementById("sign_up_link");
-      const leftPanel = document.getElementById("left_panel");
-      const rightPanel = document.getElementById("right_panel");
 
       function showRegisterForm() {
         signInLink.classList.add("show");
-        rightPanel.classList.add("show");
         registerForm.classList.add("show");
 
         signUpLink.classList.remove("show");
-        leftPanel.classList.remove("show");
         loginForm.classList.remove("show");
       }
 
       function showLoginForm() {
         signUpLink.classList.add("show");
-        leftPanel.classList.add("show");
         loginForm.classList.add("show");
 
         signInLink.classList.remove("show");
-        rightPanel.classList.remove("show");
         registerForm.classList.remove("show");
       }
 

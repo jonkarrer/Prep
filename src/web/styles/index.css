@@ -58,7 +58,7 @@ a,
 input,
 button {
   font-family: "Montserrat", sans-serif;
-  font-size: 1em;
+  /* font-size: 1em; */
 }
 
 h1 {
@@ -72,7 +72,7 @@ h1 {
 .Logo {
   width: 1.8rem;
   height: 1.8rem;
-  background-color: var(--text-color);
+  border: var(--sec-color) solid 1px;
   border-radius: 100%;
 
   display: flex;
@@ -81,7 +81,6 @@ h1 {
 }
 .Logo:hover {
   cursor: pointer;
-  background-color: var(--pri-color);
 }
 .Logo img {
   height: 0.9rem;
@@ -100,7 +99,7 @@ header {
   align-items: center;
 
   width: 100%;
-  padding: 1.6rem;
+  padding: 2rem;
 }
 
 header nav {
@@ -109,10 +108,6 @@ header nav {
 
 header nav a:first-child {
   margin-right: 12px;
-}
-
-header nav a:hover {
-  color: var(--pri-color);
 }
 
 /************ CSS Reset ************/

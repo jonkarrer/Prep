@@ -41,7 +41,7 @@ pub async fn handle_logout(
                     SESSION_COOKIE_KEY
                     )
                 )
-                .header("Location", "/auth/login")
+                .header("Location", "/auth")
                 .status(StatusCode::FOUND)
                 .finish()
             )

@@ -9,19 +9,15 @@
       integrity="sha384-rgjA7mptc2ETQqXoYC3/zJvkU7K/aP44Y+z7xQuJiVnB/422P/Ak+F/AqFR7E4Wr"
       crossorigin="anonymous"
     ></script>
-    <title>Login</title>
+    <title>Authentication</title>
   </head>
   <body>
     <div class="Toast" id="toast">
-      <p id="toast-message">An error has occurred</p>
+      <p id="toast_message">An error has occurred</p>
     </div>
 
     <div id="left_panel" class="Video show">
-      <video
-        autoplay
-        loop
-        src="https://assets.mixkit.co/videos/preview/mixkit-cutting-a-sandwich-in-half-for-a-healthy-lunch-26094-large.mp4"
-      ></video>
+      <img src="/assets/left_panel.png" alt="" />
     </div>
 
     <main>
@@ -41,34 +37,49 @@
         <img src="/assets/icons/herb-outline.svg" />
       </div>
 
-      <div class="Form">
+      <div class="Stack">
         <img class="Emblem" src="/assets/icons/emblem-hex-dots-lines.svg" />
         <h1>Prep</h1>
 
-        <div
-          class="Form__container"
-          hx-get="/auth/login"
-          hx-trigger="load"
-          id="form-container"
-        >
-          Loading...
-        </div>
+        <form action="/auth/login" method="POST" id="login_form" class="show">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            title="Enter an email address"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            title="Enter your password"
+          />
+          <button type="submit">Login</button>
+        </form>
 
-        <a
-          hx-get="/auth/register"
-          hx-target="#form-container"
-          onclick="swapAnchorTag(event)"
-          id="sign-up-link"
+        <form action="/auth/register" method="POST" id="register_form">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            title="Enter your email address"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            title="At least 8 characters with a number and uppercase letter"
+          />
+
+          <input name="confirm_password" placeholder="Confirm Password" />
+
+          <button type="submit">Register</button>
+        </form>
+
+        <a class="Link show" onclick="swapForms(event)" id="sign_up_link"
           >Sign Up</a
         >
-        <a
-          hx-get="/auth/login"
-          hx-target="#form-container"
-          onclick="swapAnchorTag(event)"
-          id="sign-in-link"
-          style="display: none"
-          >Sign In</a
-        >
+        <a class="Link" onclick="swapForms(event)" id="sign_in_link">Sign In</a>
 
         <div class="Slider">
           <p id="slider_text">
@@ -89,28 +100,35 @@
       </div>
     </main>
 
-    <div id="right_panel" class="Video">
-      <video
-        autoplay
-        loop
-        src="https://assets.mixkit.co/videos/preview/mixkit-spoonful-of-healthy-cereal-with-milk-41147-large.mp4"
-      ></video>
-    </div>
-
     <script>
-      function swapAnchorTag(e) {
-        let id = e.target.id;
-        e.target.style.display = "none";
+      const loginForm = document.getElementById("login_form");
+      const registerForm = document.getElementById("register_form");
+      loginForm.addEventListener("submit", submitForm);
+      registerForm.addEventListener("submit", submitForm);
 
-        if (id === "sign-up-link") {
-          document.getElementById("sign-in-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show");
-          document.getElementById("right_panel").classList.toggle("show");
-        } else {
-          document.getElementById("sign-up-link").style.display = "block";
-          document.getElementById("left_panel").classList.toggle("show");
-          document.getElementById("right_panel").classList.toggle("show");
-        }
+      const signInLink = document.getElementById("sign_in_link");
+      const signUpLink = document.getElementById("sign_up_link");
+
+      function showRegisterForm() {
+        signInLink.classList.add("show");
+        registerForm.classList.add("show");
+
+        signUpLink.classList.remove("show");
+        loginForm.classList.remove("show");
+      }
+
+      function showLoginForm() {
+        signUpLink.classList.add("show");
+        loginForm.classList.add("show");
+
+        signInLink.classList.remove("show");
+        registerForm.classList.remove("show");
+      }
+
+      function swapForms(e) {
+        const id = e.target.id;
+
+        id === "sign_up_link" ? showRegisterForm() : showLoginForm();
       }
 
       function transitionSliderText(index) {
@@ -152,21 +170,44 @@
         i = i === 2 ? 0 : (i += 1);
       }, 5000);
 
-      document.body.addEventListener("htmx:responseError", function (event) {
-        let status = xhr.status; // HTTP status code
-        let response = xhr.responseText; // Server response
-
-        // Handle the error
-        // e.g., display the error message on the page
+      function handleToast(type, message, timer = 8000) {
         let toast = document.getElementById("toast");
+        let toastMessage = document.getElementById("toast_message");
         toast.classList.add("slideInDown");
-        let toastMessage = document.getElementById("toast-message");
-        toastMessage.innerText = response;
+        toast.classList.add(type);
+
+        toastMessage.innerText = message;
 
         setTimeout(() => {
           toast.classList.remove("slideInDown");
-        }, 8000);
-      });
+          toast.classList.remove(type);
+        }, timer);
+      }
+
+      async function submitForm(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const path = event.target.action;
+        const method = event.target.method;
+        const body = new URLSearchParams(formData).toString();
+
+        let res = await fetch(path, {
+          method: method,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          redirect: "follow",
+          body: body,
+        });
+
+        if (res.redirected) {
+          window.location = res.url;
+        } else {
+          let text = await res.text();
+          handleToast("error", text);
+        }
+      }
     </script>
   </body>
 </html>

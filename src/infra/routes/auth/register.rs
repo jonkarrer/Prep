@@ -20,7 +20,7 @@ pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
     match req.header("HX-Request") {
         Some(_) => Ok(Html(
             r#"
-            <form hx-post="/auth/register">
+            <form action="/auth/register" method="POST">
                 <div>
                     <input type="email"
                     name="email"
@@ -105,11 +105,9 @@ pub async fn handle_register(
 
 fn is_valid_password(password: &str) -> bool {
     let length_check = password.len() >= 8;
-    let lowercase_check = Regex::new(r"[a-z]").unwrap().is_match(password);
-    let uppercase_check = Regex::new(r"[A-Z]").unwrap().is_match(password);
     let digit_check = Regex::new(r"\d").unwrap().is_match(password);
 
-    length_check && lowercase_check && uppercase_check && digit_check
+    length_check && digit_check
 }
 
 #[cfg(test)]

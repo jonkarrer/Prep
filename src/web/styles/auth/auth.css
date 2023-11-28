@@ -4,7 +4,7 @@ body {
   display: flex;
   align-items: center;
   height: 100svh;
-  background-color: var(--sec-color);
+  background-color: var(--pri-color);
 }
 
 main {
@@ -24,13 +24,14 @@ main {
 h1 {
   font-size: var(--main-heading-font-size);
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--sec-color);
   text-align: center;
 }
 p,
 a {
   font-size: var(--main-text-font-size);
   font-weight: 500;
+  color: var(--sec-color);
 }
 
 .Stack {
@@ -64,13 +65,13 @@ a {
 
   border: solid 1px;
   border-radius: var(--form-border-radius);
-  border-color: var(--text-color);
+  border-color: var(--tri-color);
   background-color: var(--sec-color);
 
   font-size: var(--form-font-size);
 }
 .Stack input:focus {
-  border-color: var(--pri-color);
+  background-color: var(--tri-color);
   border-width: 2px;
 }
 .Stack button {
@@ -79,16 +80,16 @@ a {
   height: var(--form-height);
   margin: auto;
 
-  background-color: var(--text-color);
+  background-color: var(--tri-color);
   border-radius: var(--form-border-radius);
 
   font-weight: 500;
   text-align: center;
   font-size: var(--form-font-size);
-  color: var(--sec-color);
+  color: var(--pri-color);
 }
 .Stack button:hover {
-  background-color: var(--pri-color);
+  background-color: var(--quad-color);
 }
 
 .Link {
@@ -138,11 +139,11 @@ a {
   height: 0.5rem;
   margin-top: 0.8rem;
 
-  border: 1px solid var(--text-color);
+  border: 1px solid var(--sec-color);
   border-radius: 100%;
 }
 .Dot--filled {
-  background-color: var(--text-color);
+  background-color: var(--sec-color);
 }
 
 @media (max-width: 321px) {
@@ -162,23 +163,10 @@ a {
   width: 50vw;
   height: 100vh;
 }
-.Video video {
+.Video img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.Video::after {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: -50%;
-
-  width: 300%;
-  height: 300%;
-
-  opacity: 0.2;
-  background: url(/assets/misc/noise.svg), rgba(0, 0, 0, 1);
-  animation: grain 8s steps(10) infinite;
 }
 
 .Toast {
@@ -193,13 +181,19 @@ a {
   margin: auto;
   padding: 1rem;
 
-  background-color: rgb(154, 41, 41);
   border-radius: 1.3rem;
 
   color: var(--sec-color);
   font-size: 0.8em;
   text-align: center;
   z-index: 1000;
+}
+
+.Toast.error {
+  background-color: rgb(154, 41, 41);
+}
+.Toast.warning {
+  background-color: rgb(154, 145, 41);
 }
 
 .slideInDown {
@@ -244,7 +238,7 @@ a {
     background-color: rgba(0, 0, 0, 0);
   }
   100% {
-    background-color: var(--text-color);
+    background-color: var(--sec-color);
   }
 }
 
@@ -304,11 +298,11 @@ a {
 @media (min-width: 1280px) {
   main {
     --main-heading-font-size: 5.5em;
-    --main-text-font-size: 1.2em;
+    --main-text-font-size: 1em;
   }
 
   .Stack {
-    --form-gap: 1.3rem;
+    --form-gap: 1.5rem;
     --form-font-size: 1.2em;
     --form-height: 3rem;
     --form-border-radius: 1.3rem;
@@ -360,7 +354,7 @@ a {
 @media (min-width: 1800px) {
   main {
     --main-heading-font-size: 6em;
-    --main-text-font-size: 1.4em;
+    --main-text-font-size: 1.2em;
   }
 
   .Stack {

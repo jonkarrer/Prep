@@ -13,15 +13,11 @@
   </head>
   <body>
     <div class="Toast" id="toast">
-      <p id="toast-message">An error has occurred</p>
+      <p id="toast_message">An error has occurred</p>
     </div>
 
     <div id="left_panel" class="Video show">
-      <video
-        autoplay
-        loop
-        src="https://assets.mixkit.co/videos/preview/mixkit-cutting-a-sandwich-in-half-for-a-healthy-lunch-26094-large.mp4"
-      ></video>
+      <img src="/assets/left_panel.png" alt="" />
     </div>
 
     <main>
@@ -80,12 +76,10 @@
           <button type="submit">Register</button>
         </form>
 
-        <a class="Link show" onclick="swapAnchorTag(event)" id="sign_up_link"
+        <a class="Link show" onclick="swapForms(event)" id="sign_up_link"
           >Sign Up</a
         >
-        <a class="Link" onclick="swapAnchorTag(event)" id="sign_in_link"
-          >Sign In</a
-        >
+        <a class="Link" onclick="swapForms(event)" id="sign_in_link">Sign In</a>
 
         <div class="Slider">
           <p id="slider_text">
@@ -107,37 +101,44 @@
     </main>
 
     <div id="right_panel" class="Video">
-      <video
-        autoplay
-        loop
-        src="https://assets.mixkit.co/videos/preview/mixkit-spoonful-of-healthy-cereal-with-milk-41147-large.mp4"
-      ></video>
+      <img src="/assets/left_panel.png" alt="" />
     </div>
 
     <script>
-      let loginForm = document.getElementById("login_form");
-      let registerForm = document.getElementById("register_form");
+      const loginForm = document.getElementById("login_form");
+      const registerForm = document.getElementById("register_form");
+      loginForm.addEventListener("submit", submitForm);
+      registerForm.addEventListener("submit", submitForm);
 
-      function swapAnchorTag(e) {
-        let id = e.target.id;
+      const signInLink = document.getElementById("sign_in_link");
+      const signUpLink = document.getElementById("sign_up_link");
+      const leftPanel = document.getElementById("left_panel");
+      const rightPanel = document.getElementById("right_panel");
 
-        if (id === "sign_up_link") {
-          document.getElementById("sign_in_link").classList.add("show");
-          document.getElementById("right_panel").classList.add("show");
-          registerForm.classList.add("show");
+      function showRegisterForm() {
+        signInLink.classList.add("show");
+        rightPanel.classList.add("show");
+        registerForm.classList.add("show");
 
-          document.getElementById("sign_up_link").classList.remove("show");
-          document.getElementById("left_panel").classList.remove("show");
-          loginForm.classList.remove("show");
-        } else {
-          document.getElementById("sign_up_link").classList.add("show");
-          document.getElementById("left_panel").classList.add("show");
-          loginForm.classList.add("show");
+        signUpLink.classList.remove("show");
+        leftPanel.classList.remove("show");
+        loginForm.classList.remove("show");
+      }
 
-          document.getElementById("sign_in_link").classList.remove("show");
-          document.getElementById("right_panel").classList.remove("show");
-          registerForm.classList.remove("show");
-        }
+      function showLoginForm() {
+        signUpLink.classList.add("show");
+        leftPanel.classList.add("show");
+        loginForm.classList.add("show");
+
+        signInLink.classList.remove("show");
+        rightPanel.classList.remove("show");
+        registerForm.classList.remove("show");
+      }
+
+      function swapForms(e) {
+        const id = e.target.id;
+
+        id === "sign_up_link" ? showRegisterForm() : showLoginForm();
       }
 
       function transitionSliderText(index) {
@@ -179,35 +180,44 @@
         i = i === 2 ? 0 : (i += 1);
       }, 5000);
 
-      function submitForm(event) {
+      function handleToast(type, message, timer = 8000) {
+        let toast = document.getElementById("toast");
+        let toastMessage = document.getElementById("toast_message");
+        toast.classList.add("slideInDown");
+        toast.classList.add(type);
+
+        toastMessage.innerText = message;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+          toast.classList.remove(type);
+        }, timer);
+      }
+
+      async function submitForm(event) {
         event.preventDefault();
 
-        let formData = new FormData(event.target);
+        const formData = new FormData(event.target);
+        const path = event.target.action;
+        const method = event.target.method;
+        const body = new URLSearchParams(formData).toString();
 
-        fetch(event.target.action, {
-          method: event.target.method,
+        let res = await fetch(path, {
+          method: method,
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: new URLSearchParams(formData).toString(),
-        }).then((res) => {
-          let status = res.status;
-
-          res.text().then((text) => {
-            let toast = document.getElementById("toast");
-            toast.classList.add("slideInDown");
-            let toastMessage = document.getElementById("toast-message");
-            toastMessage.innerText = text;
-
-            setTimeout(() => {
-              toast.classList.remove("slideInDown");
-            }, 8000);
-          });
+          redirect: "follow",
+          body: body,
         });
-      }
 
-      loginForm.addEventListener("submit", submitForm);
-      registerForm.addEventListener("submit", submitForm);
+        if (res.redirected) {
+          window.location = res.url;
+        } else {
+          let text = await res.text();
+          handleToast("error", text);
+        }
+      }
     </script>
   </body>
 </html>

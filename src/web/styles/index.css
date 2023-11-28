@@ -72,7 +72,7 @@ h1 {
 .Logo {
   width: 1.8rem;
   height: 1.8rem;
-  background-color: var(--text-color);
+  border: var(--sec-color) solid 1px;
   border-radius: 100%;
 
   display: flex;

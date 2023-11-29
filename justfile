@@ -1,12 +1,13 @@
-# ---- General ----
-run-dev:
-    cargo run --bin prep
-    
+# ---- Build ----
 build-app:
     ./scripts/build.sh
 
 teardown-app:
     docker compose down
+
+# ---- Development ----
+start-dev:
+    cargo run --bin prep
 
 # ---- DATABASE ----
 echo-db-url:

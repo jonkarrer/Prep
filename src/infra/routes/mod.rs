@@ -12,6 +12,6 @@ pub fn router() -> Route {
         .nest("/dash", dash::use_dash_routes())
         .nest(
             "/",
-            StaticFilesEndpoint::new("./src/web").index_file("index.html"),
+            StaticFilesEndpoint::new("/srv/web").index_file("index.html"),
         )
 }

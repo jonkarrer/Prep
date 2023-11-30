@@ -10,7 +10,7 @@ use poem::{get, post, EndpointExt, Route};
 
 pub fn use_recipe_routes() -> AuthGuardImpl<Route> {
     Route::new()
-        .at("/select/:id", get(handle_get_recipe))
+        .at("/select/:id", get(handle_get_recipe_ui))
         .at("/create", post(handle_create_recipe))
         .at("/all", get(handle_get_all_recipes_ui))
         .with(AuthGuard)

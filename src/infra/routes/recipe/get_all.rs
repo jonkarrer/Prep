@@ -1,11 +1,8 @@
-use crate::{
-    app::interface::{Database, RecipeRepository},
-    domain::entity::Recipe,
-};
+use crate::app::interface::{Database, RecipeRepository};
 use brize_auth::entity::Session;
 use poem::{
     handler,
-    web::{Data, Html, Path},
+    web::{Data, Html},
     Error, IntoResponse, Result,
 };
 use sqlx::MySqlPool;
@@ -22,7 +19,10 @@ pub async fn handle_get_all_recipes_ui(
 
     let mut html_string = String::from("<ul>");
     for detail in recipes {
-        let list_item = format!("<li>{}</li>", detail.recipe_title);
+        let list_item = format!(
+            "<li><a href=\"/recipe/select/{}\">{}</a></li>",
+            detail.recipe_id, detail.recipe_title
+        );
         html_string.push_str(&list_item)
     }
     html_string.push_str("</ul>");

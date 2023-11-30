@@ -4,6 +4,8 @@ mod recipe;
 mod user;
 use poem::{endpoint::StaticFilesEndpoint, Route};
 
+use crate::app::configs::StaticPath;
+
 pub fn router() -> Route {
     Route::new()
         .nest("/recipe", recipe::use_recipe_routes())
@@ -12,6 +14,6 @@ pub fn router() -> Route {
         .nest("/dash", dash::use_dash_routes())
         .nest(
             "/",
-            StaticFilesEndpoint::new("/srv/web").index_file("index.html"),
+            StaticFilesEndpoint::new(StaticPath::root().0).index_file("index.html"),
         )
 }

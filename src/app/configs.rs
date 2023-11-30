@@ -46,3 +46,22 @@ impl DbConfig {
         )
     }
 }
+
+pub struct StaticPath(pub String);
+
+impl StaticPath {
+    pub fn from(path: &str) -> Self {
+        dotenvy::dotenv().unwrap_or_default();
+
+        let prefix = env::var("STATIC_FILE_PREFIX").expect("STATIC_FILE_PREFIX not found");
+
+        Self(format!("{}{}", prefix, path))
+    }
+
+    pub fn root() -> Self {
+        dotenvy::dotenv().unwrap_or_default();
+
+        let prefix = env::var("STATIC_FILE_PREFIX").expect("STATIC_FILE_PREFIX not found");
+        Self(prefix.to_string())
+    }
+}

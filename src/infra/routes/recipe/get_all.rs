@@ -2,6 +2,7 @@ use crate::{
     app::interface::{Database, RecipeRepository},
     domain::entity::Recipe,
 };
+use brize_auth::entity::Session;
 use poem::{
     handler,
     web::{Data, Html, Path},
@@ -11,11 +12,11 @@ use sqlx::MySqlPool;
 
 #[handler]
 pub async fn handle_get_all_recipes_ui(
-    user_id: Path<String>,
+    Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     let recipes = repo
-        .select_all_recipe_metadata_for_user(&user_id)
+        .select_all_recipe_metadata_for_user(&session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::NOT_FOUND))?;
 

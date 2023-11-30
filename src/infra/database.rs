@@ -4,8 +4,7 @@ use crate::{
         interface::{Database, RecipeRepository, UserRepository},
     },
     domain::entity::{
-        Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails,
-        RecipeMetadata, Tag, User,
+        Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails, Tag, User,
     },
 };
 use anyhow::{Context, Result};

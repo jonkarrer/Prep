@@ -16,6 +16,8 @@ pub async fn handle_create_recipe(
     Data(repo): Data<&Database<MySqlPool>>,
     Data(session): Data<&Session>,
 ) -> Result<Json<Recipe>> {
+    // println!("{:#?}", recipe);
+    // Ok(())
     let recipe_id = repo
         .create_recipe_from_args(recipe, &session.user_id)
         .await

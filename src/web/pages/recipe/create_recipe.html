@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Recipe</title>
+
+    <style>
+      input {
+        border: none;
+        outline: none;
+        border-bottom: 1px solid black;
+        margin-bottom: 1rem;
+      }
+      .qty,
+      .unit {
+        width: 60px;
+        margin-right: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="recipe_form" action="/recipe/create" method="POST">
+      <label for="recipe_title">
+        <h4>New Recipe</h4>
+        <input type="text" name="title" placeholder="title" />
+        <input type="number" name="servings" placeholder="servings" />
+      </label>
+
+      <label for="directions">
+        <h4>Ingredients</h4>
+        <input class="qty" type="number" name="qty" placeholder="qty" />
+        <input class="unit" type="text" name="unit" placeholder="unit" />
+        <input type="text" name="ingredient" placeholder="ingredient" />
+        <br />
+        <input class="qty" type="number" name="qty" placeholder="qty" />
+        <input class="unit" type="text" name="unit" placeholder="unit" />
+        <input type="text" name="ingredient" placeholder="ingredient" />
+        <br />
+        <input class="qty" type="number" name="qty" placeholder="qty" />
+        <input class="unit" type="text" name="unit" placeholder="unit" />
+        <input type="text" name="ingredient" placeholder="ingredient" />
+
+        <br />
+      </label>
+
+      <label for="directions">
+        <h4>Directions</h4>
+        <input type="text" name="direction" placeholder="direction" />
+        <br />
+        <input type="text" name="direction" placeholder="direction" />
+        <br />
+        <input type="text" name="direction" placeholder="direction" />
+
+        <br />
+      </label>
+
+      <label for="tags">
+        <h4>Tags</h4>
+        <input type="text" name="tag" placeholder="tag" />
+        <br />
+        <input type="text" name="tag" placeholder="tag" />
+        <br />
+        <input type="text" name="tag" placeholder="tag" />
+
+        <br />
+      </label>
+
+      <!-- <label for="recipe_directions">
+        <h4>Directions</h4>
+        <div class="ingredient">
+            
+        </div>
+        <input type="text" name="directions[]" placeholder="Direction 1"/ >
+        <input type="text" name="directions[]" placeholder="Direction 2"/ >
+      </label> -->
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("recipe_form")
+        .addEventListener("submit", submitForm);
+
+      async function submitForm(event) {
+        event.preventDefault();
+
+        //     pub struct RecipeArgs {
+        //     pub title: String,
+        //     pub servings: f32,
+        //     pub tags: Vec<String, Global>,
+        //     pub favorite: bool,
+        //     pub directions: Vec<DirectionArgs, Global>,
+        //     pub ingredients: Vec<IngredientArgs, Global>,
+        // }
+
+        const formData = new FormData(event.target);
+        const path = event.target.action;
+        const method = event.target.method;
+
+        const qtys = formData.getAll("qty");
+        const units = formData.getAll("unit");
+        const ingredients = formData.getAll("ingredient");
+        const directions = formData.getAll("direction");
+        const tags = formData.getAll("tag");
+
+        let recipe = {
+          title: formData.get("title"),
+          servings: parseInt(formData.get("servings")),
+          favorite: false,
+          ingredients: [],
+          directions: [],
+          tags: tags,
+        };
+
+        for (let i = 0; i < ingredients.length; i++) {
+          recipe.ingredients.push({
+            name: ingredients[i],
+            amount: parseInt(qtys[i]),
+            unit: units[i],
+          });
+        }
+
+        for (let i = 0; i < directions.length; i++) {
+          recipe.directions.push({
+            step_order: i,
+            details: directions[i],
+          });
+        }
+
+        console.log("recipe", recipe);
+
+        const body = JSON.stringify(recipe);
+
+        let res = await fetch(path, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //   redirect: "follow",
+          body: body,
+        });
+
+        console.log("response", await res.json());
+
+        // if (res.redirected) {
+        //   window.location = res.url;
+        // } else {
+        //   let text = await res.text();
+        //   handleToast("error", text);
+        // }
+      }
+    </script>
+  </body>
+</html>

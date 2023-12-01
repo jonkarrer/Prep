@@ -12,14 +12,57 @@
         border-bottom: 1px solid black;
         margin-bottom: 1rem;
       }
-      .qty,
-      .unit {
+
+      input[name="amount"],
+      input[name="unit"],
+      input[name="ingredient"] {
         width: 60px;
         margin-right: 1rem;
       }
     </style>
   </head>
   <body>
+    <template id="RecipeDirection">
+      <input
+        type="text"
+        name="direction"
+        placeholder="direction"
+        oninput="handleDirectionInput(event)"
+      />
+    </template>
+
+    <template id="RecipeTag">
+      <input
+        type="text"
+        name="tag"
+        placeholder="tag"
+        oninput="handleTagInput(event)"
+      />
+    </template>
+
+    <template id="RecipeIngredient">
+      <div>
+        <input
+          type="number"
+          name="amount"
+          placeholder="amount"
+          oninput="handleAmountInput(event)"
+        />
+        <input
+          type="text"
+          name="unit"
+          placeholder="unit"
+          oninput="handleUnitInput(event)"
+        />
+        <input
+          type="text"
+          name="ingredient"
+          placeholder="ingredient"
+          oninput="handleIngredientInput(event)"
+        />
+      </div>
+    </template>
+
     <form id="recipe_form" action="/recipe/create" method="POST">
       <label for="recipe_title">
         <h4>New Recipe</h4>
@@ -27,54 +70,29 @@
         <input type="number" name="servings" placeholder="servings" />
       </label>
 
-      <label for="directions">
+      <section>
         <h4>Ingredients</h4>
-        <input class="qty" type="number" name="qty" placeholder="qty" />
-        <input class="unit" type="text" name="unit" placeholder="unit" />
-        <input type="text" name="ingredient" placeholder="ingredient" />
-        <br />
-        <input class="qty" type="number" name="qty" placeholder="qty" />
-        <input class="unit" type="text" name="unit" placeholder="unit" />
-        <input type="text" name="ingredient" placeholder="ingredient" />
-        <br />
-        <input class="qty" type="number" name="qty" placeholder="qty" />
-        <input class="unit" type="text" name="unit" placeholder="unit" />
-        <input type="text" name="ingredient" placeholder="ingredient" />
+        <recipe-ingredient></recipe-ingredient>
 
-        <br />
-      </label>
+        <div onclick="appendNewIngredientInput(event)">Add</div>
+      </section>
 
-      <label for="directions">
+      <section>
         <h4>Directions</h4>
-        <input type="text" name="direction" placeholder="direction" />
-        <br />
-        <input type="text" name="direction" placeholder="direction" />
-        <br />
-        <input type="text" name="direction" placeholder="direction" />
-
-        <br />
-      </label>
+        <ol>
+          <li><recipe-direction></recipe-direction></li>
+          <div onclick="appendNewDirectionInput(event)">Add</div>
+        </ol>
+      </section>
 
       <label for="tags">
         <h4>Tags</h4>
-        <input type="text" name="tag" placeholder="tag" />
-        <br />
-        <input type="text" name="tag" placeholder="tag" />
-        <br />
-        <input type="text" name="tag" placeholder="tag" />
+        <recipe-tag></recipe-tag>
 
-        <br />
+        <div onclick="appendNewTagInput(event)">Add</div>
       </label>
 
-      <!-- <label for="recipe_directions">
-        <h4>Directions</h4>
-        <div class="ingredient">
-            
-        </div>
-        <input type="text" name="directions[]" placeholder="Direction 1"/ >
-        <input type="text" name="directions[]" placeholder="Direction 2"/ >
-      </label> -->
-
+      <br />
       <button type="submit">Submit</button>
     </form>
 
@@ -86,20 +104,11 @@
       async function submitForm(event) {
         event.preventDefault();
 
-        //     pub struct RecipeArgs {
-        //     pub title: String,
-        //     pub servings: f32,
-        //     pub tags: Vec<String, Global>,
-        //     pub favorite: bool,
-        //     pub directions: Vec<DirectionArgs, Global>,
-        //     pub ingredients: Vec<IngredientArgs, Global>,
-        // }
-
         const formData = new FormData(event.target);
         const path = event.target.action;
         const method = event.target.method;
 
-        const qtys = formData.getAll("qty");
+        const amounts = formData.getAll("amount");
         const units = formData.getAll("unit");
         const ingredients = formData.getAll("ingredient");
         const directions = formData.getAll("direction");
@@ -117,7 +126,7 @@
         for (let i = 0; i < ingredients.length; i++) {
           recipe.ingredients.push({
             name: ingredients[i],
-            amount: parseInt(qtys[i]),
+            amount: parseInt(amounts[i]),
             unit: units[i],
           });
         }
@@ -151,6 +160,109 @@
         //   handleToast("error", text);
         // }
       }
+    </script>
+
+    <script>
+      function handleTitleInput(e) {
+        console.log("blue", e.target.value);
+      }
+      function handleServingsInput(e) {
+        console.log("blue", e.target.value);
+      }
+
+      function handleAmountInput(e) {
+        console.log("blue", e.target.value);
+      }
+      function handleUnitInput(e) {
+        console.log("blue", e.target.value);
+      }
+      function handleIngredientInput(e) {
+        console.log("blue", e.target.value);
+      }
+
+      function handleDirectionInput(e) {
+        console.log("blue", e.target.value);
+      }
+
+      function handleTagInput(e) {
+        console.log("blue", e.target.value);
+      }
+
+      function appendNewIngredientInput(e) {
+        const customInputEl = document.createElement("recipe-ingredient");
+        e.target.insertAdjacentElement("beforeBegin", customInputEl);
+      }
+
+      function appendNewTagInput(e) {
+        const customInputEl = document.createElement("recipe-tag");
+        e.target.insertAdjacentElement("beforeBegin", customInputEl);
+      }
+
+      function appendNewDirectionInput(e) {
+        const customInputEl = document.createElement("recipe-direction");
+        const listEl = document.createElement("li");
+        listEl.appendChild(customInputEl);
+        e.target.insertAdjacentElement("beforeBegin", listEl);
+      }
+    </script>
+
+    <script>
+      customElements.define(
+        "recipe-tag",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeTag").content;
+          }
+          render() {
+            this.appendChild(this.template.cloneNode(true));
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
+
+      customElements.define(
+        "recipe-direction",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeDirection").content;
+          }
+          render() {
+            this.appendChild(this.template.cloneNode(true));
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
+
+      customElements.define(
+        "recipe-ingredient",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeIngredient").content;
+          }
+          render() {
+            this.appendChild(this.template.cloneNode(true));
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
     </script>
   </body>
 </html>

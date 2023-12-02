@@ -19,9 +19,73 @@
         width: 60px;
         margin-right: 1rem;
       }
+
+      .cover {
+        position: relative;
+      }
+      .cover::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        height: 115%;
+        width: 40px;
+        z-index: 2;
+        background-color: dimgrey;
+        border-radius: 0.6rem;
+      }
+      .cover::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        height: 115%;
+        width: 100%;
+        z-index: 1;
+        background-color: #fff;
+      }
+
+      .General,
+      .Ingredients,
+      .Directions {
+        display: none;
+      }
+
+      .show {
+        display: block;
+      }
     </style>
   </head>
   <body>
+    <template id="RecipeIngredient">
+      <div>
+        <input
+          type="text"
+          name="ingredient"
+          placeholder="ingredient"
+          oninput="handleIngredientInput(event)"
+        />
+
+        <span onclick="toggleShow(event)" class="cover">
+          <input
+            type="number"
+            name="amount"
+            placeholder="amount"
+            oninput="handleAmountInput(event)"
+          />
+          <input
+            type="text"
+            name="unit"
+            placeholder="unit"
+            oninput="handleUnitInput(event)"
+            onclick="toggleShow(event)"
+          />
+        </span>
+      </div>
+    </template>
+
     <template id="RecipeDirection">
       <input
         type="text"
@@ -40,62 +104,44 @@
       />
     </template>
 
-    <template id="RecipeIngredient">
-      <div>
-        <input
-          type="number"
-          name="amount"
-          placeholder="amount"
-          oninput="handleAmountInput(event)"
-        />
-        <input
-          type="text"
-          name="unit"
-          placeholder="unit"
-          oninput="handleUnitInput(event)"
-        />
-        <input
-          type="text"
-          name="ingredient"
-          placeholder="ingredient"
-          oninput="handleIngredientInput(event)"
-        />
-      </div>
-    </template>
+    <main>
+      <header>
+        <nav>
+          <span onclick="showSection('general_section')">General</span>
+          <span onclick="showSection('ingredient_section')">Ingredients</span>
+          <span onclick="showSection('direction_section')">Directions</span>
+        </nav>
+      </header>
 
-    <form id="recipe_form" action="/recipe/create" method="POST">
-      <label for="recipe_title">
-        <h4>New Recipe</h4>
-        <input type="text" name="title" placeholder="title" />
-        <input type="number" name="servings" placeholder="servings" />
-      </label>
+      <form id="recipe_form" action="/recipe/create" method="POST">
+        <section id="general_section" class="General">
+          <h2>New Recipe</h2>
+          <input type="text" name="title" placeholder="title" />
+          <input type="number" name="servings" placeholder="servings" />
+          <h4>Tags</h4>
+          <recipe-tag></recipe-tag>
 
-      <section>
-        <h4>Ingredients</h4>
-        <recipe-ingredient></recipe-ingredient>
+          <div onclick="appendNewTagInput(event)">Add</div>
+        </section>
 
-        <div onclick="appendNewIngredientInput(event)">Add</div>
-      </section>
+        <section id="ingredient_section" class="Ingredients">
+          <h3>Ingredients</h3>
+          <recipe-ingredient></recipe-ingredient>
 
-      <section>
-        <h4>Directions</h4>
-        <ol>
-          <li><recipe-direction></recipe-direction></li>
-          <div onclick="appendNewDirectionInput(event)">Add</div>
-        </ol>
-      </section>
+          <div onclick="appendNewIngredientInput(event)">Add</div>
+        </section>
 
-      <label for="tags">
-        <h4>Tags</h4>
-        <recipe-tag></recipe-tag>
+        <section id="direction_section" class="Directions">
+          <h3>Directions</h3>
+          <ol>
+            <li><recipe-direction></recipe-direction></li>
+            <div onclick="appendNewDirectionInput(event)">Add</div>
+          </ol>
+        </section>
 
-        <div onclick="appendNewTagInput(event)">Add</div>
-      </label>
-
-      <br />
-      <button type="submit">Submit</button>
-    </form>
-
+        <button type="submit">Submit</button>
+      </form>
+    </main>
     <script>
       document
         .getElementById("recipe_form")
@@ -114,9 +160,10 @@
         const directions = formData.getAll("direction");
         const tags = formData.getAll("tag");
 
+        let servings = formData.get("servings");
         let recipe = {
           title: formData.get("title"),
-          servings: parseInt(formData.get("servings")),
+          servings: servings ? parseInt(servings) : 0,
           favorite: false,
           ingredients: [],
           directions: [],
@@ -124,9 +171,10 @@
         };
 
         for (let i = 0; i < ingredients.length; i++) {
+          console.log(parseInt(amounts[i]));
           recipe.ingredients.push({
             name: ingredients[i],
-            amount: parseInt(amounts[i]),
+            amount: amounts[i] ? parseInt(amounts[i]) : 0,
             unit: units[i],
           });
         }
@@ -163,6 +211,52 @@
     </script>
 
     <script>
+      let generalSection = document.getElementById("general_section");
+      let ingredientSection = document.getElementById("ingredient_section");
+      let directionSection = document.getElementById("direction_section");
+
+      function showGeneralSection() {
+        generalSection.classList.add("show");
+        ingredientSection.classList.remove("show");
+        directionSection.classList.remove("show");
+      }
+
+      function showIngredientSection() {
+        ingredientSection.classList.add("show");
+        generalSection.classList.remove("show");
+        directionSection.classList.remove("show");
+      }
+
+      function showDirectionSection() {
+        directionSection.classList.add("show");
+        ingredientSection.classList.remove("show");
+        generalSection.classList.remove("show");
+      }
+
+      function showSection(section_id) {
+        switch (section_id) {
+          case "general_section":
+            showGeneralSection();
+            break;
+
+          case "ingredient_section":
+            showIngredientSection();
+            break;
+
+          case "direction_section":
+            showDirectionSection();
+            break;
+
+          default:
+            break;
+        }
+      }
+    </script>
+
+    <script>
+      function toggleShow(e) {
+        e.target.classList.toggle("cover");
+      }
       function handleTitleInput(e) {
         console.log("blue", e.target.value);
       }

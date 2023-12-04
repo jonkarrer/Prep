@@ -101,12 +101,14 @@
                 >Plus</span
               >
             </div>
-            <input
-              type="text"
-              name="ingredient"
-              placeholder="ingredient"
-              id="ingredient_controller_ingredient"
-            />
+            <div class="IngredientController__ingredient-wrapper">
+              <input
+                type="text"
+                name="ingredient"
+                placeholder="ingredient"
+                id="ingredient_controller_ingredient"
+              />
+            </div>
           </div>
         </section>
 
@@ -233,22 +235,37 @@
     <script type="module">
       import { ingredients } from "/assets/ingredients.js";
 
+      let autoValue;
+
       function handleIngredientInput(e) {
         let inputValue = e.target.value.toLowerCase();
-
         let autoCompleteValues = ingredients.filter((item) =>
           item.startsWith(inputValue)
         );
-        console.log("auto", autoCompleteValues);
+
+        autoValue = autoCompleteValues[0] ?? "";
+        document.documentElement.style.setProperty(
+          "--ingredient-autocomplete",
+          `"${autoValue}"`
+        );
+      }
+
+      function handleAutoComplete(e) {
+        if (e.key === "Tab" || e.key === "Enter") {
+          e.preventDefault();
+          e.target.value = autoValue;
+        }
       }
 
       let ingredientInputController = document.getElementById(
         "ingredient_controller_ingredient"
       );
+
       ingredientInputController.addEventListener(
         "input",
         handleIngredientInput
       );
+      ingredientInputController.addEventListener("keydown", handleAutoComplete);
     </script>
     <script>
       function submitIngredientController(e) {

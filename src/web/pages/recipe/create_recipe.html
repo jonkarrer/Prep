@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Create Recipe</title>
 
     <style>
@@ -14,14 +18,6 @@
         border: none;
         outline: none;
         border-bottom: 1px solid black;
-        margin-bottom: 1rem;
-      }
-
-      input[name="amount"],
-      input[name="unit"],
-      input[name="ingredient"] {
-        width: 60px;
-        margin-right: 1rem;
       }
 
       .cover {
@@ -62,16 +58,38 @@
       }
 
       .IngredientController {
-        position: absolute;
+        position: fixed;
         bottom: 0;
         left: 0;
+        right: 0;
 
-        background-color: red;
+        width: 80%;
+        margin: auto;
+
+        background-color: lightgrey;
+        padding: 1rem;
       }
       .IngredientController__add-button {
         background-color: green;
         color: white;
-        border-radius: 10px;
+      }
+      .IngredientController__top-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+      .IngredientController input {
+        height: 1.8rem;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      .IngredientController input[name="ingredient"] {
+        width: 100%;
+      }
+      .IngredientController input[name="amount"] {
+        width: 40%;
+      }
+      .IngredientController input[name="unit"] {
+        width: 40%;
       }
       .StagedIngredient {
         border: green solid 1px;
@@ -80,7 +98,7 @@
       }
     </style>
   </head>
-  <body>
+  <body id="body">
     <template id="RecipeIngredient">
       <div class="StagedIngredient">
         <input
@@ -150,21 +168,28 @@
           <div id="staged_ingredient_anchor"></div>
 
           <div id="ingredient_controller" class="IngredientController">
-            <input
-              type="number"
-              name="amount"
-              placeholder="amount"
-              oninput="handleAmountInput(event)"
-              id="ingredient_controller_amount"
-            />
-            <input
-              type="text"
-              name="unit"
-              placeholder="unit"
-              oninput="handleUnitInput(event)"
-              onclick="toggleShow(event)"
-              id="ingredient_controller_unit"
-            />
+            <div class="IngredientController__top-row">
+              <input
+                type="number"
+                name="amount"
+                placeholder="amount"
+                oninput="handleAmountInput(event)"
+                id="ingredient_controller_amount"
+              />
+              <input
+                type="text"
+                name="unit"
+                placeholder="unit"
+                oninput="handleUnitInput(event)"
+                onclick="toggleShow(event)"
+                id="ingredient_controller_unit"
+              />
+              <span
+                class="IngredientController__add-button"
+                onclick="submitIngredientController(event)"
+                >Plus</span
+              >
+            </div>
             <input
               type="text"
               name="ingredient"
@@ -172,11 +197,6 @@
               oninput="handleIngredientInput(event)"
               id="ingredient_controller_ingredient"
             />
-            <span
-              class="IngredientController__add-button"
-              onclick="submitIngredientController(event)"
-              >Plus</span
-            >
           </div>
         </section>
 
@@ -301,6 +321,10 @@
     </script>
 
     <script>
+      let elem = document.getElementById("body");
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
       function submitIngredientController(e) {
         const amount = document.getElementById(
           "ingredient_controller_amount"

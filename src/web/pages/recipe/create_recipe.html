@@ -105,7 +105,6 @@
               type="text"
               name="ingredient"
               placeholder="ingredient"
-              oninput="handleIngredientInput(event)"
               id="ingredient_controller_ingredient"
             />
           </div>
@@ -231,11 +230,27 @@
       }
     </script>
 
-    <script>
-      let elem = document.getElementById("body");
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
+    <script type="module">
+      import { ingredients } from "/assets/ingredients.js";
+
+      function handleIngredientInput(e) {
+        let inputValue = e.target.value.toLowerCase();
+
+        let autoCompleteValues = ingredients.filter((item) =>
+          item.startsWith(inputValue)
+        );
+        console.log("auto", autoCompleteValues);
       }
+
+      let ingredientInputController = document.getElementById(
+        "ingredient_controller_ingredient"
+      );
+      ingredientInputController.addEventListener(
+        "input",
+        handleIngredientInput
+      );
+    </script>
+    <script>
       function submitIngredientController(e) {
         const amount = document.getElementById(
           "ingredient_controller_amount"
@@ -276,9 +291,6 @@
         console.log("blue", e.target.value);
       }
       function handleUnitInput(e) {
-        console.log("blue", e.target.value);
-      }
-      function handleIngredientInput(e) {
         console.log("blue", e.target.value);
       }
 

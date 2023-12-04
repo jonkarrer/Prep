@@ -6,6 +6,10 @@
     <title>Create Recipe</title>
 
     <style>
+      body {
+        height: 100svh;
+        margin: 0;
+      }
       input {
         border: none;
         outline: none;
@@ -56,11 +60,29 @@
       .show {
         display: block;
       }
+
+      .IngredientController {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+
+        background-color: red;
+      }
+      .IngredientController__add-button {
+        background-color: green;
+        color: white;
+        border-radius: 10px;
+      }
+      .StagedIngredient {
+        border: green solid 1px;
+        border-radius: 1.5rem;
+        padding: 1rem;
+      }
     </style>
   </head>
   <body>
     <template id="RecipeIngredient">
-      <div>
+      <div class="StagedIngredient">
         <input
           type="text"
           name="ingredient"
@@ -68,21 +90,18 @@
           oninput="handleIngredientInput(event)"
         />
 
-        <span onclick="toggleShow(event)" class="cover">
-          <input
-            type="number"
-            name="amount"
-            placeholder="amount"
-            oninput="handleAmountInput(event)"
-          />
-          <input
-            type="text"
-            name="unit"
-            placeholder="unit"
-            oninput="handleUnitInput(event)"
-            onclick="toggleShow(event)"
-          />
-        </span>
+        <input
+          type="number"
+          name="amount"
+          placeholder="amount"
+          oninput="handleAmountInput(event)"
+        />
+        <input
+          type="text"
+          name="unit"
+          placeholder="unit"
+          oninput="handleUnitInput(event)"
+        />
       </div>
     </template>
 
@@ -122,13 +141,43 @@
           <recipe-tag></recipe-tag>
 
           <div onclick="appendNewTagInput(event)">Add</div>
+          <button type="submit">Submit</button>
         </section>
 
-        <section id="ingredient_section" class="Ingredients">
+        <section id="ingredient_section" class="Ingredients show">
           <h3>Ingredients</h3>
           <recipe-ingredient></recipe-ingredient>
+          <div id="staged_ingredient_anchor"></div>
 
-          <div onclick="appendNewIngredientInput(event)">Add</div>
+          <div id="ingredient_controller" class="IngredientController">
+            <input
+              type="number"
+              name="amount"
+              placeholder="amount"
+              oninput="handleAmountInput(event)"
+              id="ingredient_controller_amount"
+            />
+            <input
+              type="text"
+              name="unit"
+              placeholder="unit"
+              oninput="handleUnitInput(event)"
+              onclick="toggleShow(event)"
+              id="ingredient_controller_unit"
+            />
+            <input
+              type="text"
+              name="ingredient"
+              placeholder="ingredient"
+              oninput="handleIngredientInput(event)"
+              id="ingredient_controller_ingredient"
+            />
+            <span
+              class="IngredientController__add-button"
+              onclick="submitIngredientController(event)"
+              >Plus</span
+            >
+          </div>
         </section>
 
         <section id="direction_section" class="Directions">
@@ -138,8 +187,6 @@
             <div onclick="appendNewDirectionInput(event)">Add</div>
           </ol>
         </section>
-
-        <button type="submit">Submit</button>
       </form>
     </main>
     <script>
@@ -254,6 +301,32 @@
     </script>
 
     <script>
+      function submitIngredientController(e) {
+        const amount = document.getElementById(
+          "ingredient_controller_amount"
+        ).value;
+        const unit = document.getElementById(
+          "ingredient_controller_unit"
+        ).value;
+        const ingredient = document.getElementById(
+          "ingredient_controller_ingredient"
+        ).value;
+        const anchor = document.getElementById("staged_ingredient_anchor");
+
+        let template = document.getElementById("RecipeIngredient").content;
+        let clonedContent = template.cloneNode(true);
+        let wrapper = document.createElement("div");
+        wrapper.appendChild(clonedContent);
+
+        // Set the values of the inputs
+        wrapper.querySelector('input[name="ingredient"]').value = ingredient;
+        wrapper.querySelector('input[name="amount"]').value = amount;
+        wrapper.querySelector('input[name="unit"]').value = unit;
+
+        anchor.insertAdjacentElement("beforebegin", wrapper);
+
+        console.log("data", amount, unit, ingredient);
+      }
       function toggleShow(e) {
         e.target.classList.toggle("cover");
       }
@@ -347,7 +420,16 @@
             this.template = document.getElementById("RecipeIngredient").content;
           }
           render() {
-            this.appendChild(this.template.cloneNode(true));
+            let clonedContent = this.template.cloneNode(true);
+
+            // Set the values of the inputs
+            clonedContent.querySelector('input[name="ingredient"]').value =
+              "hello";
+            clonedContent.querySelector('input[name="amount"]').value =
+              "amount";
+            clonedContent.querySelector('input[name="unit"]').value = 5;
+
+            this.appendChild(clonedContent);
           }
           connectedCallback() {
             if (!this.rendered) {

@@ -2,102 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
+    <link rel="stylesheet" href="/styles/recipe/create_recipe.css" />
     <title>Create Recipe</title>
-
-    <style>
-      body {
-        height: 100svh;
-        margin: 0;
-      }
-      input {
-        border: none;
-        outline: none;
-        border-bottom: 1px solid black;
-      }
-
-      .cover {
-        position: relative;
-      }
-      .cover::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-
-        height: 115%;
-        width: 40px;
-        z-index: 2;
-        background-color: dimgrey;
-        border-radius: 0.6rem;
-      }
-      .cover::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-
-        height: 115%;
-        width: 100%;
-        z-index: 1;
-        background-color: #fff;
-      }
-
-      .General,
-      .Ingredients,
-      .Directions {
-        display: none;
-      }
-
-      .show {
-        display: block;
-      }
-
-      .IngredientController {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        width: 80%;
-        margin: auto;
-
-        background-color: lightgrey;
-        padding: 1rem;
-      }
-      .IngredientController__add-button {
-        background-color: green;
-        color: white;
-      }
-      .IngredientController__top-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-      }
-      .IngredientController input {
-        height: 1.8rem;
-        background-color: rgba(0, 0, 0, 0.05);
-      }
-      .IngredientController input[name="ingredient"] {
-        width: 100%;
-      }
-      .IngredientController input[name="amount"] {
-        width: 40%;
-      }
-      .IngredientController input[name="unit"] {
-        width: 40%;
-      }
-      .StagedIngredient {
-        border: green solid 1px;
-        border-radius: 1.5rem;
-        padding: 1rem;
-      }
-    </style>
   </head>
+
   <body id="body">
     <template id="RecipeIngredient">
       <div class="StagedIngredient">
@@ -107,7 +19,6 @@
           placeholder="ingredient"
           oninput="handleIngredientInput(event)"
         />
-
         <input
           type="number"
           name="amount"

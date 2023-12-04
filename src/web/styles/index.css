@@ -88,28 +88,6 @@ h1 {
   margin-left: 2px;
 }
 
-/*** Header ***/
-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: 100%;
-  padding: 2rem;
-}
-
-header nav {
-  font-weight: 500;
-}
-
-header nav a:first-child {
-  margin-right: 12px;
-}
-
 /************ CSS Reset ************/
 
 /* Preferred box-sizing value */

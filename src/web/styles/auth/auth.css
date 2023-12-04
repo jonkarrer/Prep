@@ -41,6 +41,28 @@ a:hover {
   color: var(--tri-color);
 }
 
+/*** Header ***/
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 2rem;
+}
+
+header nav {
+  font-weight: 500;
+}
+
+header nav a:first-child {
+  margin-right: 12px;
+}
+
 .Stack {
   --form-gap: 1.1rem;
   --form-font-size: 1em;

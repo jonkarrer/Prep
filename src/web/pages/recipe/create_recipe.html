@@ -239,9 +239,20 @@
 
       function handleIngredientInput(e) {
         let inputValue = e.target.value.toLowerCase();
+        if (inputValue.length === 0) {
+          autoValue = "";
+          document.documentElement.style.setProperty(
+            "--ingredient-autocomplete",
+            `"${autoValue}"`
+          );
+          return;
+        }
+
         let autoCompleteValues = ingredients.filter((item) =>
           item.startsWith(inputValue)
         );
+
+        console.log("vale", autoCompleteValues);
 
         autoValue = autoCompleteValues[0] ?? "";
         document.documentElement.style.setProperty(

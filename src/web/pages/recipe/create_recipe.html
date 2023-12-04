@@ -87,14 +87,14 @@
                 oninput="handleAmountInput(event)"
                 id="ingredient_controller_amount"
               />
-              <input
-                type="text"
-                name="unit"
-                placeholder="unit"
-                oninput="handleUnitInput(event)"
-                onclick="toggleShow(event)"
-                id="ingredient_controller_unit"
-              />
+              <div class="IngredientController__unit-wrapper">
+                <input
+                  type="text"
+                  name="unit"
+                  placeholder="unit"
+                  id="ingredient_controller_unit"
+                />
+              </div>
               <span
                 class="IngredientController__add-button"
                 onclick="submitIngredientController(event)"
@@ -230,6 +230,54 @@
             break;
         }
       }
+    </script>
+
+    <script type="module">
+      import {
+        unitsMap,
+        unitsFullNames,
+        unitsAbbreviations,
+      } from "/assets/units.js";
+
+      let unitValue;
+
+      function handleUnitInput(e) {
+        let inputValue = e.target.value.toLowerCase();
+        if (inputValue.length === 0) {
+          unitValue = "";
+          document.documentElement.style.setProperty(
+            "--unit-autocomplete",
+            `"${unitValue}"`
+          );
+          return;
+        }
+
+        let autoCompleteValues = unitsFullNames.filter((item) =>
+          item.startsWith(inputValue)
+        );
+
+        console.log("vale", autoCompleteValues);
+
+        unitValue = autoCompleteValues[0] ?? "";
+        document.documentElement.style.setProperty(
+          "--unit-autocomplete",
+          `"${unitValue}"`
+        );
+      }
+
+      function handleAutoComplete(e) {
+        if (e.key === "Tab" || e.key === "Enter") {
+          e.preventDefault();
+          e.target.value = unitValue;
+        }
+      }
+
+      let unitInputController = document.getElementById(
+        "ingredient_controller_unit"
+      );
+
+      unitInputController.addEventListener("input", handleUnitInput);
+      unitInputController.addEventListener("keydown", handleAutoComplete);
     </script>
 
     <script type="module">

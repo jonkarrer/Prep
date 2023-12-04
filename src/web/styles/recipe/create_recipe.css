@@ -99,11 +99,34 @@ input {
   opacity: 0.5;
   z-index: 0;
 }
+.IngredientController__unit-wrapper {
+  position: relative;
+  width: 40%;
+}
+.IngredientController__unit-wrapper::before {
+  content: var(--unit-autocomplete);
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.2;
+
+  opacity: 0.5;
+  z-index: 0;
+}
 .IngredientController input[name="amount"] {
   width: 40%;
 }
 .IngredientController input[name="unit"] {
-  width: 40%;
+  width: 100%;
 }
 
 .StagedIngredient {

@@ -28,6 +28,9 @@ export const unitsFullNames = [
   "peck",
   "degrees celsius",
   "degrees fahrenheit",
+  "whole",
+  "half",
+  "quarter",
 ];
 
 export const unitsAbbreviations = [
@@ -60,6 +63,9 @@ export const unitsAbbreviations = [
   "peck",
   "°C",
   "°F",
+  "whole",
+  "half",
+  "quarter",
 ];
 
 export let unitsMap = new Map();

@@ -80,27 +80,56 @@
 
           <div id="ingredient_controller" class="IngredientController">
             <div class="IngredientController__top-row">
-              <input
-                type="number"
-                name="amount"
-                placeholder="amount"
-                oninput="handleAmountInput(event)"
-                id="ingredient_controller_amount"
-              />
-              <div class="IngredientController__unit-wrapper">
+              <div class="IngredientController__amount-wrapper">
+                <div class="IngredientController__decimal-input">
+                  <input
+                    type="number"
+                    name="amount"
+                    placeholder="amount"
+                    oninput="handleAmountInput(event)"
+                    id="ingredient_controller_amount"
+                  />
+                </div>
+                <div class="IngredientController__fraction-input show">
+                  <input type="number" />
+                  <span class="IngredientController__fraction-slash">/</span>
+                  <input type="number" />
+                </div>
+                <span
+                  class="IngredientController__amount-type-button"
+                  onclick="swapAmountType(event)"
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 75 75"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M37.5 6.25C20.2187 6.25 6.25 20.2187 6.25 37.5C6.25 54.7813 20.2187 68.75 37.5 68.75C54.7813 68.75 68.75 54.7813 68.75 37.5C68.75 20.2187 54.7813 6.25 37.5 6.25Z"
+                      fill="#000"
+                    />
+                  </svg>
+                </span>
+              </div>
+
+              <!-- <div class="IngredientController__unit-wrapper">
                 <input
                   type="text"
                   name="unit"
                   placeholder="unit"
                   id="ingredient_controller_unit"
                 />
-              </div>
+              </div> -->
+
               <span
                 class="IngredientController__add-button"
                 onclick="submitIngredientController(event)"
-                >Plus</span
-              >
+                >Plus
+              </span>
             </div>
+
             <div class="IngredientController__ingredient-wrapper">
               <input
                 type="text"
@@ -232,6 +261,17 @@
       }
     </script>
 
+    <script>
+      function handleAmountInput(e) {
+        let inputValue = e.target.value;
+
+        const numberFractionRegex =
+          /^(?:(\d+)\s+)?(\d+)\/(\d+)$|^\d+$|^\d+\.\d+$/;
+
+        if (!inputValue.length || !numberFractionRegex.test(inputValue)) {
+        }
+      }
+    </script>
     <script type="module">
       import {
         unitsMap,
@@ -243,6 +283,8 @@
 
       function handleUnitInput(e) {
         let inputValue = e.target.value.toLowerCase();
+        e.target.value = inputValue;
+
         if (inputValue.length === 0) {
           unitValue = "";
           document.documentElement.style.setProperty(
@@ -287,6 +329,8 @@
 
       function handleIngredientInput(e) {
         let inputValue = e.target.value.toLowerCase();
+        e.target.value = inputValue;
+
         if (inputValue.length === 0) {
           autoValue = "";
           document.documentElement.style.setProperty(
@@ -360,13 +404,6 @@
         console.log("blue", e.target.value);
       }
       function handleServingsInput(e) {
-        console.log("blue", e.target.value);
-      }
-
-      function handleAmountInput(e) {
-        console.log("blue", e.target.value);
-      }
-      function handleUnitInput(e) {
         console.log("blue", e.target.value);
       }
 

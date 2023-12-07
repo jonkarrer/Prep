@@ -99,6 +99,20 @@ input {
   opacity: 0.5;
   z-index: 0;
 }
+.IngredientController__amount-wrapper {
+  position: relative;
+  display: flex;
+  width: 40%;
+}
+.IngredientController__amount-type-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 3px;
+  padding-right: 3px;
+  background-color: aliceblue;
+  width: 24px;
+}
 .IngredientController__unit-wrapper {
   position: relative;
   width: 40%;
@@ -123,7 +137,44 @@ input {
   z-index: 0;
 }
 .IngredientController input[name="amount"] {
-  width: 40%;
+  width: 100%;
+}
+.IngredientController__decimal-input {
+  display: none;
+}
+.IngredientController__decimal-input.show {
+  display: block;
+}
+.IngredientController__fraction-input {
+  display: none;
+  position: relative;
+
+  align-items: center;
+  width: 60%;
+}
+.IngredientController__fraction-input.show {
+  display: flex;
+}
+.IngredientController__fraction-input input {
+  display: block;
+}
+.IngredientController__fraction-input input:first-of-type {
+  text-align: right;
+  width: 24px;
+}
+.IngredientController__fraction-input input:last-of-type {
+  width: 44px;
+  padding-left: 16px;
+}
+.IngredientController__fraction-slash {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 4px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 .IngredientController input[name="unit"] {
   width: 100%;

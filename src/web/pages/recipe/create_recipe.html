@@ -155,6 +155,9 @@
       }
 
       function showFractionHint(decimal) {
+        let wholeNumber = Math.floor(decimal);
+        let decimalPart = decimal - wholeNumber;
+
         const fractionMappings = new Map([
           [0.25, "1/4"],
           [0.75, "3/4"],
@@ -172,7 +175,7 @@
           [0.8, "4/5"],
         ]);
 
-        return fractionMappings.get(parseFloat(decimal));
+        return fractionMappings.get(parseFloat(decimalPart));
       }
 
       function handleAmountInput(e) {

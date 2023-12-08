@@ -154,6 +154,7 @@
       </form>
     </main>
 
+    <script src="/scripts/handle_toast.js"></script>
     <!-- Amount Input Fraction Hint -->
     <script>
       let fractionHint = document.getElementById("fraction_hint");
@@ -197,20 +198,6 @@
 
     <!-- Submit Form -->
     <script>
-      function handleToast(type, message, timer = 8000) {
-        let toast = document.getElementById("toast");
-        let toastMessage = document.getElementById("toast_message");
-        toast.classList.add("slideInDown");
-        toast.classList.add(type);
-
-        toastMessage.innerText = message;
-
-        setTimeout(() => {
-          toast.classList.remove("slideInDown");
-          toast.classList.remove(type);
-        }, timer);
-      }
-
       document
         .getElementById("recipe_form")
         .addEventListener("submit", submitForm);
@@ -555,20 +542,6 @@
         console.log("data", amount, unit, ingredient);
       }
 
-      function handleToast(type, message, timer = 8000) {
-        let toast = document.getElementById("toast");
-        let toastMessage = document.getElementById("toast_message");
-        toast.classList.add("slideInDown");
-        toast.classList.add(type);
-
-        toastMessage.innerText = message;
-
-        setTimeout(() => {
-          toast.classList.remove("slideInDown");
-          toast.classList.remove(type);
-        }, timer);
-      }
-
       function runIngredientValidation(amount, unit, ingredient) {
         let lenCheck = (i) => i.length === 0;
         if (lenCheck(amount) || lenCheck(unit) || lenCheck(ingredient)) {
@@ -602,20 +575,6 @@
 
         const anchor = document.getElementById("staged_direction_anchor");
         anchor.insertAdjacentElement("beforebegin", wrapper);
-      }
-
-      function handleToast(type, message, timer = 8000) {
-        let toast = document.getElementById("toast");
-        let toastMessage = document.getElementById("toast_message");
-        toast.classList.add("slideInDown");
-        toast.classList.add(type);
-
-        toastMessage.innerText = message;
-
-        setTimeout(() => {
-          toast.classList.remove("slideInDown");
-          toast.classList.remove(type);
-        }, timer);
       }
 
       function runDirectionValidation(direction) {

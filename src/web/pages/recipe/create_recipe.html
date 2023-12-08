@@ -11,6 +11,10 @@
   </head>
 
   <body>
+    <div class="Toast" id="toast">
+      <p id="toast_message">An error has occurred</p>
+    </div>
+
     <template id="RecipeIngredient">
       <div class="StagedIngredient">
         <input
@@ -517,7 +521,11 @@
         const ingredient = document.getElementById(
           "ingredient_controller_ingredient"
         ).value;
-        const anchor = document.getElementById("staged_ingredient_anchor");
+
+        if (!runIngredientValidation(amount, unit, ingredient)) {
+          console.log("invalid inputs");
+          return;
+        }
 
         let template = document.getElementById("RecipeIngredient").content;
         let clonedContent = template.cloneNode(true);
@@ -529,21 +537,32 @@
         wrapper.querySelector('input[name="amount"]').value = amount;
         wrapper.querySelector('input[name="unit"]').value = unit;
 
+        const anchor = document.getElementById("staged_ingredient_anchor");
         anchor.insertAdjacentElement("beforebegin", wrapper);
 
         console.log("data", amount, unit, ingredient);
       }
 
-      function appendNewTagInput(e) {
-        const customInputEl = document.createElement("recipe-tag");
-        e.target.insertAdjacentElement("beforeBegin", customInputEl);
+      function handleToast(type, message, timer = 8000) {
+        let toast = document.getElementById("toast");
+        let toastMessage = document.getElementById("toast_message");
+        toast.classList.add("slideInDown");
+        toast.classList.add(type);
+
+        toastMessage.innerText = message;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+          toast.classList.remove(type);
+        }, timer);
       }
 
-      function appendNewDirectionInput(e) {
-        const customInputEl = document.createElement("recipe-direction");
-        const listEl = document.createElement("li");
-        listEl.appendChild(customInputEl);
-        e.target.insertAdjacentElement("beforeBegin", listEl);
+      function runIngredientValidation(amount, unit, ingredient) {
+        let lenCheck = (i) => i.length === 0;
+        if (lenCheck(amount) || lenCheck(unit) || lenCheck(ingredient)) {
+          handleToast("error", "inputs are empty");
+          return false;
+        }
       }
     </script>
 
@@ -554,7 +573,10 @@
           "direction_controller_direction"
         ).value;
 
-        const anchor = document.getElementById("staged_direction_anchor");
+        if (!runDirectionValidation(direction)) {
+          console.log("invalid direction");
+          return;
+        }
 
         let template = document.getElementById("RecipeDirection").content;
         let clonedContent = template.cloneNode(true);
@@ -564,8 +586,34 @@
         // Set the values of the inputs
         wrapper.querySelector('textarea[name="direction"]').value = direction;
 
+        const anchor = document.getElementById("staged_direction_anchor");
         anchor.insertAdjacentElement("beforebegin", wrapper);
       }
+
+      function handleToast(type, message, timer = 8000) {
+        console.log("comment");
+        let toast = document.getElementById("toast");
+        let toastMessage = document.getElementById("toast_message");
+        toast.classList.add("slideInDown");
+        toast.classList.add(type);
+
+        toastMessage.innerText = message;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+          toast.classList.remove(type);
+        }, timer);
+      }
+
+      function runDirectionValidation(direction) {
+        let lenCheck = (i) => i.length === 0;
+        if (lenCheck(direction)) {
+          handleToast("error", "direction field is empty");
+          return false;
+        }
+      }
     </script>
+
+    <script></script>
   </body>
 </html>

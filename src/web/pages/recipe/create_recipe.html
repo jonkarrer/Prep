@@ -10,7 +10,7 @@
     <title>Create Recipe</title>
   </head>
 
-  <body id="body">
+  <body>
     <template id="RecipeIngredient">
       <div class="StagedIngredient">
         <input
@@ -19,7 +19,12 @@
           placeholder="ingredient"
           oninput="handleIngredientInput(event)"
         />
-        <input type="number" name="amount" placeholder="amount" step="any" />
+        <input
+          type="number"
+          name="amount"
+          placeholder="amount"
+          onkeydown="handleAmountKeyPress(event)"
+        />
         <input
           type="text"
           name="unit"
@@ -57,11 +62,11 @@
       </header>
 
       <div id="ingredient_controller" class="IngredientController">
-        <div class="IngredientController__top-row">
-          <div class="IngredientController__amount-wrapper">
+        <div class="flex justify-space-between">
+          <div class="IngredientController__amount-wrapper relative">
             <div
               id="fraction_hint"
-              class="IngredientController__fraction-hint"
+              class="IngredientController__fraction-hint flex align-center"
             ></div>
             <input
               type="number"
@@ -73,7 +78,7 @@
             />
           </div>
 
-          <div class="IngredientController__unit-wrapper">
+          <div class="IngredientController__unit-wrapper relative">
             <input
               type="text"
               name="unit"
@@ -84,12 +89,12 @@
 
           <span
             class="IngredientController__add-button"
-            onclick="submitIngredientController(event)"
+            onclick="createStagedIngredient(event)"
             >Plus
           </span>
         </div>
 
-        <div class="IngredientController__ingredient-wrapper">
+        <div class="IngredientController__ingredient-wrapper relative">
           <input
             type="text"
             name="ingredient"
@@ -108,13 +113,12 @@
           <recipe-tag></recipe-tag>
 
           <div onclick="appendNewTagInput(event)">Add</div>
+          <button type="submit">Submit</button>
         </section>
 
         <section id="ingredient_section" class="Ingredients show">
           <h3>Ingredients</h3>
-          <recipe-ingredient></recipe-ingredient>
           <div id="staged_ingredient_anchor"></div>
-          <button type="submit">Submit</button>
         </section>
 
         <section id="direction_section" class="Directions">
@@ -127,36 +131,17 @@
       </form>
     </main>
 
+    <!-- Amount Input Fraction Hint -->
     <script>
       let fractionHint = document.getElementById("fraction_hint");
-      function roundToNearestHundred(num) {
-        return Math.round(num / 100) * 100;
-      }
 
-      function decimalToFraction(decimal) {
-        if (decimal % 1 === 0) {
-          // If the number is an integer
-          return `${decimal}/1`;
-        }
-
-        const precision = 1e1; // Adjust precision as needed
-        let numerator = decimal * precision;
-        let denominator = precision;
-
-        function gcd(a, b) {
-          return b ? gcd(b, a % b) : a; // Euclidean algorithm for Greatest Common Divisor
-        }
-
-        const divisor = gcd(numerator, denominator); // Find GCD
-        numerator /= divisor; // Divide both numerator and denominator by GCD
-        denominator /= divisor;
-
-        return `${Math.round(numerator)}/${Math.round(denominator)}`;
+      function roundToTenThousand(num) {
+        return Math.round(num * 10000) / 10000;
       }
 
       function showFractionHint(decimal) {
         let wholeNumber = Math.floor(decimal);
-        let decimalPart = decimal - wholeNumber;
+        let decimalPart = roundToTenThousand(decimal - wholeNumber);
 
         const fractionMappings = new Map([
           [0.25, "1/4"],
@@ -180,13 +165,14 @@
 
       function handleAmountInput(e) {
         let value = e.target.value;
-
         fractionHint.innerText = showFractionHint(value) ?? "";
       }
       function handleAmountKeyPress(e) {
         return ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
       }
     </script>
+
+    <!-- Submit Form -->
     <script>
       document
         .getElementById("recipe_form")
@@ -255,6 +241,7 @@
       }
     </script>
 
+    <!-- Page Switching -->
     <script>
       let generalSection = document.getElementById("general_section");
       let ingredientSection = document.getElementById("ingredient_section");
@@ -301,167 +288,7 @@
       }
     </script>
 
-    <script type="module">
-      import {
-        unitsMap,
-        unitsFullNames,
-        unitsAbbreviations,
-      } from "/assets/units.js";
-
-      let unitValue;
-
-      function handleUnitInput(e) {
-        let inputValue = e.target.value.toLowerCase();
-        e.target.value = inputValue;
-
-        if (inputValue.length === 0) {
-          unitValue = "";
-          document.documentElement.style.setProperty(
-            "--unit-autocomplete",
-            `"${unitValue}"`
-          );
-          return;
-        }
-
-        let autoCompleteValues = unitsFullNames.filter((item) =>
-          item.startsWith(inputValue)
-        );
-
-        console.log("vale", autoCompleteValues);
-
-        unitValue = autoCompleteValues[0] ?? "";
-        document.documentElement.style.setProperty(
-          "--unit-autocomplete",
-          `"${unitValue}"`
-        );
-      }
-
-      function handleAutoComplete(e) {
-        if (e.key === "Tab" || e.key === "Enter") {
-          e.preventDefault();
-          e.target.value = unitValue;
-        }
-      }
-
-      let unitInputController = document.getElementById(
-        "ingredient_controller_unit"
-      );
-
-      unitInputController.addEventListener("input", handleUnitInput);
-      unitInputController.addEventListener("keydown", handleAutoComplete);
-    </script>
-
-    <script type="module">
-      import { ingredients } from "/assets/ingredients.js";
-
-      let autoValue;
-
-      function handleIngredientInput(e) {
-        let inputValue = e.target.value.toLowerCase();
-        e.target.value = inputValue;
-
-        if (inputValue.length === 0) {
-          autoValue = "";
-          document.documentElement.style.setProperty(
-            "--ingredient-autocomplete",
-            `"${autoValue}"`
-          );
-          return;
-        }
-
-        let autoCompleteValues = ingredients.filter((item) =>
-          item.startsWith(inputValue)
-        );
-
-        console.log("vale", autoCompleteValues);
-
-        autoValue = autoCompleteValues[0] ?? "";
-        document.documentElement.style.setProperty(
-          "--ingredient-autocomplete",
-          `"${autoValue}"`
-        );
-      }
-
-      function handleAutoComplete(e) {
-        if (e.key === "Tab" || e.key === "Enter") {
-          e.preventDefault();
-          e.target.value = autoValue;
-        }
-      }
-
-      let ingredientInputController = document.getElementById(
-        "ingredient_controller_ingredient"
-      );
-
-      ingredientInputController.addEventListener(
-        "input",
-        handleIngredientInput
-      );
-      ingredientInputController.addEventListener("keydown", handleAutoComplete);
-    </script>
-    <script>
-      function submitIngredientController(e) {
-        const amount = document.getElementById(
-          "ingredient_controller_amount"
-        ).value;
-        const unit = document.getElementById(
-          "ingredient_controller_unit"
-        ).value;
-        const ingredient = document.getElementById(
-          "ingredient_controller_ingredient"
-        ).value;
-        const anchor = document.getElementById("staged_ingredient_anchor");
-
-        let template = document.getElementById("RecipeIngredient").content;
-        let clonedContent = template.cloneNode(true);
-        let wrapper = document.createElement("div");
-        wrapper.appendChild(clonedContent);
-
-        // Set the values of the inputs
-        wrapper.querySelector('input[name="ingredient"]').value = ingredient;
-        wrapper.querySelector('input[name="amount"]').value = amount;
-        wrapper.querySelector('input[name="unit"]').value = unit;
-
-        anchor.insertAdjacentElement("beforebegin", wrapper);
-
-        console.log("data", amount, unit, ingredient);
-      }
-      function toggleShow(e) {
-        e.target.classList.toggle("cover");
-      }
-      function handleTitleInput(e) {
-        console.log("blue", e.target.value);
-      }
-      function handleServingsInput(e) {
-        console.log("blue", e.target.value);
-      }
-
-      function handleDirectionInput(e) {
-        console.log("blue", e.target.value);
-      }
-
-      function handleTagInput(e) {
-        console.log("blue", e.target.value);
-      }
-
-      function appendNewIngredientInput(e) {
-        const customInputEl = document.createElement("recipe-ingredient");
-        e.target.insertAdjacentElement("beforeBegin", customInputEl);
-      }
-
-      function appendNewTagInput(e) {
-        const customInputEl = document.createElement("recipe-tag");
-        e.target.insertAdjacentElement("beforeBegin", customInputEl);
-      }
-
-      function appendNewDirectionInput(e) {
-        const customInputEl = document.createElement("recipe-direction");
-        const listEl = document.createElement("li");
-        listEl.appendChild(customInputEl);
-        e.target.insertAdjacentElement("beforeBegin", listEl);
-      }
-    </script>
-
+    <!-- Web Components -->
     <script>
       customElements.define(
         "recipe-tag",
@@ -511,12 +338,6 @@
           render() {
             let clonedContent = this.template.cloneNode(true);
 
-            // Set the values of the inputs
-            clonedContent.querySelector('input[name="ingredient"]').value =
-              "hello";
-            clonedContent.querySelector('input[name="amount"]').value = 5;
-            clonedContent.querySelector('input[name="unit"]').value = "cup";
-
             this.appendChild(clonedContent);
           }
           connectedCallback() {
@@ -527,6 +348,127 @@
           }
         }
       );
+    </script>
+
+    <!-- Autocomplete -->
+    <script type="module">
+      import {
+        unitsMap,
+        unitsFullNames,
+        unitsAbbreviations,
+      } from "/assets/units.js";
+      import { ingredients } from "/assets/ingredients.js";
+
+      let unitAutoCompleteHint;
+      let ingredientAutoCompleteHint;
+
+      function setAutoCompleteIntoContent(cssVariableName, autoCompleteValue) {
+        document.documentElement.style.setProperty(
+          cssVariableName,
+          `"${autoCompleteValue}"`
+        );
+      }
+
+      function filterAutoCompleteOptions(options, target) {
+        return options.filter((item) => item.startsWith(target));
+      }
+
+      function createAutoCompleteHint(e, cssVar, options) {
+        let inputValue = e.target.value.toLowerCase();
+        e.target.value = inputValue;
+
+        if (inputValue.length === 0) {
+          setAutoCompleteIntoContent(cssVar, "");
+          return "";
+        }
+
+        let hint = filterAutoCompleteOptions(options, inputValue)[0] ?? "";
+        setAutoCompleteIntoContent(cssVar, hint);
+        return hint;
+      }
+
+      function insertAutoCompleteIntoField(e, autoCompleteValue) {
+        let value = e.target.value;
+
+        if (e.key === "Tab" || e.key === "Enter") {
+          e.preventDefault();
+
+          if (autoCompleteValue.length != 0) {
+            e.target.value = autoCompleteValue;
+          }
+        }
+      }
+
+      let unitInputController = document.getElementById(
+        "ingredient_controller_unit"
+      );
+      let ingredientInputController = document.getElementById(
+        "ingredient_controller_ingredient"
+      );
+
+      unitInputController.addEventListener("input", (e) => {
+        unitAutoCompleteHint = createAutoCompleteHint(
+          e,
+          "--unit-autocomplete",
+          unitsFullNames
+        );
+      });
+      ingredientInputController.addEventListener("input", (e) => {
+        ingredientAutoCompleteHint = createAutoCompleteHint(
+          e,
+          "--ingredient-autocomplete",
+          ingredients
+        );
+      });
+
+      unitInputController.addEventListener("keydown", (e) =>
+        insertAutoCompleteIntoField(e, unitAutoCompleteHint)
+      );
+      ingredientInputController.addEventListener("keydown", (e) =>
+        insertAutoCompleteIntoField(e, ingredientAutoCompleteHint)
+      );
+    </script>
+
+    <!-- Create Staged Ingredient -->
+    <script>
+      function createStagedIngredient(e) {
+        const amount = document.getElementById(
+          "ingredient_controller_amount"
+        ).value;
+        const unit = document.getElementById(
+          "ingredient_controller_unit"
+        ).value;
+        const ingredient = document.getElementById(
+          "ingredient_controller_ingredient"
+        ).value;
+        const anchor = document.getElementById("staged_ingredient_anchor");
+
+        let template = document.getElementById("RecipeIngredient").content;
+        let clonedContent = template.cloneNode(true);
+        let wrapper = document.createElement("div");
+        wrapper.appendChild(clonedContent);
+
+        // Set the values of the inputs
+        wrapper.querySelector('input[name="ingredient"]').value = ingredient;
+        wrapper.querySelector('input[name="amount"]').value = amount;
+        wrapper.querySelector('input[name="unit"]').value = unit;
+
+        anchor.insertAdjacentElement("beforebegin", wrapper);
+
+        console.log("data", amount, unit, ingredient);
+      }
+
+      function appendNewTagInput(e) {
+        const customInputEl = document.createElement("recipe-tag");
+        e.target.insertAdjacentElement("beforeBegin", customInputEl);
+      }
+
+      function appendNewDirectionInput(e) {
+        const customInputEl = document.createElement("recipe-direction");
+        const listEl = document.createElement("li");
+        listEl.appendChild(customInputEl);
+        e.target.insertAdjacentElement("beforeBegin", listEl);
+      }
     </script>
   </body>
 </html>

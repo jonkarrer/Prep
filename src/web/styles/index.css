@@ -93,9 +93,27 @@ h1 {
   margin-left: 2px;
 }
 
-/************ CSS Reset ************/
+/************ CSS Base ************/
+.relative {
+  position: relative;
+}
+.flex {
+  display: flex;
+}
+.align-center {
+  align-items: center;
+}
+.justify-space-between {
+  justify-content: space-between;
+}
+.invisible {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
 
-/* Preferred box-sizing value */
+/************ CSS Reset ************/
 *,
 *::before,
 *::after {

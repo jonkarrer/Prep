@@ -10,39 +10,11 @@ input {
   border-bottom: 1px solid black;
 }
 
-.cover {
-  position: relative;
-}
-.cover::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-
-  height: 115%;
-  width: 40px;
-  z-index: 2;
-  background-color: dimgrey;
-  border-radius: 0.6rem;
-}
-.cover::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-
-  height: 115%;
-  width: 100%;
-  z-index: 1;
-  background-color: #fff;
-}
-
 .General,
 .Ingredients,
 .Directions {
   display: none;
 }
-
 .show {
   display: block;
 }
@@ -63,69 +35,26 @@ input {
   background-color: green;
   color: white;
 }
-.IngredientController__top-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
+
 .IngredientController input {
+  position: relative;
+
   height: 1.8rem;
+  width: 100%;
+
   background-color: rgba(0, 0, 0, 0.05);
+  z-index: 1;
 }
-.IngredientController input[name="ingredient"] {
-  position: relative;
-  display: block;
-  width: 100%;
-}
+
 .IngredientController__ingredient-wrapper {
-  position: relative;
+  margin-top: 1rem;
 }
-.IngredientController__ingredient-wrapper::before {
-  content: var(--ingredient-autocomplete);
-
-  position: absolute;
-  left: 0;
-  bottom: 0;
-
-  height: 100%;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-
-  font-family: "Montserrat", sans-serif;
-  line-height: 1.2;
-
-  opacity: 0.5;
-  z-index: 0;
-}
-.IngredientController__amount-wrapper {
-  position: relative;
-  display: flex;
-  width: 40%;
-}
-.IngredientController__fraction-type-button,
-.IngredientController__decimal-type-button {
-  display: none;
-  background-color: aliceblue;
-  width: 2.2rem;
-
-  font-size: 1.5rem;
-  font-weight: 500;
-}
-.IngredientController__fraction-type-button.show,
-.IngredientController__decimal-type-button.show {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.IngredientController__amount-wrapper,
 .IngredientController__unit-wrapper {
-  position: relative;
   width: 40%;
 }
-.IngredientController__unit-wrapper::before {
-  content: var(--unit-autocomplete);
-
+.IngredientController__ingredient-wrapper::after,
+.IngredientController__unit-wrapper::after {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -136,84 +65,33 @@ input {
   display: flex;
   align-items: center;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--sec-font);
   line-height: 1.2;
 
   opacity: 0.5;
   z-index: 0;
 }
-.IngredientController input[name="amount"] {
-  width: 100%;
+.IngredientController__ingredient-wrapper::after {
+  content: var(--ingredient-autocomplete);
+}
+.IngredientController__unit-wrapper::after {
+  content: var(--unit-autocomplete);
 }
 
-.IngredientController input[name="unit"] {
-  width: 100%;
-}
-
-.IngredientController__fraction-selector {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  display: none;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-  background-color: red;
-}
-.IngredientController__fraction-selector.show {
-  display: block;
-}
-.IngredientController__fractions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  position: relative;
-  padding: 1rem;
-}
-.IngredientController__fractions div {
-  background-color: #fff;
-}
-.IngredientController__close-fraction-selector {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-}
-.IngredientController__decimal-input {
-  position: relative;
-}
-.IngredientController__fraction-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: lightgray;
-
-  display: none;
-  border-bottom: 1px solid black;
-}
-.IngredientController__fraction-mask.show {
-  display: flex;
-  align-items: center;
-  font-family: var(--sec-font);
-}
 .IngredientController__fraction-hint {
   position: absolute;
   top: 0;
   right: 0;
 
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  padding-right: 5px;
-  background-color: rgba(0, 0, 0, 0);
-  opacity: 0.5;
-  font-family: var(--sec-font);
   width: 2rem;
   height: 100%;
+  padding-right: 5px;
+
+  background-color: rgba(0, 0, 0, 0);
+  opacity: 0.5;
+
+  text-align: center;
+  font-family: var(--sec-font);
 }
 
 .StagedIngredient {

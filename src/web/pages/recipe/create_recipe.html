@@ -197,6 +197,20 @@
 
     <!-- Submit Form -->
     <script>
+      function handleToast(type, message, timer = 8000) {
+        let toast = document.getElementById("toast");
+        let toastMessage = document.getElementById("toast_message");
+        toast.classList.add("slideInDown");
+        toast.classList.add(type);
+
+        toastMessage.innerText = message;
+
+        setTimeout(() => {
+          toast.classList.remove("slideInDown");
+          toast.classList.remove(type);
+        }, timer);
+      }
+
       document
         .getElementById("recipe_form")
         .addEventListener("submit", submitForm);
@@ -253,14 +267,12 @@
           body: body,
         });
 
-        console.log("response", await res.json());
-
-        // if (res.redirected) {
-        //   window.location = res.url;
-        // } else {
-        //   let text = await res.text();
-        //   handleToast("error", text);
-        // }
+        if (res.ok) {
+          console.log("response", await res.json());
+        } else {
+          let text = await res.text();
+          handleToast("error", text);
+        }
       }
     </script>
 
@@ -563,6 +575,8 @@
           handleToast("error", "inputs are empty");
           return false;
         }
+
+        return true;
       }
     </script>
 
@@ -591,7 +605,6 @@
       }
 
       function handleToast(type, message, timer = 8000) {
-        console.log("comment");
         let toast = document.getElementById("toast");
         let toastMessage = document.getElementById("toast_message");
         toast.classList.add("slideInDown");
@@ -606,11 +619,13 @@
       }
 
       function runDirectionValidation(direction) {
+        console.log("len", direction.length);
         let lenCheck = (i) => i.length === 0;
         if (lenCheck(direction)) {
           handleToast("error", "direction field is empty");
           return false;
         }
+        return true;
       }
     </script>
 

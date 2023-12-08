@@ -5,10 +5,35 @@ use crate::{
 use brize_auth::entity::Session;
 use poem::{
     handler,
+    http::StatusCode,
     web::{Data, Json},
     Error, Result,
 };
 use sqlx::MySqlPool;
+
+fn validate_recipe(recipe: &RecipeArgs) -> bool {
+    let title = recipe.title.as_str();
+
+    if title.len() == 0 {
+        return false;
+    }
+
+    for dir in recipe.directions.iter() {
+        if dir.details.len() == 0 {
+            return false;
+        }
+    }
+
+    for ing in recipe.ingredients.iter() {
+        let ingredient_name = ing.name.as_str();
+
+        if ingredient_name.len() == 0 {
+            return false;
+        }
+    }
+
+    true
+}
 
 #[handler]
 pub async fn handle_create_recipe(
@@ -16,12 +41,19 @@ pub async fn handle_create_recipe(
     Data(repo): Data<&Database<MySqlPool>>,
     Data(session): Data<&Session>,
 ) -> Result<Json<Recipe>> {
-    // println!("{:#?}", recipe);
-    // Ok(())
+    // TODO run validation on input before insertion
+
+    if !validate_recipe(&recipe) {
+        return Err(Error::from_string(
+            "Recipe missing some things",
+            StatusCode::BAD_REQUEST,
+        ));
+    }
+
     let recipe_id = repo
         .create_recipe_from_args(recipe, &session.user_id)
         .await
-        .map_err(|e| Error::from_string(format!("{e}"), poem::http::StatusCode::BAD_GATEWAY))?;
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_GATEWAY))?;
 
     let recipe = repo
         .select_by_recipe_id(&recipe_id)

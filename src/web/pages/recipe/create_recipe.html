@@ -124,7 +124,14 @@
           <h4>Tags</h4>
           <recipe-tag></recipe-tag>
 
-          <div onclick="appendNewTagInput(event)">Add</div>
+          <h4>Ingredients</h4>
+          <div id="preview_ingredient_anchor"></div>
+
+          <h4>Directions</h4>
+          <ol>
+            <div id="preview_direction_anchor"></div>
+          </ol>
+
           <button type="submit">Submit</button>
         </section>
 
@@ -267,6 +274,8 @@
         ingredientController.classList.remove("show");
         directionSection.classList.remove("show");
         directionController.classList.remove("show");
+
+        updateRecipePreview();
       }
 
       function showIngredientSection() {
@@ -302,6 +311,42 @@
           default:
             break;
         }
+      }
+
+      let form = document.getElementById("recipe_form");
+      function updateRecipePreview() {
+        const formData = new FormData(form);
+
+        const amounts = formData.getAll("amount");
+        const units = formData.getAll("unit");
+        const ingredients = formData.getAll("ingredient");
+        const directions = formData.getAll("direction");
+
+        let recipePreview = {
+          ingredients: [],
+          directions: [],
+        };
+
+        let ingredientAnchor = document.getElementById(
+          "preview_ingredient_anchor"
+        );
+        for (let i = 0; i < ingredients.length; i++) {
+          let ingredientEl = document.createElement("p");
+          let ingString = `${amounts[i]} ${units[i]} ${ingredients[i]}`;
+          ingredientEl.innerText = ingString;
+          ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
+        }
+
+        let directionAnchor = document.getElementById(
+          "preview_direction_anchor"
+        );
+        for (let i = 0; i < directions.length; i++) {
+          let directionEl = document.createElement("li");
+          directionEl.innerText = directions[i];
+          directionAnchor.insertAdjacentElement("beforebegin", directionEl);
+        }
+
+        console.log("recipe", recipePreview);
       }
     </script>
 
@@ -488,6 +533,7 @@
       }
     </script>
 
+    <!-- Create Staged Direction -->
     <script>
       function createStagedDirection(e) {
         const direction = document.getElementById(
@@ -505,13 +551,6 @@
         wrapper.querySelector('textarea[name="direction"]').value = direction;
 
         anchor.insertAdjacentElement("beforebegin", wrapper);
-      }
-
-      function appendNewDirectionInput(e) {
-        const customInputEl = document.createElement("recipe-direction");
-        const listEl = document.createElement("li");
-        listEl.appendChild(customInputEl);
-        e.target.insertAdjacentElement("beforeBegin", listEl);
       }
     </script>
   </body>

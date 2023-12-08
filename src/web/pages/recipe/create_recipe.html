@@ -35,12 +35,12 @@
     </template>
 
     <template id="RecipeDirection">
-      <input
+      <textarea
         type="text"
         name="direction"
         placeholder="direction"
         oninput="handleDirectionInput(event)"
-      />
+      ></textarea>
     </template>
 
     <template id="RecipeTag">
@@ -60,6 +60,18 @@
           <span onclick="showSection('direction_section')">Directions</span>
         </nav>
       </header>
+
+      <div id="direction_controller" class="DirectionController">
+        <span
+          class="IngredientController__add-button"
+          onclick="createStagedDirection(event)"
+          >Plus
+        </span>
+        <textarea
+          id="direction_controller_direction"
+          placeholder="Input direction"
+        ></textarea>
+      </div>
 
       <div id="ingredient_controller" class="IngredientController">
         <div class="flex justify-space-between">
@@ -116,16 +128,14 @@
           <button type="submit">Submit</button>
         </section>
 
-        <section id="ingredient_section" class="Ingredients show">
+        <section id="ingredient_section" class="Ingredients">
           <h3>Ingredients</h3>
           <div id="staged_ingredient_anchor"></div>
         </section>
-
         <section id="direction_section" class="Directions">
           <h3>Directions</h3>
           <ol>
-            <li><recipe-direction></recipe-direction></li>
-            <div onclick="appendNewDirectionInput(event)">Add</div>
+            <div id="staged_direction_anchor"></div>
           </ol>
         </section>
       </form>
@@ -249,22 +259,29 @@
         "ingredient_controller"
       );
       let directionSection = document.getElementById("direction_section");
+      let directionController = document.getElementById("direction_controller");
 
       function showGeneralSection() {
         generalSection.classList.add("show");
         ingredientSection.classList.remove("show");
+        ingredientController.classList.remove("show");
         directionSection.classList.remove("show");
+        directionController.classList.remove("show");
       }
 
       function showIngredientSection() {
         ingredientSection.classList.add("show");
+        ingredientController.classList.add("show");
         generalSection.classList.remove("show");
         directionSection.classList.remove("show");
+        directionController.classList.remove("show");
       }
 
       function showDirectionSection() {
         directionSection.classList.add("show");
+        directionController.classList.add("show");
         ingredientSection.classList.remove("show");
+        ingredientController.classList.remove("show");
         generalSection.classList.remove("show");
       }
 
@@ -461,6 +478,33 @@
       function appendNewTagInput(e) {
         const customInputEl = document.createElement("recipe-tag");
         e.target.insertAdjacentElement("beforeBegin", customInputEl);
+      }
+
+      function appendNewDirectionInput(e) {
+        const customInputEl = document.createElement("recipe-direction");
+        const listEl = document.createElement("li");
+        listEl.appendChild(customInputEl);
+        e.target.insertAdjacentElement("beforeBegin", listEl);
+      }
+    </script>
+
+    <script>
+      function createStagedDirection(e) {
+        const direction = document.getElementById(
+          "direction_controller_direction"
+        ).value;
+
+        const anchor = document.getElementById("staged_direction_anchor");
+
+        let template = document.getElementById("RecipeDirection").content;
+        let clonedContent = template.cloneNode(true);
+        let wrapper = document.createElement("li");
+        wrapper.appendChild(clonedContent);
+
+        // Set the values of the inputs
+        wrapper.querySelector('textarea[name="direction"]').value = direction;
+
+        anchor.insertAdjacentElement("beforebegin", wrapper);
       }
 
       function appendNewDirectionInput(e) {

@@ -138,7 +138,6 @@ button:disabled {
 }
 
 /* Remove list styles (bullets/numbers) */
-ol,
 ul,
 menu,
 summary {

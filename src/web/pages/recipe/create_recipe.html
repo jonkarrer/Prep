@@ -125,10 +125,12 @@
           <recipe-tag></recipe-tag>
 
           <h4>Ingredients</h4>
-          <div id="preview_ingredient_anchor"></div>
+          <div id="ingredients_preview">
+            <div id="preview_ingredient_anchor"></div>
+          </div>
 
           <h4>Directions</h4>
-          <ol>
+          <ol id="directions_preview">
             <div id="preview_direction_anchor"></div>
           </ol>
 
@@ -313,8 +315,9 @@
         }
       }
 
-      let form = document.getElementById("recipe_form");
       function updateRecipePreview() {
+        removeStalePreviewItems();
+        const form = document.getElementById("recipe_form");
         const formData = new FormData(form);
 
         const amounts = formData.getAll("amount");
@@ -322,12 +325,7 @@
         const ingredients = formData.getAll("ingredient");
         const directions = formData.getAll("direction");
 
-        let recipePreview = {
-          ingredients: [],
-          directions: [],
-        };
-
-        let ingredientAnchor = document.getElementById(
+        const ingredientAnchor = document.getElementById(
           "preview_ingredient_anchor"
         );
         for (let i = 0; i < ingredients.length; i++) {
@@ -337,7 +335,7 @@
           ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
         }
 
-        let directionAnchor = document.getElementById(
+        const directionAnchor = document.getElementById(
           "preview_direction_anchor"
         );
         for (let i = 0; i < directions.length; i++) {
@@ -345,8 +343,24 @@
           directionEl.innerText = directions[i];
           directionAnchor.insertAdjacentElement("beforebegin", directionEl);
         }
+      }
 
-        console.log("recipe", recipePreview);
+      function removeStalePreviewItems() {
+        let ingredientContainer = document.getElementById(
+          "ingredients_preview"
+        );
+        let ingredients = ingredientContainer.querySelectorAll("p");
+
+        for (let ing of ingredients) {
+          ing.remove();
+        }
+
+        let directionContainer = document.getElementById("directions_preview");
+        let directions = directionContainer.querySelectorAll("li");
+
+        for (let dir of directions) {
+          dir.remove();
+        }
       }
     </script>
 

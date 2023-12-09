@@ -236,3 +236,19 @@ meter {
 ::-webkit-details-marker {
   display: none;
 }
+
+/* SM */
+@media (min-width: 640px) {
+}
+/* MD */
+@media (min-width: 768px) {
+}
+/* LG */
+@media (min-width: 1024px) {
+}
+/* XL */
+@media (min-width: 1280px) {
+}
+/* XXL */
+@media (min-width: 1536px) {
+}

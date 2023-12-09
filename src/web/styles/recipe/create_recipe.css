@@ -110,3 +110,27 @@ section {
   border-radius: 1.5rem;
   padding: 1rem;
 }
+
+/* SM */
+@media (min-width: 640px) {
+}
+/* MD */
+@media (min-width: 768px) {
+  .General,
+  .Ingredients,
+  .Directions {
+    display: block;
+  }
+  form {
+    display: flex;
+  }
+}
+/* LG */
+@media (min-width: 1024px) {
+}
+/* XL */
+@media (min-width: 1280px) {
+}
+/* XXL */
+@media (min-width: 1536px) {
+}

@@ -29,14 +29,15 @@
         oninput="searchRecipes(event)"
       />
       <button>Filter</button>
+      <button><a href="/recipe/create">Create</a></button>
     </header>
     <main>
       <ul id="list_container">
         {% for recipe in recipes %}
         <li>
-          <a href="/recipe/select/{{ recipe.recipe_id }}">{{
-            recipe.recipe_title
-          }}</a>
+          <a href="/recipe/select/{{ recipe.recipe_id }}">
+            {{ recipe.recipe_title }}
+          </a>
         </li>
         {% endfor %}
       </ul>

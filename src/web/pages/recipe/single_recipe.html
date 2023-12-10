@@ -18,9 +18,7 @@
         {% for ing in ingredients %}
         <li>
           <span>
-            {{ ing.amount }}
-            {{ ing.unit }}
-            {{ ing.ingredient_name }}
+            {{ ing.amount }} {{ ing.unit }} {{ ing.ingredient_name }}
           </span>
         </li>
         {% endfor %}
@@ -32,10 +30,7 @@
       <ul>
         {% for dir in directions %}
         <li>
-          <span>
-            {{ dir.step_order }}
-            {{ dir.direction_details }}
-          </span>
+          <span> {{ dir.step_order }} {{ dir.direction_details }} </span>
         </li>
         {% endfor %}
       </ul>
@@ -46,9 +41,7 @@
       <ul>
         {% for tag in tags %}
         <li>
-          <span>
-            {{ tag.tag_name }}
-          </span>
+          <span> {{ tag.tag_name }} </span>
         </li>
         {% endfor %}
       </ul>

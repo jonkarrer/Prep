@@ -3,17 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.9"
+      integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Dashboard</title>
   </head>
-  <body>
-    <a href="/recipe">My Recipes</a>
+  <body id="app">
+    <footer class="fixed bottom-0 left-0 bg-gray-500 w-full">
+      <button>
+        <a
+          hx-get="/recipe/all"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+        >
+          Recipes
+        </a>
+      </button>
+      <button><a hx-get="/usr/profile">Profile</a></button>
+    </footer>
   </body>
-
-  <div>
-    <a href="/usr/profile">Go To Profile</a>
-  </div>
-
-  <div>
-    <a href="/recipe/create">Create Recipe</a>
-  </div>
 </html>

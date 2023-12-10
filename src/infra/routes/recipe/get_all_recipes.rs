@@ -12,6 +12,7 @@ pub async fn handle_get_all_recipes_ui(
     Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
+    // TODO add htmx protection header
     let recipes = repo
         .select_all_recipe_metadata_for_user(&session.user_id)
         .await

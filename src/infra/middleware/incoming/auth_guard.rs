@@ -36,33 +36,35 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                     .validate_session(&session_token)
                     .await
                     .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+                req.extensions_mut().insert(session);
+                return self.0.call(req).await;
 
-                if ["GET", "OPTIONS", "HEAD"].contains(&req.method().as_str()) {
-                    req.extensions_mut().insert(session);
-                    return self.0.call(req).await;
-                } else {
-                    let content_type = req
-                        .content_type()
-                        .ok_or(0)
-                        .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+                // if ["GET", "OPTIONS", "HEAD"].contains(&req.method().as_str()) {
+                //     req.extensions_mut().insert(session);
+                //     return self.0.call(req).await;
+                // } else {
+                //     let content_type = req
+                //         .content_type()
+                //         .ok_or(0)
+                //         .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-                    if content_type == "application/json" {
-                        let csrf_token = req
-                            .header(CSRF_TOKEN_HEADER)
-                            .ok_or(0)
-                            .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+                //     if content_type == "application/json" {
+                //         let csrf_token = req
+                //             .header(CSRF_TOKEN_HEADER)
+                //             .ok_or(0)
+                //             .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
 
-                        if !session.match_csrf_token(csrf_token) {
-                            return Err(Error::from_status(StatusCode::UNAUTHORIZED));
-                        }
-                    }
+                //         if !session.match_csrf_token(csrf_token) {
+                //             return Err(Error::from_status(StatusCode::UNAUTHORIZED));
+                //         }
+                //     }
 
-                    // pass session details to handler
-                    req.extensions_mut().insert(session);
+                //     // pass session details to handler
+                //     req.extensions_mut().insert(session);
 
-                    // call next route
-                    return self.0.call(req).await;
-                }
+                //     // call next route
+                //     return self.0.call(req).await;
+                // }
             }
 
             None => Err(Error::from_status(StatusCode::UNAUTHORIZED)),

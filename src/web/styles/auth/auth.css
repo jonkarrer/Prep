@@ -41,6 +41,28 @@ a:hover {
   color: var(--tri-color);
 }
 
+/*** Header ***/
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 2rem;
+}
+
+header nav {
+  font-weight: 500;
+}
+
+header nav a:first-child {
+  margin-right: 12px;
+}
+
 .Stack {
   --form-gap: 1.1rem;
   --form-font-size: 1em;
@@ -176,38 +198,6 @@ a:hover {
   object-fit: cover;
 }
 
-.Toast {
-  position: absolute;
-  top: 2rem;
-  left: 0;
-  right: 0;
-  visibility: hidden;
-
-  width: max-content;
-  max-width: 70vw;
-  margin: auto;
-  padding: 1rem;
-
-  border-radius: 1.3rem;
-
-  color: var(--sec-color);
-  font-size: 0.8em;
-  text-align: center;
-  z-index: 1000;
-}
-
-.Toast.error {
-  background-color: rgb(154, 41, 41);
-}
-.Toast.warning {
-  background-color: rgb(154, 145, 41);
-}
-
-.slideInDown {
-  animation: slideInDown 0.5s ease;
-  animation-fill-mode: forwards;
-}
-
 .fade-in {
   animation: fade-in ease-out 1s forwards;
 }
@@ -225,18 +215,6 @@ a:hover {
   }
   100% {
     opacity: 1;
-  }
-}
-
-@keyframes slideInDown {
-  from {
-    transform: translate3d(0, -120%, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-    visibility: visible;
   }
 }
 
@@ -283,6 +261,10 @@ a:hover {
   }
 }
 
+@media (min-width: 640px) {
+}
+@media (min-width: 768px) {
+}
 @media (min-width: 1023px) {
   main {
     max-width: 50vw;

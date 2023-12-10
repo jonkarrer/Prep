@@ -31,3 +31,20 @@ pub struct Recipe {
     pub directions: Vec<Direction>,
     pub ingredients: Vec<Ingredient>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RecipeMetadata {
+    pub recipe_id: String,
+    pub recipe_title: String,
+    pub servings: f32,
+    pub favorite: bool,
+    pub tags: Vec<Tag>,
+}
+
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct RecipeDetails {
+    pub recipe_id: String,
+    pub recipe_title: String,
+    pub servings: f32,
+    pub favorite: bool,
+}

@@ -3,7 +3,9 @@ use crate::{
         configs::DbConfig,
         interface::{Database, RecipeRepository, UserRepository},
     },
-    domain::entity::{Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, Tag, User},
+    domain::entity::{
+        Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails, Tag, User,
+    },
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -277,6 +279,37 @@ impl RecipeRepository for Database<MySqlPool> {
         .context("Failed to delete recipe")?;
 
         Ok(())
+    }
+
+    async fn select_all_recipe_metadata_for_user(
+        &self,
+        user_id: &str,
+    ) -> Result<Vec<RecipeDetails>> {
+        let recipe_details: Vec<RecipeDetails> = sqlx::query_as(
+            r#"
+            SELECT recipe_id, recipe_title, servings, favorite
+            FROM recipes
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select recipe details by id")?;
+
+        // let tags: Vec<Tag> = sqlx::query_as(
+        //     r#"
+        //     SELECT tag_id, tag_name
+        //     FROM tags
+        //     WHERE recipe_id = ?
+        //     "#,
+        // )
+        // .bind(&recipe_id)
+        // .fetch_all(&self.pool)
+        // .await
+        // .context("Failed to select directions by id")?;
+
+        Ok(recipe_details)
     }
 }
 

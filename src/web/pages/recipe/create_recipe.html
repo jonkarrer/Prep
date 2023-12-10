@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <link rel="stylesheet" href="/styles/recipe/create_recipe.css" />
+    <title>Create Recipe</title>
+  </head>
+
+  <body>
+    <div class="Toast" id="toast">
+      <p id="toast_message">An error has occurred</p>
+    </div>
+
+    <template id="RecipeIngredient">
+      <div class="StagedIngredient">
+        <input
+          type="text"
+          name="ingredient"
+          placeholder="ingredient"
+          oninput="handleIngredientInput(event)"
+        />
+        <input
+          type="number"
+          name="amount"
+          placeholder="amount"
+          onkeydown="handleAmountKeyPress(event)"
+        />
+        <input
+          type="text"
+          name="unit"
+          placeholder="unit"
+          oninput="handleUnitInput(event)"
+        />
+      </div>
+    </template>
+
+    <template id="RecipeDirection">
+      <textarea
+        type="text"
+        name="direction"
+        placeholder="direction"
+        oninput="handleDirectionInput(event)"
+      ></textarea>
+    </template>
+
+    <template id="RecipeTag">
+      <input
+        type="text"
+        name="tag"
+        placeholder="tag"
+        oninput="handleTagInput(event)"
+      />
+    </template>
+
+    <main>
+      <header>
+        <nav>
+          <span onclick="showSection('general_section')">General</span>
+          <span onclick="showSection('ingredient_section')">Ingredients</span>
+          <span onclick="showSection('direction_section')">Directions</span>
+        </nav>
+      </header>
+
+      <div id="direction_controller" class="DirectionController">
+        <span
+          class="IngredientController__add-button"
+          onclick="createStagedDirection(event)"
+          >Plus
+        </span>
+        <textarea
+          id="direction_controller_direction"
+          placeholder="Input direction"
+        ></textarea>
+      </div>
+
+      <div id="ingredient_controller" class="IngredientController">
+        <div class="flex justify-space-between">
+          <div class="IngredientController__amount-wrapper relative">
+            <div
+              id="fraction_hint"
+              class="IngredientController__fraction-hint flex align-center"
+            ></div>
+            <input
+              type="number"
+              name="amount"
+              placeholder="amount"
+              onkeydown="handleAmountKeyPress(event)"
+              oninput="handleAmountInput(event)"
+              id="ingredient_controller_amount"
+            />
+          </div>
+
+          <div class="IngredientController__unit-wrapper relative">
+            <input
+              type="text"
+              name="unit"
+              placeholder="unit"
+              id="ingredient_controller_unit"
+            />
+          </div>
+
+          <span
+            class="IngredientController__add-button"
+            onclick="createStagedIngredient(event)"
+            >Plus
+          </span>
+        </div>
+
+        <div class="IngredientController__ingredient-wrapper relative">
+          <input
+            type="text"
+            name="ingredient"
+            placeholder="ingredient"
+            id="ingredient_controller_ingredient"
+          />
+        </div>
+      </div>
+
+      <form id="recipe_form" action="/recipe/create" method="POST">
+        <section id="general_section" class="General">
+          <h2>New Recipe</h2>
+          <input type="text" name="title" placeholder="title" />
+          <br />
+          <input type="number" name="servings" placeholder="servings" />
+          <h4>Tags</h4>
+          <recipe-tag></recipe-tag>
+
+          <h4>Ingredients</h4>
+          <div id="ingredients_preview">
+            <div id="preview_ingredient_anchor"></div>
+          </div>
+
+          <h4>Directions</h4>
+          <ol id="directions_preview">
+            <div id="preview_direction_anchor"></div>
+          </ol>
+
+          <button type="submit">Submit</button>
+        </section>
+
+        <section id="ingredient_section" class="Ingredients">
+          <h3>Ingredients</h3>
+          <div id="staged_ingredient_anchor"></div>
+        </section>
+        <section id="direction_section" class="Directions">
+          <h3>Directions</h3>
+          <ol>
+            <div id="staged_direction_anchor"></div>
+          </ol>
+        </section>
+      </form>
+    </main>
+
+    <script src="/scripts/handle_toast.js"></script>
+
+    <!-- Amount Input Fraction Hint -->
+    <script>
+      let fractionHint = document.getElementById("fraction_hint");
+
+      function roundToTenThousand(num) {
+        return Math.round(num * 10000) / 10000;
+      }
+
+      function showFractionHint(decimal) {
+        let wholeNumber = Math.floor(decimal);
+        let decimalPart = roundToTenThousand(decimal - wholeNumber);
+
+        const fractionMappings = new Map([
+          [0.25, "1/4"],
+          [0.75, "3/4"],
+          [0.16, "1/6"],
+          [0.125, "1/8"],
+          [0.0625, "1/16"],
+          [0.3, "1/3"],
+          [0.33, "1/3"],
+          [0.6, "2/3"],
+          [0.66, "2/3"],
+          [0.5, "1/2"],
+          [0.2, "1/5"],
+          [0.4, "2/5"],
+          [0.6, "3/5"],
+          [0.8, "4/5"],
+        ]);
+
+        return fractionMappings.get(parseFloat(decimalPart));
+      }
+
+      function handleAmountInput(e) {
+        let value = e.target.value;
+        fractionHint.innerText = showFractionHint(value) ?? "";
+      }
+      function handleAmountKeyPress(e) {
+        return ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
+      }
+    </script>
+
+    <!-- Submit Form -->
+    <script>
+      document
+        .getElementById("recipe_form")
+        .addEventListener("submit", submitForm);
+
+      async function submitForm(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const path = event.target.action;
+        const method = event.target.method;
+
+        const amounts = formData.getAll("amount");
+        const units = formData.getAll("unit");
+        const ingredients = formData.getAll("ingredient");
+        const directions = formData.getAll("direction");
+        const tags = formData.getAll("tag");
+
+        let servings = formData.get("servings");
+        let recipe = {
+          title: formData.get("title"),
+          servings: servings ? parseInt(servings) : 0,
+          favorite: false,
+          ingredients: [],
+          directions: [],
+          tags: tags,
+        };
+
+        for (let i = 0; i < ingredients.length; i++) {
+          console.log(parseFloat(amounts[i]));
+          recipe.ingredients.push({
+            name: ingredients[i],
+            amount: amounts[i] ? parseFloat(amounts[i]) : 0,
+            unit: units[i],
+          });
+        }
+
+        for (let i = 0; i < directions.length; i++) {
+          recipe.directions.push({
+            step_order: i,
+            details: directions[i],
+          });
+        }
+
+        console.log("recipe", recipe);
+
+        const body = JSON.stringify(recipe);
+
+        let res = await fetch(path, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //   redirect: "follow",
+          body: body,
+        });
+
+        if (res.ok) {
+          console.log("response", await res.json());
+        } else {
+          let text = await res.text();
+          handleToast("error", text);
+        }
+      }
+    </script>
+
+    <!-- Page Switching -->
+    <script>
+      let generalSection = document.getElementById("general_section");
+      let ingredientSection = document.getElementById("ingredient_section");
+      let ingredientController = document.getElementById(
+        "ingredient_controller"
+      );
+      let directionSection = document.getElementById("direction_section");
+      let directionController = document.getElementById("direction_controller");
+
+      function showGeneralSection() {
+        generalSection.classList.add("show");
+        ingredientSection.classList.remove("show");
+        ingredientController.classList.remove("show");
+        directionSection.classList.remove("show");
+        directionController.classList.remove("show");
+
+        updateRecipePreview();
+      }
+
+      function showIngredientSection() {
+        ingredientSection.classList.add("show");
+        ingredientController.classList.add("show");
+        generalSection.classList.remove("show");
+        directionSection.classList.remove("show");
+        directionController.classList.remove("show");
+      }
+
+      function showDirectionSection() {
+        directionSection.classList.add("show");
+        directionController.classList.add("show");
+        ingredientSection.classList.remove("show");
+        ingredientController.classList.remove("show");
+        generalSection.classList.remove("show");
+      }
+
+      function showSection(section_id) {
+        switch (section_id) {
+          case "general_section":
+            showGeneralSection();
+            break;
+
+          case "ingredient_section":
+            showIngredientSection();
+            break;
+
+          case "direction_section":
+            showDirectionSection();
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      function updateRecipePreview() {
+        removeStalePreviewItems();
+        const form = document.getElementById("recipe_form");
+        const formData = new FormData(form);
+
+        const amounts = formData.getAll("amount");
+        const units = formData.getAll("unit");
+        const ingredients = formData.getAll("ingredient");
+        const directions = formData.getAll("direction");
+
+        const ingredientAnchor = document.getElementById(
+          "preview_ingredient_anchor"
+        );
+        for (let i = 0; i < ingredients.length; i++) {
+          let ingredientEl = document.createElement("p");
+          let ingString = `${amounts[i]} ${units[i]} ${ingredients[i]}`;
+          ingredientEl.innerText = ingString;
+          ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
+        }
+
+        const directionAnchor = document.getElementById(
+          "preview_direction_anchor"
+        );
+        for (let i = 0; i < directions.length; i++) {
+          let directionEl = document.createElement("li");
+          directionEl.innerText = directions[i];
+          directionAnchor.insertAdjacentElement("beforebegin", directionEl);
+        }
+      }
+
+      function removeStalePreviewItems() {
+        let ingredientContainer = document.getElementById(
+          "ingredients_preview"
+        );
+        let ingredients = ingredientContainer.querySelectorAll("p");
+
+        for (let ing of ingredients) {
+          ing.remove();
+        }
+
+        let directionContainer = document.getElementById("directions_preview");
+        let directions = directionContainer.querySelectorAll("li");
+
+        for (let dir of directions) {
+          dir.remove();
+        }
+      }
+    </script>
+
+    <!-- Web Components -->
+    <script>
+      customElements.define(
+        "recipe-tag",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeTag").content;
+          }
+          render() {
+            this.appendChild(this.template.cloneNode(true));
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
+
+      customElements.define(
+        "recipe-direction",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeDirection").content;
+          }
+          render() {
+            this.appendChild(this.template.cloneNode(true));
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
+
+      customElements.define(
+        "recipe-ingredient",
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.template = document.getElementById("RecipeIngredient").content;
+          }
+          render() {
+            let clonedContent = this.template.cloneNode(true);
+
+            this.appendChild(clonedContent);
+          }
+          connectedCallback() {
+            if (!this.rendered) {
+              this.render();
+              this.rendered = true;
+            }
+          }
+        }
+      );
+    </script>
+
+    <!-- Autocomplete -->
+    <script type="module">
+      import {
+        unitsMap,
+        unitsFullNames,
+        unitsAbbreviations,
+      } from "/assets/units.js";
+      import { ingredients } from "/assets/ingredients.js";
+
+      let unitAutoCompleteHint;
+      let ingredientAutoCompleteHint;
+
+      function setAutoCompleteIntoContent(cssVariableName, autoCompleteValue) {
+        document.documentElement.style.setProperty(
+          cssVariableName,
+          `"${autoCompleteValue}"`
+        );
+      }
+
+      function filterAutoCompleteOptions(options, target) {
+        return options.filter((item) => item.startsWith(target));
+      }
+
+      function createAutoCompleteHint(e, cssVar, options) {
+        let inputValue = e.target.value.toLowerCase();
+        e.target.value = inputValue;
+
+        if (inputValue.length === 0) {
+          setAutoCompleteIntoContent(cssVar, "");
+          return "";
+        }
+
+        let hint = filterAutoCompleteOptions(options, inputValue)[0] ?? "";
+        setAutoCompleteIntoContent(cssVar, hint);
+        return hint;
+      }
+
+      function insertAutoCompleteIntoField(e, autoCompleteValue) {
+        let value = e.target.value;
+
+        if (e.key === "Tab" || e.key === "Enter") {
+          e.preventDefault();
+
+          if (autoCompleteValue.length != 0) {
+            e.target.value = autoCompleteValue;
+          }
+        }
+      }
+
+      let unitInputController = document.getElementById(
+        "ingredient_controller_unit"
+      );
+      let ingredientInputController = document.getElementById(
+        "ingredient_controller_ingredient"
+      );
+
+      unitInputController.addEventListener("input", (e) => {
+        unitAutoCompleteHint = createAutoCompleteHint(
+          e,
+          "--unit-autocomplete",
+          unitsFullNames
+        );
+      });
+      ingredientInputController.addEventListener("input", (e) => {
+        ingredientAutoCompleteHint = createAutoCompleteHint(
+          e,
+          "--ingredient-autocomplete",
+          ingredients
+        );
+      });
+
+      unitInputController.addEventListener("keydown", (e) =>
+        insertAutoCompleteIntoField(e, unitAutoCompleteHint)
+      );
+      ingredientInputController.addEventListener("keydown", (e) =>
+        insertAutoCompleteIntoField(e, ingredientAutoCompleteHint)
+      );
+    </script>
+
+    <!-- Create Staged Ingredient -->
+    <script>
+      function createStagedIngredient(e) {
+        const amount = document.getElementById(
+          "ingredient_controller_amount"
+        ).value;
+        const unit = document.getElementById(
+          "ingredient_controller_unit"
+        ).value;
+        const ingredient = document.getElementById(
+          "ingredient_controller_ingredient"
+        ).value;
+
+        if (!runIngredientValidation(amount, unit, ingredient)) {
+          console.log("invalid inputs");
+          return;
+        }
+
+        let template = document.getElementById("RecipeIngredient").content;
+        let clonedContent = template.cloneNode(true);
+        let wrapper = document.createElement("div");
+        wrapper.appendChild(clonedContent);
+
+        // Set the values of the inputs
+        wrapper.querySelector('input[name="ingredient"]').value = ingredient;
+        wrapper.querySelector('input[name="amount"]').value = amount;
+        wrapper.querySelector('input[name="unit"]').value = unit;
+
+        const anchor = document.getElementById("staged_ingredient_anchor");
+        anchor.insertAdjacentElement("beforebegin", wrapper);
+
+        console.log("data", amount, unit, ingredient);
+      }
+
+      function runIngredientValidation(amount, unit, ingredient) {
+        let lenCheck = (i) => i.length === 0;
+        if (lenCheck(amount) || lenCheck(unit) || lenCheck(ingredient)) {
+          handleToast("error", "inputs are empty");
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+
+    <!-- Create Staged Direction -->
+    <script>
+      function createStagedDirection(e) {
+        const direction = document.getElementById(
+          "direction_controller_direction"
+        ).value;
+
+        if (!runDirectionValidation(direction)) {
+          console.log("invalid direction");
+          return;
+        }
+
+        let template = document.getElementById("RecipeDirection").content;
+        let clonedContent = template.cloneNode(true);
+        let wrapper = document.createElement("li");
+        wrapper.appendChild(clonedContent);
+
+        // Set the values of the inputs
+        wrapper.querySelector('textarea[name="direction"]').value = direction;
+
+        const anchor = document.getElementById("staged_direction_anchor");
+        anchor.insertAdjacentElement("beforebegin", wrapper);
+      }
+
+      function runDirectionValidation(direction) {
+        console.log("len", direction.length);
+        let lenCheck = (i) => i.length === 0;
+        if (lenCheck(direction)) {
+          handleToast("error", "direction field is empty");
+          return false;
+        }
+        return true;
+      }
+    </script>
+
+    <script></script>
+  </body>
+</html>

@@ -14,6 +14,8 @@
   --tri-color: #cbccc3;
   --quad-color: #aeb3b0;
   --text-color: #162019;
+
+  --sec-font: "Montserrat", sans-serif;
 }
 
 html {
@@ -56,7 +58,10 @@ h4 {
 p,
 a,
 input,
-button {
+button,
+ul,
+li,
+ol {
   font-family: "Montserrat", sans-serif;
   /* font-size: 1em; */
 }
@@ -88,31 +93,69 @@ h1 {
   margin-left: 2px;
 }
 
-/*** Header ***/
-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-
+/************ CSS Base ************/
+.relative {
+  position: relative;
+}
+.flex {
   display: flex;
-  justify-content: space-between;
+}
+.align-center {
   align-items: center;
-
-  width: 100%;
-  padding: 2rem;
+}
+.justify-space-between {
+  justify-content: space-between;
+}
+.invisible {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
 }
 
-header nav {
-  font-weight: 500;
-}
+/************ Components ************/
+.Toast {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  visibility: hidden;
 
-header nav a:first-child {
-  margin-right: 12px;
+  width: max-content;
+  max-width: 70vw;
+  margin: auto;
+  padding: 1rem;
+
+  border-radius: 1.3rem;
+
+  color: var(--sec-color);
+  font-size: 0.8em;
+  text-align: center;
+  z-index: 1000;
+}
+.Toast.error {
+  background-color: rgb(154, 41, 41);
+}
+.Toast.warning {
+  background-color: rgb(154, 145, 41);
+}
+.slideInDown {
+  animation: slideInDown 0.5s ease;
+  animation-fill-mode: forwards;
+}
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -120%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
 }
 
 /************ CSS Reset ************/
-
-/* Preferred box-sizing value */
 *,
 *::before,
 *::after {
@@ -137,7 +180,6 @@ button:disabled {
 }
 
 /* Remove list styles (bullets/numbers) */
-ol,
 ul,
 menu,
 summary {
@@ -193,4 +235,20 @@ meter {
 /* Remove details summary webkit styles */
 ::-webkit-details-marker {
   display: none;
+}
+
+/* SM */
+@media (min-width: 640px) {
+}
+/* MD */
+@media (min-width: 768px) {
+}
+/* LG */
+@media (min-width: 1024px) {
+}
+/* XL */
+@media (min-width: 1280px) {
+}
+/* XXL */
+@media (min-width: 1536px) {
 }

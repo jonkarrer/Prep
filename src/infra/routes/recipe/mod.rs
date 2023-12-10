@@ -1,32 +1,26 @@
+mod all_recipes_ui;
 mod create_recipe;
-mod get_all_recipes;
-mod get_single_recipe;
+mod single_recipe_ui;
 
 use crate::{
     app::configs::StaticPath,
     infra::middleware::{AuthGuard, AuthGuardImpl},
 };
+use all_recipes_ui::*;
 use create_recipe::*;
-use get_all_recipes::*;
-use get_single_recipe::*;
 use poem::{endpoint::StaticFileEndpoint, get, EndpointExt, Route};
+use single_recipe_ui::*;
 
 pub fn use_recipe_routes() -> AuthGuardImpl<Route> {
     Route::new()
-        .at("/get_all", get(handle_get_all_recipes_ui))
-        .at("/select/:id", get(handle_get_single_recipe_ui))
+        .at("/all", get(handle_all_recipes_ui))
+        .at("/select/:id", get(handle_single_recipe_ui))
         .at(
             "/create",
             get(StaticFileEndpoint::new(
                 StaticPath::from("/pages/recipe/create_recipe.html").0,
             ))
             .post(handle_create_recipe),
-        )
-        .at(
-            "/all",
-            get(StaticFileEndpoint::new(
-                StaticPath::from("/pages/recipe/all_recipes.html").0,
-            )),
         )
         .with(AuthGuard)
 }

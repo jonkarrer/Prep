@@ -30,12 +30,16 @@
       />
       <button>Filter</button>
     </header>
-    <main
-      hx-get="/recipe/get_all"
-      hx-trigger="load"
-      hx-swap="afterbegin"
-      id="list_container"
-    >
+    <main>
+      <ul id="list_container">
+        {% for recipe in recipes %}
+        <li>
+          <a href="/recipe/select/{{ recipe.recipe_id }}">{{
+            recipe.recipe_title
+          }}</a>
+        </li>
+        {% endfor %}
+      </ul>
       <div id="recipes_list_anchor"></div>
     </main>
 

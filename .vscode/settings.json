@@ -1,4 +1,4 @@
 {
   "rust-analyzer.showUnlinkedFileNotification": false,
-  "cSpell.words": ["curr"]
+  "cSpell.words": ["curr", "tera"]
 }

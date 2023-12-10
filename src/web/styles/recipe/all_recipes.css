@@ -1,0 +1,9 @@
+@import url("/styles/index.css");
+
+li {
+  margin: 20px;
+  background-color: var(--sec-color);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.65);
+}

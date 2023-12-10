@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.9"
+      integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="/styles/recipe/all_recipes.css" />
+
+    <title>Your Recipes</title>
+
+    <style>
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <input
+        placeholder="Search"
+        type="search"
+        name="search"
+        id="search_box"
+        oninput="searchRecipes(event)"
+      />
+      <button>Filter</button>
+    </header>
+    <main
+      hx-get="/recipe/get_all"
+      hx-trigger="load"
+      hx-swap="afterbegin"
+      id="list_container"
+    >
+      <div id="recipes_list_anchor"></div>
+    </main>
+
+    <script>
+      let listContainer = document.getElementById("list_container");
+      function searchRecipes(e) {
+        let searchValue = e.target.value.toLowerCase();
+        let recipes = listContainer.querySelectorAll("a");
+
+        for (recipe of recipes) {
+          let recipeName = recipe.innerText.toLowerCase();
+          if (!recipeName.startsWith(searchValue)) {
+            recipe.parentElement.classList.add("hide");
+          } else {
+            recipe.parentElement.classList.remove("hide");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

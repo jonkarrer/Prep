@@ -13,7 +13,7 @@ use poem::{endpoint::StaticFileEndpoint, get, EndpointExt, Route};
 
 pub fn use_recipe_routes() -> AuthGuardImpl<Route> {
     Route::new()
-        .at("/", get(handle_get_all_recipes_ui))
+        .at("/get_all", get(handle_get_all_recipes_ui))
         .at("/select/:id", get(handle_get_single_recipe_ui))
         .at(
             "/create",
@@ -21,6 +21,12 @@ pub fn use_recipe_routes() -> AuthGuardImpl<Route> {
                 StaticPath::from("/pages/recipe/create_recipe.html").0,
             ))
             .post(handle_create_recipe),
+        )
+        .at(
+            "/all",
+            get(StaticFileEndpoint::new(
+                StaticPath::from("/pages/recipe/all_recipes.html").0,
+            )),
         )
         .with(AuthGuard)
 }

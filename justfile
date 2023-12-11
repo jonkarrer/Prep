@@ -55,3 +55,8 @@ test-usr-route:
 # Scripts
 hit-recipe-api:
     bun ./scripts/spoontacular_api.js
+
+install-tailwind:
+    curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64
+    chmod +x tailwindcss-macos-arm64
+    mv tailwindcss-macos-arm64 tailwindcss

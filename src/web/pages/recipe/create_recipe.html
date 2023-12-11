@@ -6,13 +6,13 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
+    <link rel="stylesheet" href="/styles/index.css" />
+
     <script
       src="https://unpkg.com/htmx.org@1.9.9"
       integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
       crossorigin="anonymous"
     ></script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <title>Create Recipe</title>
   </head>
@@ -73,7 +73,7 @@
         </nav>
       </header>
 
-      <div id="direction_controller" class="DirectionController">
+      <div id="direction_controller" class="hidden">
         <span
           class="IngredientController__add-button"
           onclick="createStagedDirection(event)"
@@ -85,7 +85,7 @@
         ></textarea>
       </div>
 
-      <div id="ingredient_controller" class="IngredientController">
+      <div id="ingredient_controller" class="hidden">
         <div class="flex justify-space-between">
           <div class="IngredientController__amount-wrapper relative">
             <div
@@ -129,7 +129,7 @@
       </div>
 
       <form id="recipe_form" action="/recipe/create" method="POST">
-        <section id="general_section" class="General">
+        <section id="general_section" class="block">
           <h2>New Recipe</h2>
           <input type="text" name="title" placeholder="title" />
           <br />
@@ -150,11 +150,11 @@
           <button type="submit">Submit</button>
         </section>
 
-        <section id="ingredient_section" class="Ingredients">
+        <section id="ingredient_section" class="hidden">
           <h3>Ingredients</h3>
           <div id="staged_ingredient_anchor"></div>
         </section>
-        <section id="direction_section" class="Directions">
+        <section id="direction_section" class="hidden">
           <h3>Directions</h3>
           <ol>
             <div id="staged_direction_anchor"></div>

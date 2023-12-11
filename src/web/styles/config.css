@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pri-color: #25383b;
+  --sec-color: #e9f0f2;
+  --tri-color: #cbccc3;
+  --quad-color: #aeb3b0;
+  --text-color: #162019;
+
+  --pri-font: "Raleway", sans-serif;
+  --sec-font: "Montserrat", sans-serif;
+}
+
+html {
+  font-size: 100%;
+}
+
+html,
+body {
+  background-color: var(--quad-color);
+}
+
+a {
+  text-underline-offset: 4px;
+  text-decoration: underline;
+  color: inherit;
+}
+@media (min-width: 1536px) {
+  a {
+    text-underline-offset: 6px;
+  }
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+}
+::placeholder {
+  opacity: 0.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Raleway", sans-serif;
+}
+
+p,
+a,
+input,
+button,
+ul,
+li,
+ol {
+  font-family: "Montserrat", sans-serif;
+}
+
+h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+@layer components {
+  .Logo {
+    width: 1.8rem;
+    height: 1.8rem;
+    border: var(--sec-color) solid 1px;
+    border-radius: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .Logo:hover {
+    cursor: pointer;
+  }
+  .Logo img {
+    height: 0.9rem;
+    width: 0.9rem;
+    margin-left: 2px;
+  }
+}
+
+@layer components {
+  .Toast {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    visibility: hidden;
+
+    width: max-content;
+    max-width: 70vw;
+    margin: auto;
+    padding: 1rem;
+
+    border-radius: 1.3rem;
+
+    color: var(--sec-color);
+    font-size: 0.8em;
+    text-align: center;
+    z-index: 1000;
+  }
+  .Toast.error {
+    background-color: rgb(154, 41, 41);
+  }
+  .Toast.warning {
+    background-color: rgb(154, 145, 41);
+  }
+}
+
+@layer utilities {
+  .slideInDown {
+    animation: slideInDown 0.5s ease;
+    animation-fill-mode: forwards;
+  }
+  @keyframes slideInDown {
+    from {
+      transform: translate3d(0, -120%, 0);
+      visibility: visible;
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+      visibility: visible;
+    }
+  }
+}

@@ -7,29 +7,45 @@ let directionSection = document.getElementById("direction_section");
 let directionController = document.getElementById("direction_controller");
 
 function showGeneralSection() {
-  generalSection.classList.add("show");
-  ingredientSection.classList.remove("show");
-  ingredientController.classList.remove("show");
-  directionSection.classList.remove("show");
-  directionController.classList.remove("show");
+  generalSection.classList.remove("hidden");
+  generalSection.classList.add("block");
+
+  directionSection.classList.remove("block");
+  directionController.classList.remove("block");
+  directionSection.classList.add("hidden");
+  directionController.classList.add("hidden");
+
+  ingredientSection.classList.remove("block");
+  ingredientSection.classList.add("hidden");
+  ingredientController.classList.remove("block");
+  ingredientController.classList.add("hidden");
 
   updateRecipePreview();
 }
 
 function showIngredientSection() {
-  ingredientSection.classList.add("show");
-  ingredientController.classList.add("show");
-  generalSection.classList.remove("show");
-  directionSection.classList.remove("show");
-  directionController.classList.remove("show");
+  ingredientSection.classList.remove("hidden");
+  ingredientController.classList.remove("hidden");
+  ingredientSection.classList.add("block");
+  ingredientController.classList.add("block");
+
+  generalSection.classList.remove("block");
+  generalSection.classList.add("hidden");
 }
 
 function showDirectionSection() {
-  directionSection.classList.add("show");
-  directionController.classList.add("show");
-  ingredientSection.classList.remove("show");
-  ingredientController.classList.remove("show");
-  generalSection.classList.remove("show");
+  directionSection.classList.remove("hidden");
+  directionController.classList.remove("hidden");
+  directionSection.classList.add("block");
+  directionController.classList.add("block");
+
+  generalSection.classList.remove("block");
+  generalSection.classList.add("hidden");
+
+  ingredientSection.classList.remove("block");
+  ingredientSection.classList.add("hidden");
+  ingredientController.classList.remove("block");
+  ingredientController.classList.add("hidden");
 }
 
 function showSection(section_id) {

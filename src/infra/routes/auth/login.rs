@@ -13,11 +13,12 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         Error::from_string("Username or Password is incorrect", StatusCode::BAD_REQUEST)
     })?;
 
+    // TODO make cookie Secure; if not in dev tauri browser
     let res = Response::builder()
         .header(
             "Set-Cookie",
             format!(
-                "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                "{}={}; Path=/; HttpOnly; SameSite=Strict",
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )

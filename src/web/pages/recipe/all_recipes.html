@@ -10,6 +10,7 @@
     ></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
     <title>Your Recipes</title>
   </head>
   <body id="app">
@@ -22,7 +23,15 @@
         oninput="searchRecipes(event)"
       />
       <button>Filter</button>
-      <button><a href="/recipe/create">Create</a></button>
+      <button>
+        <a
+          hx-get="/recipe/create"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Create</a
+        >
+      </button>
     </header>
     <main>
       <ul id="list_container">
@@ -50,10 +59,9 @@
       </button>
       <button><a hx-get="/usr/profile">Profile</a></button>
     </footer>
-
     <script>
-      let listContainer = document.getElementById("list_container");
       function searchRecipes(e) {
+        let listContainer = document.getElementById("list_container");
         let searchValue = e.target.value.toLowerCase();
         let recipes = listContainer.querySelectorAll("a");
 

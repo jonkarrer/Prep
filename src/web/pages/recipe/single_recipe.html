@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/index.css" />
+
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <header>
+      <button><a href="/recipe/all">Back</a></button>
+    </header>
+    <h2>{{ title }}</h2>
+    <h5>Is A Favorite: {{ favorite }}</h5>
+
+    <section>
+      <h3>Ingredients</h3>
+      <ul>
+        {% for ing in ingredients %}
+        <li>
+          <span>
+            {{ ing.amount }} {{ ing.unit }} {{ ing.ingredient_name }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h3>Directions</h3>
+      <ul>
+        {% for dir in directions %}
+        <li>
+          <span> {{ dir.step_order }} {{ dir.direction_details }} </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h3>Tags</h3>
+      <ul>
+        {% for tag in tags %}
+        <li>
+          <span> {{ tag.tag_name }} </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-use crate::domain::entity::{Recipe, RecipeArgs, RecipeDetails, RecipeMetadata};
+use crate::domain::entity::{Recipe, RecipeArgs, RecipeDetails};
 use anyhow::Result;
 
 #[async_trait::async_trait]

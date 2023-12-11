@@ -11,16 +11,42 @@
       crossorigin="anonymous"
     ></script>
 
+    <script type="module" src="/scripts/components/AppBar.js"></script>
+
     <title>Dashboard</title>
   </head>
-  <body id="app">
-    <footer class="fixed bottom-0 left-0 bg-gray-500 w-full">
-      <button>
-        <a hx-get="/recipe/all" hx-target="#app" hx-push-url="true">
-          Recipes
-        </a>
-      </button>
-      <button><a hx-get="/usr/profile">Profile</a></button>
+
+  <template id="AppBar">
+    <footer class="AppBar">
+      <nav>
+        <a
+          hx-get="/dash"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Home</a
+        >
+        <a
+          hx-get="/recipe/all"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Recipes</a
+        >
+        <a>Meals</a>
+        <a>Pantry</a>
+        <a
+          hx-get="/usr/profile"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Profile</a
+        >
+      </nav>
     </footer>
+  </template>
+
+  <body id="app">
+    <app-bar></app-bar>
   </body>
 </html>

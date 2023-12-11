@@ -46,19 +46,6 @@
       <div id="recipes_list_anchor"></div>
     </main>
 
-    <footer class="fixed bottom-0 left-0 bg-gray-500 w-full">
-      <button>
-        <a
-          hx-get="/dash"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-        >
-          Dashboard
-        </a>
-      </button>
-      <button><a hx-get="/usr/profile">Profile</a></button>
-    </footer>
     <script>
       function searchRecipes(e) {
         let listContainer = document.getElementById("list_container");

@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/styles/index.css" />
+    <script type="module" src="/scripts/components/index.js"></script>
 
     <script
       src="https://unpkg.com/htmx.org@1.9.9"
@@ -37,7 +39,12 @@
       <ul id="list_container">
         {% for recipe in recipes %}
         <li>
-          <a href="/recipe/select/{{ recipe.recipe_id }}">
+          <a
+            hx-get="/recipe/select/{{ recipe.recipe_id }}"
+            hx-target="#app"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+          >
             {{ recipe.recipe_title }}
           </a>
         </li>
@@ -46,6 +53,7 @@
       <div id="recipes_list_anchor"></div>
     </main>
 
+    <app-bar></app-bar>
     <script>
       function searchRecipes(e) {
         let listContainer = document.getElementById("list_container");

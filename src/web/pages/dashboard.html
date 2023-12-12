@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/styles/index.css" />
+    <script type="module" src="/scripts/components/index.js"></script>
 
     <script
       src="https://unpkg.com/htmx.org@1.9.9"
@@ -11,43 +13,10 @@
       crossorigin="anonymous"
     ></script>
 
-    <script type="module" src="/scripts/components/AppBar.js"></script>
-
     <title>Dashboard</title>
   </head>
 
-  <template id="AppBar">
-    <footer class="AppBar">
-      <nav>
-        <a
-          hx-get="/dash"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Home</a
-        >
-        <a
-          hx-get="/recipe/all"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Recipes</a
-        >
-        <a>Meals</a>
-        <a>Pantry</a>
-        <a
-          hx-get="/usr/profile"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Profile</a
-        >
-      </nav>
-    </footer>
-  </template>
-
   <body id="app">
-    <simple-greeting name="jon"></simple-greeting>
     <app-bar></app-bar>
   </body>
 </html>

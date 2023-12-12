@@ -1,9 +1,6 @@
-import {
-  LitElement,
-  html,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js";
+import { LitElement, html } from "./index.js";
 
-export class SimpleGreeting extends LitElement {
+export class AppBar extends LitElement {
   static properties = {
     name: {},
   };
@@ -16,7 +13,36 @@ export class SimpleGreeting extends LitElement {
 
   // Render the UI as a function of component state
   render() {
-    return html`<p>Hello, ${this.name}!</p>`;
+    return html`<footer class="AppBar">
+      <nav>
+        <a
+          hx-get="/dash"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Home</a
+        >
+        <a
+          hx-get="/recipe/all"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Recipes</a
+        >
+        <a>Meals</a>
+        <a>Pantry</a>
+        <a
+          hx-get="/usr/profile"
+          hx-target="#app"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          >Profile</a
+        >
+      </nav>
+    </footer>`;
+  }
+
+  createRenderRoot() {
+    return this;
   }
 }
-customElements.define("simple-greeting", SimpleGreeting);

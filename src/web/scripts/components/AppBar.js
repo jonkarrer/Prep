@@ -1,17 +1,10 @@
-import { LitElement, html, css } from "./index.js";
+import { LitElement, html } from "./index.js";
 
 export class AppBar extends LitElement {
-  static properties = {
-    name: {},
-  };
-
   constructor() {
     super();
-    // Declare reactive properties
-    this.name = "World";
   }
 
-  // Render the UI as a function of component state
   render() {
     return html`
       <footer class="AppBar">

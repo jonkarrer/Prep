@@ -20,65 +20,6 @@ function runIngredientValidation(amount, unit, ingredient) {
   return true;
 }
 
-customElements.define(
-  "recipe-tag",
-  class extends HTMLElement {
-    constructor() {
-      super();
-      this.template = document.getElementById("RecipeTag").content;
-    }
-    render() {
-      this.appendChild(this.template.cloneNode(true));
-    }
-    connectedCallback() {
-      if (!this.rendered) {
-        this.render();
-        this.rendered = true;
-      }
-    }
-  }
-);
-
-customElements.define(
-  "recipe-direction",
-  class extends HTMLElement {
-    constructor() {
-      super();
-      this.template = document.getElementById("RecipeDirection").content;
-    }
-    render() {
-      this.appendChild(this.template.cloneNode(true));
-    }
-    connectedCallback() {
-      if (!this.rendered) {
-        this.render();
-        this.rendered = true;
-      }
-    }
-  }
-);
-
-customElements.define(
-  "recipe-ingredient",
-  class extends HTMLElement {
-    constructor() {
-      super();
-      this.template = document.getElementById("RecipeIngredient").content;
-    }
-    render() {
-      let clonedContent = this.template.cloneNode(true);
-
-      this.appendChild(clonedContent);
-    }
-    connectedCallback() {
-      if (!this.rendered) {
-        this.render();
-        this.rendered = true;
-      }
-    }
-  }
-);
-
 function createStagedIngredient(e) {
   const amount = document.getElementById("ingredient_controller_amount").value;
   const unit = document.getElementById("ingredient_controller_unit").value;
@@ -91,8 +32,6 @@ function createStagedIngredient(e) {
     return;
   }
 
-  let template = document.getElementById("RecipeIngredient").content;
-  let clonedContent = template.cloneNode(true);
   let wrapper = document.createElement("div");
   wrapper.appendChild(clonedContent);
 

@@ -34,12 +34,12 @@ function handleAmountInput(e) {
 }
 
 function handleAmountKeyPress(e) {
-  return ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
+  return ["e", "E", "+", "-", "/"].includes(e.key) && e.preventDefault();
 }
 
 export function useFractionHint() {
   let amountInput = document.getElementById("ingredient_controller_amount");
 
-  amountInput.onkeydown = (e) => handleAmountKeyPress(e);
-  amountInput.oninput = (e) => handleAmountInput(e);
+  amountInput.addEventListener("input", handleAmountInput);
+  amountInput.addEventListener("keydown", handleAmountKeyPress);
 }

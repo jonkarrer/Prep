@@ -1,4 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
+@import url("./components.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 :root {
   --pri-color: #25383b;
@@ -26,11 +33,6 @@ a {
   text-decoration: underline;
   color: inherit;
 }
-@media (min-width: 1536px) {
-  a {
-    text-underline-offset: 6px;
-  }
-}
 
 input,
 button,
@@ -46,7 +48,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: "Raleway", sans-serif;
+  font-family: var(--pri-font);
 }
 
 p,
@@ -56,75 +58,13 @@ button,
 ul,
 li,
 ol {
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--sec-font);
 }
 
 h1 {
   font-size: 4.5em;
   font-weight: 700;
   color: var(--text-color);
-}
-
-.Logo {
-  width: 1.8rem;
-  height: 1.8rem;
-  border: var(--sec-color) solid 1px;
-  border-radius: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.Logo:hover {
-  cursor: pointer;
-}
-.Logo img {
-  height: 0.9rem;
-  width: 0.9rem;
-  margin-left: 2px;
-}
-
-.Toast {
-  position: absolute;
-  top: 2rem;
-  left: 0;
-  right: 0;
-  visibility: hidden;
-
-  width: max-content;
-  max-width: 70vw;
-  margin: auto;
-  padding: 1rem;
-
-  border-radius: 1.3rem;
-
-  color: var(--sec-color);
-  font-size: 0.8em;
-  text-align: center;
-  z-index: 1000;
-}
-.Toast.error {
-  background-color: rgb(154, 41, 41);
-}
-.Toast.warning {
-  background-color: rgb(154, 145, 41);
-}
-
-.AppBar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 1rem;
-  width: 100%;
-  height: 48px;
-
-  background-color: var(--pri-color);
-  color: var(--sec-color);
 }
 
 .slideInDown {
@@ -155,6 +95,19 @@ html {
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
+}
+
+/* Links */
+a {
+  color: inherit;
+}
+*:any-link {
+  color: inherit;
+  text-decoration-line: none;
+}
+*:any-link:active {
+  color: inherit;
+  text-decoration-line: none;
 }
 
 /* Reapply the pointer cursor for anchor tags */
@@ -192,6 +145,18 @@ textarea {
   user-select: auto;
 }
 
+/* Hide the spinner/arrow buttons in an input[type=number] */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* revert the 'white-space' property for textarea elements on Safari */
 textarea {
   white-space: revert;
@@ -222,6 +187,21 @@ meter {
 
 /* Remove details summary webkit styles */
 ::-webkit-details-marker {
+  display: none;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+}
+::-webkit-scrollbar-track {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 

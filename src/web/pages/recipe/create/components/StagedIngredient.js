@@ -1,4 +1,4 @@
-import { LitElement, html } from "./index.js";
+import { LitElement, html } from "../../../global/components/index.js";
 
 export class AppBar extends LitElement {
   // Render the UI as a function of component state

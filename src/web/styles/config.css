@@ -132,6 +132,7 @@ h1 {
     height: 48px;
 
     background-color: var(--pri-color);
+    color: var(--sec-color);
   }
 }
 

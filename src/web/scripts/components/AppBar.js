@@ -5,33 +5,15 @@ export class AppBar extends HTMLElement {
 
   render() {
     this.innerHTML = `<footer class="AppBar">
-    <button
-      hx-get="/dash"
-      hx-trigger="click"
-      hx-target="#app"
-      hx-swap="innerHTML"
-      hx-push-url="true"
-    >
+    <a href="/dash">
       Home
-    </button>
-    <button
-      hx-get="/recipe/all"
-      hx-trigger="click"
-      hx-target="#app"
-      hx-swap="innerHTML"
-      hx-push-url="true"
-    >
+    </a>
+    <a href="/recipe/all">
       Recipes
-    </button>
+    </a>
     <div>Meals</div>
     <div>Pantry</div>
-    <div
-      hx-get="/usr/profile"
-      hx-trigger="click"
-      hx-target="#app"
-      hx-swap="innerHTML"
-      hx-push-url="true"
-    >
+    <div href="/usr/profile">
       Profile
     </div>
   </footer>`;

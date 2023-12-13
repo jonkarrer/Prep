@@ -44,6 +44,7 @@ function showDirectionSection() {
 }
 
 function showSection(section_id) {
+  console.log("section", section_id);
   switch (section_id) {
     case "general_section":
       showGeneralSection();

@@ -7,16 +7,10 @@
     <link rel="stylesheet" href="/styles/index.css" />
     <script type="module" src="/scripts/components/index.js"></script>
 
-    <script
-      src="https://unpkg.com/htmx.org@1.9.9"
-      integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
-      crossorigin="anonymous"
-    ></script>
-
     <title>Create Recipe</title>
   </head>
 
-  <body id="app">
+  <body>
     <div class="Toast" id="toast">
       <p id="toast_message">An error has occurred</p>
     </div>
@@ -64,7 +58,7 @@
 
     <main>
       <header>
-        <button><a hx-get="/recipe/all" hx-push-url="true">Back</a></button>
+        <button><a href="/recipe/all">Back</a></button>
         <nav>
           <span id="general_nav">General</span>
           <span id="ingredient_nav">Ingredients</span>

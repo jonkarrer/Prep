@@ -1,4 +1,4 @@
-import { handleToast } from "/scripts/handle_toast.js";
+import { handleToast } from "/scripts/utils/handle_toast.js";
 
 export async function submitForm(event) {
   event.preventDefault();

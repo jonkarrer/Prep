@@ -1,3 +1,5 @@
+@import url("/styles/index.css");
+
 body {
   height: 100svh;
   margin: 0;
@@ -11,10 +13,21 @@ section {
   margin-left: 1.2rem;
 }
 
+.General,
+.Ingredients,
+.Directions {
+  display: none;
+}
+.General.show,
+.Ingredients.show,
+.Directions.show {
+  display: block;
+}
+
 .IngredientController,
 .DirectionController {
   position: fixed;
-  bottom: 0;
+  bottom: 48px;
   left: 0;
   right: 0;
 
@@ -36,8 +49,6 @@ section {
 }
 
 .IngredientController input {
-  position: relative;
-
   height: 1.8rem;
   width: 100%;
 
@@ -45,7 +56,9 @@ section {
   z-index: 1;
 }
 
-.IngredientController__ingredient-wrapper {
+.IngredientController__ingredient-wrapper,
+.IngredientController__unit-wrapper {
+  position: relative;
   margin-top: 1rem;
 }
 .IngredientController__amount-wrapper,

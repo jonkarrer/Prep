@@ -1,3 +1,6 @@
+import { unitsFullNames } from "/assets/units.js";
+import { ingredients } from "/assets/ingredients.js";
+
 function setAutoCompleteIntoContent(cssVariableName, autoCompleteValue) {
   document.documentElement.style.setProperty(
     cssVariableName,
@@ -33,4 +36,35 @@ function insertAutoCompleteIntoField(e, autoCompleteValue) {
   }
 }
 
-export { createAutoCompleteHint, insertAutoCompleteIntoField };
+export function useAutocomplete() {
+  let unitAutoCompleteHint;
+  let ingredientAutoCompleteHint;
+  let unitInputController = document.getElementById(
+    "ingredient_controller_unit"
+  );
+  let ingredientInputController = document.getElementById(
+    "ingredient_controller_ingredient"
+  );
+
+  unitInputController.addEventListener("input", (e) => {
+    unitAutoCompleteHint = createAutoCompleteHint(
+      e,
+      "--unit-autocomplete",
+      unitsFullNames
+    );
+  });
+  ingredientInputController.addEventListener("input", (e) => {
+    ingredientAutoCompleteHint = createAutoCompleteHint(
+      e,
+      "--ingredient-autocomplete",
+      ingredients
+    );
+  });
+
+  unitInputController.addEventListener("keydown", (e) =>
+    insertAutoCompleteIntoField(e, unitAutoCompleteHint)
+  );
+  ingredientInputController.addEventListener("keydown", (e) =>
+    insertAutoCompleteIntoField(e, ingredientAutoCompleteHint)
+  );
+}

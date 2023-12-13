@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/styles/index.css" />
+    <link rel="stylesheet" href="/styles/recipe/create_recipe.css" />
     <script type="module" src="/scripts/components/index.js"></script>
 
     <title>Create Recipe</title>
@@ -17,43 +17,16 @@
 
     <template id="RecipeIngredient">
       <div class="StagedIngredient">
-        <input
-          type="text"
-          name="ingredient"
-          placeholder="ingredient"
-          oninput="handleIngredientInput(event)"
-        />
-        <input
-          type="number"
-          name="amount"
-          placeholder="amount"
-          onkeydown="handleAmountKeyPress(event)"
-        />
-        <input
-          type="text"
-          name="unit"
-          placeholder="unit"
-          oninput="handleUnitInput(event)"
-        />
+        <input type="text" name="ingredient" placeholder="ingredient" />
+        <input type="number" name="amount" placeholder="amount" />
+        <input type="text" name="unit" placeholder="unit" />
       </div>
     </template>
-
     <template id="RecipeDirection">
-      <textarea
-        type="text"
-        name="direction"
-        placeholder="direction"
-        oninput="handleDirectionInput(event)"
-      ></textarea>
+      <textarea type="text" name="direction" placeholder="direction"></textarea>
     </template>
-
     <template id="RecipeTag">
-      <input
-        type="text"
-        name="tag"
-        placeholder="tag"
-        oninput="handleTagInput(event)"
-      />
+      <input type="text" name="tag" placeholder="tag" />
     </template>
 
     <main>
@@ -66,10 +39,10 @@
         </nav>
       </header>
 
-      <div id="direction_controller" class="hidden">
+      <div id="direction_controller" class="DirectionController">
         <span
           class="IngredientController__add-button"
-          onclick="createStagedDirection(event)"
+          id="create_direction_button"
           >Plus
         </span>
         <textarea
@@ -78,24 +51,22 @@
         ></textarea>
       </div>
 
-      <div id="ingredient_controller" class="hidden">
+      <div id="ingredient_controller" class="IngredientController">
         <div class="flex justify-space-between">
-          <div class="IngredientController__amount-wrapper relative">
+          <div class="IngredientController__amount-wrapper">
             <div
               id="fraction_hint"
-              class="IngredientController__fraction-hint flex align-center"
+              class="IngredientController__fraction-hint"
             ></div>
             <input
               type="number"
               name="amount"
               placeholder="amount"
-              onkeydown="handleAmountKeyPress(event)"
-              oninput="handleAmountInput(event)"
               id="ingredient_controller_amount"
             />
           </div>
 
-          <div class="IngredientController__unit-wrapper relative">
+          <div class="IngredientController__unit-wrapper">
             <input
               type="text"
               name="unit"
@@ -106,12 +77,12 @@
 
           <span
             class="IngredientController__add-button"
-            onclick="createStagedIngredient(event)"
+            id="create_ingredient_button"
             >Plus
           </span>
         </div>
 
-        <div class="IngredientController__ingredient-wrapper relative">
+        <div class="IngredientController__ingredient-wrapper">
           <input
             type="text"
             name="ingredient"
@@ -122,7 +93,7 @@
       </div>
 
       <form id="recipe_form" action="/recipe/create" method="POST">
-        <section id="general_section" class="block">
+        <section id="general_section" class="General">
           <h2>New Recipe</h2>
           <input type="text" name="title" placeholder="title" />
           <br />
@@ -143,11 +114,11 @@
           <button type="submit">Submit</button>
         </section>
 
-        <section id="ingredient_section" class="hidden">
+        <section id="ingredient_section" class="Ingredients">
           <h3>Ingredients</h3>
           <div id="staged_ingredient_anchor"></div>
         </section>
-        <section id="direction_section" class="hidden">
+        <section id="direction_section" class="Directions">
           <h3>Directions</h3>
           <ol>
             <div id="staged_direction_anchor"></div>
@@ -157,6 +128,7 @@
     </main>
 
     <app-bar></app-bar>
+
     <script type="module" src="/scripts/recipe/create/index.js"></script>
   </body>
 </html>

@@ -1,28 +1,30 @@
-export class AppBar extends HTMLElement {
+import { LitElement, html, css } from "./index.js";
+
+export class AppBar extends LitElement {
+  static properties = {
+    name: {},
+  };
+
   constructor() {
     super();
+    // Declare reactive properties
+    this.name = "World";
   }
 
+  // Render the UI as a function of component state
   render() {
-    this.innerHTML = `<footer class="AppBar">
-    <a href="/dash">
-      Home
-    </a>
-    <a href="/recipe/all">
-      Recipes
-    </a>
-    <div>Meals</div>
-    <div>Pantry</div>
-    <div href="/usr/profile">
-      Profile
-    </div>
-  </footer>`;
+    return html`
+      <footer class="AppBar">
+        <a href="/dash"> Home </a>
+        <a href="/recipe/all"> Recipes </a>
+        <div>Meals</div>
+        <div>Pantry</div>
+        <div href="/usr/profile">Profile</div>
+      </footer>
+    `;
   }
 
-  connectedCallback() {
-    if (!this.rendered) {
-      this.render();
-      this.rendered = true;
-    }
+  createRenderRoot() {
+    return this;
   }
 }

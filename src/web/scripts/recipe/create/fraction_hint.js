@@ -37,4 +37,9 @@ function handleAmountKeyPress(e) {
   return ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 }
 
-export { handleAmountInput, handleAmountKeyPress };
+export function useFractionHint() {
+  let amountInput = document.getElementById("ingredient_controller_amount");
+
+  amountInput.onkeydown = (e) => handleAmountKeyPress(e);
+  amountInput.oninput = (e) => handleAmountInput(e);
+}

@@ -1,4 +1,24 @@
-import { runDirectionValidation, runIngredientValidation } from "./validation";
+import { handleToast } from "/scripts/utils/handle_toast.js";
+
+function runDirectionValidation(direction) {
+  console.log("len", direction.length);
+  let lenCheck = (i) => i.length === 0;
+  if (lenCheck(direction)) {
+    handleToast("error", "direction field is empty");
+    return false;
+  }
+  return true;
+}
+
+function runIngredientValidation(amount, unit, ingredient) {
+  let lenCheck = (i) => i.length === 0;
+  if (lenCheck(amount) || lenCheck(unit) || lenCheck(ingredient)) {
+    handleToast("error", "inputs are empty");
+    return false;
+  }
+
+  return true;
+}
 
 customElements.define(
   "recipe-tag",
@@ -109,4 +129,11 @@ function createStagedDirection(e) {
   anchor.insertAdjacentElement("beforebegin", wrapper);
 }
 
-export { createStagedDirection, createStagedDirection };
+export function useCreateStagedDirection() {
+  document.getElementById("create_direction_button").onclick = (e) =>
+    createStagedDirection(e);
+}
+export function useCreateStagedIngredient() {
+  document.getElementById("create_ingredient_button").onclick = (e) =>
+    createStagedIngredient(e);
+}

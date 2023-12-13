@@ -1,5 +1,3 @@
-import { updateRecipePreview } from "./recipe_preview.js";
-
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
 let ingredientController = document.getElementById("ingredient_controller");
@@ -8,14 +6,12 @@ let directionController = document.getElementById("direction_controller");
 
 function showElements(elements) {
   for (let el of elements) {
-    el.classList.remove("hidden");
-    el.classList.add("block");
+    el.classList.add("show");
   }
 }
 function hideElements(elements) {
   for (let el of elements) {
-    el.classList.remove("block");
-    el.classList.add("hidden");
+    el.classList.remove("show");
   }
 }
 
@@ -70,4 +66,53 @@ function showSection(section_id) {
   }
 }
 
-export { showSection };
+function updateRecipePreview() {
+  removeStalePreviewItems();
+  const form = document.getElementById("recipe_form");
+  const formData = new FormData(form);
+
+  const amounts = formData.getAll("amount");
+  const units = formData.getAll("unit");
+  const ingredients = formData.getAll("ingredient");
+  const directions = formData.getAll("direction");
+
+  const ingredientAnchor = document.getElementById("preview_ingredient_anchor");
+  for (let i = 0; i < ingredients.length; i++) {
+    let ingredientEl = document.createElement("p");
+    let ingString = `${amounts[i]} ${units[i]} ${ingredients[i]}`;
+    ingredientEl.innerText = ingString;
+    ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
+  }
+
+  const directionAnchor = document.getElementById("preview_direction_anchor");
+  for (let i = 0; i < directions.length; i++) {
+    let directionEl = document.createElement("li");
+    directionEl.innerText = directions[i];
+    directionAnchor.insertAdjacentElement("beforebegin", directionEl);
+  }
+}
+
+function removeStalePreviewItems() {
+  let ingredientContainer = document.getElementById("ingredients_preview");
+  let ingredients = ingredientContainer.querySelectorAll("p");
+
+  for (let ing of ingredients) {
+    ing.remove();
+  }
+
+  let directionContainer = document.getElementById("directions_preview");
+  let directions = directionContainer.querySelectorAll("li");
+
+  for (let dir of directions) {
+    dir.remove();
+  }
+}
+
+export function useSectionSwap() {
+  document.getElementById("general_nav").onclick = () =>
+    showSection("general_section");
+  document.getElementById("ingredient_nav").onclick = () =>
+    showSection("ingredient_section");
+  document.getElementById("direction_nav").onclick = () =>
+    showSection("direction_section");
+}

@@ -50,36 +50,3 @@ export class StagedIngredient extends LitElement {
     this.unit = unit;
   }
 }
-
-function runIngredientValidation(amount, unit, ingredient) {
-  let lenCheck = (i) => i.length === 0;
-  if (lenCheck(amount) || lenCheck(unit) || lenCheck(ingredient)) {
-    createToast("error", "inputs are empty");
-    return false;
-  }
-
-  return true;
-}
-
-function createStagedIngredient(e) {
-  console.log("stage ing");
-  const amount = document.getElementById("ingredient_controller_amount").value;
-  const unit = document.getElementById("ingredient_controller_unit").value;
-  const ingredient = document.getElementById(
-    "ingredient_controller_ingredient"
-  ).value;
-
-  if (!runIngredientValidation(amount, unit, ingredient)) {
-    return;
-  }
-
-  let stagedIngredientEl = new StagedIngredient(ingredient, amount, unit);
-
-  const anchor = document.getElementById("staged_ingredient_anchor");
-  anchor.insertAdjacentElement("beforebegin", stagedIngredientEl);
-}
-
-export function useCreateStagedIngredient() {
-  document.getElementById("create_ingredient_button").onclick = (e) =>
-    createStagedIngredient(e);
-}

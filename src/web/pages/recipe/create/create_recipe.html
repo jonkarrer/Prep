@@ -15,14 +15,6 @@
   </head>
 
   <body>
-    <template id="RecipeIngredient"> </template>
-    <template id="RecipeDirection">
-      <textarea type="text" name="direction" placeholder="direction"></textarea>
-    </template>
-    <template id="RecipeTag">
-      <input type="text" name="tag" placeholder="tag" />
-    </template>
-
     <main>
       <header>
         <button><a href="/recipe/all">Back</a></button>
@@ -45,46 +37,7 @@
         ></textarea>
       </div>
 
-      <div id="ingredient_controller" class="IngredientController">
-        <div class="flex justify-space-between">
-          <div class="IngredientController__amount-wrapper">
-            <div
-              id="fraction_hint"
-              class="IngredientController__fraction-hint"
-            ></div>
-            <input
-              type="number"
-              name="amount"
-              placeholder="amount"
-              id="ingredient_controller_amount"
-            />
-          </div>
-
-          <div class="IngredientController__unit-wrapper">
-            <input
-              type="text"
-              name="unit"
-              placeholder="unit"
-              id="ingredient_controller_unit"
-            />
-          </div>
-
-          <span
-            class="IngredientController__add-button"
-            id="create_ingredient_button"
-            >Plus
-          </span>
-        </div>
-
-        <div class="IngredientController__ingredient-wrapper">
-          <input
-            type="text"
-            name="ingredient"
-            placeholder="ingredient"
-            id="ingredient_controller_ingredient"
-          />
-        </div>
-      </div>
+      <ingredient-controller show="true"></ingredient-controller>
 
       <form id="recipe_form" action="/recipe/create" method="POST">
         <section id="general_section" class="General">

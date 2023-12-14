@@ -18,7 +18,7 @@ pub async fn handle_all_recipes_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/*.html")
+    let tera = Tera::new("src/web/pages/recipe/all/*.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch all recipes

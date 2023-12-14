@@ -3,17 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
 
-    <script
-      src="https://unpkg.com/htmx.org@1.9.9"
-      integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
-      crossorigin="anonymous"
-    ></script>
+    <link rel="stylesheet" href="/pages/global/styles/index.css" />
+    <script type="module" src="/pages/global/components/index.js"></script>
 
     <title>Your Recipes</title>
   </head>
-  <body id="app">
+  <body>
     <header>
       <input
         placeholder="Search"
@@ -24,13 +20,7 @@
       />
       <button>Filter</button>
       <button>
-        <a
-          hx-get="/recipe/create"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Create</a
-        >
+        <a href="/recipe/create">Create</a>
       </button>
     </header>
     <main>
@@ -46,6 +36,7 @@
       <div id="recipes_list_anchor"></div>
     </main>
 
+    <app-bar></app-bar>
     <script>
       function searchRecipes(e) {
         let listContainer = document.getElementById("list_container");

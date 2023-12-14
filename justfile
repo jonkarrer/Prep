@@ -9,9 +9,6 @@ teardown-app:
 start-dev:
     cargo run --bin prep
 
-tailwind-dev:
-    ./tailwindcss -i src/web/styles/config.css -o src/web/styles/index.css --watch
-
 # ---- DATABASE ----
 echo-db-url:
     @source .env && echo "${DATABASE_URL}"
@@ -50,7 +47,6 @@ test-routes:
 
 test-usr-route:
     -cargo test usr
-
 
 # Scripts
 hit-recipe-api:

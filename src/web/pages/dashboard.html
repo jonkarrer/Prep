@@ -3,50 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
 
-    <script
-      src="https://unpkg.com/htmx.org@1.9.9"
-      integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
-      crossorigin="anonymous"
-    ></script>
-
-    <script type="module" src="/scripts/components/AppBar.js"></script>
+    <link rel="stylesheet" href="/pages/global/styles/index.css" />
+    <script type="module" src="/pages/global/components/index.js"></script>
 
     <title>Dashboard</title>
   </head>
 
-  <template id="AppBar">
-    <footer class="AppBar">
-      <nav>
-        <a
-          hx-get="/dash"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Home</a
-        >
-        <a
-          hx-get="/recipe/all"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Recipes</a
-        >
-        <a>Meals</a>
-        <a>Pantry</a>
-        <a
-          hx-get="/usr/profile"
-          hx-target="#app"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          >Profile</a
-        >
-      </nav>
-    </footer>
-  </template>
-
-  <body id="app">
+  <body>
     <app-bar></app-bar>
   </body>
 </html>

@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --pri-color: #25383b;
+  --sec-color: #e9f0f2;
+  --tri-color: #cbccc3;
+  --quad-color: #aeb3b0;
+  --text-color: #162019;
+
+  --pri-font: "Raleway", sans-serif;
+  --sec-font: "Montserrat", sans-serif;
+}
+
+html {
+  font-size: 100%;
+}
+
+html,
+body {
+  background-color: var(--quad-color);
+  height: 100svh;
+}
+
+a {
+  text-underline-offset: 4px;
+  text-decoration: underline;
+  color: inherit;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+}
+::placeholder {
+  opacity: 0.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--pri-font);
+}
+
+p,
+a,
+input,
+button,
+ul,
+li,
+ol {
+  font-family: var(--sec-font);
+}
+
+h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.slideInDown {
+  animation: slideInDown 0.5s ease;
+  animation-fill-mode: forwards;
+}
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -120%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+}
+
+.Logo {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: var(--sec-color) solid 1px;
+  border-radius: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Logo:hover {
+  cursor: pointer;
+}
+.Logo img {
+  height: 0.9rem;
+  width: 0.9rem;
+  margin-left: 2px;
+}
+
+/************ CSS Reset ************/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Fix mobile Safari increase font-size on landscape mode */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Links */
+a {
+  color: inherit;
+}
+*:any-link {
+  color: inherit;
+  text-decoration-line: none;
+}
+*:any-link:active {
+  color: inherit;
+  text-decoration-line: none;
+}
+
+/* Reapply the pointer cursor for anchor tags */
+a,
+button {
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Remove list styles (bullets/numbers) */
+ul,
+menu,
+summary {
+  list-style: none;
+}
+
+/* For images to not be able to exceed their container */
+img {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+}
+
+/* removes spacing between cells in tables */
+table {
+  border-collapse: collapse;
+}
+
+/* Safari - solving issue when using user-select:none on the <body> text input doesn't working */
+input,
+textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* Hide the spinner/arrow buttons in an input[type=number] */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* revert the 'white-space' property for textarea elements on Safari */
+textarea {
+  white-space: revert;
+}
+
+/* minimum style to allow to style meter element */
+meter {
+  -webkit-appearance: revert;
+  appearance: revert;
+}
+
+/* preformatted text - use only for this feature */
+:where(pre) {
+  all: revert;
+  box-sizing: border-box;
+}
+
+/* reset default text opacity of input placeholder */
+::placeholder {
+  color: unset;
+}
+
+/* fix the feature of 'hidden' attribute.
+   display:revert; revert to element instead of attribute */
+:where([hidden]) {
+  display: none;
+}
+
+/* Remove details summary webkit styles */
+::-webkit-details-marker {
+  display: none;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+}
+::-webkit-scrollbar-track {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+::-webkit-scrollbar-thumb:hover {
+  display: none;
+}
+
+/* SM */
+@media (min-width: 640px) {
+}
+/* MD */
+@media (min-width: 768px) {
+}
+/* LG */
+@media (min-width: 1024px) {
+}
+/* XL */
+@media (min-width: 1280px) {
+}
+/* XXL */
+@media (min-width: 1536px) {
+}

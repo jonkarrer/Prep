@@ -18,7 +18,7 @@ pub fn use_recipe_routes() -> AuthGuardImpl<Route> {
         .at(
             "/create",
             get(StaticFileEndpoint::new(
-                StaticPath::from("/pages/recipe/create_recipe.html").0,
+                StaticPath::from("/pages/recipe/create/create_recipe.html").0,
             ))
             .post(handle_create_recipe),
         )

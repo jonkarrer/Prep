@@ -1,6 +1,6 @@
-import { handleToast } from "/scripts/handle_toast.js";
+import { createToast } from "/pages/global/components/Toast.js";
 
-export async function submitForm(event) {
+async function submitForm(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
@@ -56,6 +56,10 @@ export async function submitForm(event) {
     console.log("response", await res.json());
   } else {
     let text = await res.text();
-    handleToast("error", text);
+    createToast("error", text);
   }
+}
+
+export function useSubmitForm() {
+  document.getElementById("recipe_form").addEventListener("submit", submitForm);
 }

@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
-@import url("./components.css");
 
 * {
   margin: 0;
@@ -81,6 +80,25 @@ h1 {
     transform: translate3d(0, 0, 0);
     visibility: visible;
   }
+}
+
+.Logo {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: var(--sec-color) solid 1px;
+  border-radius: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Logo:hover {
+  cursor: pointer;
+}
+.Logo img {
+  height: 0.9rem;
+  width: 0.9rem;
+  margin-left: 2px;
 }
 
 /************ CSS Reset ************/

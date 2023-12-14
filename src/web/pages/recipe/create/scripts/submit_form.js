@@ -1,4 +1,4 @@
-import { handleToast } from "/pages/global/utils/handle_toast.js";
+import { createToast } from "/pages/global/components/Toast.js";
 
 async function submitForm(event) {
   event.preventDefault();
@@ -56,7 +56,7 @@ async function submitForm(event) {
     console.log("response", await res.json());
   } else {
     let text = await res.text();
-    handleToast("error", text);
+    createToast("error", text);
   }
 }
 

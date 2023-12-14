@@ -1,11 +1,11 @@
-import { LitElement, html, css } from "./index.js";
+import { LitElement, html, css } from "/deps/lit.js";
 
 export class AppBar extends LitElement {
   constructor() {
     super();
   }
 
-  static style = css`
+  static styles = css`
     footer {
       position: fixed;
       bottom: 0;

@@ -1,9 +1,5 @@
-export {
-  LitElement,
-  html,
-  css,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js";
-
 import { AppBar } from "./AppBar.js";
+import { Toast } from "./Toast.js";
 
 customElements.define("app-bar", AppBar);
+customElements.define("toast-message", Toast);

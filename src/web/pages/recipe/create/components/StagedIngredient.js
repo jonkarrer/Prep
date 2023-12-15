@@ -1,5 +1,5 @@
-import { createToast } from "/pages/global/components/Toast.js";
 import { LitElement, html, css } from "/deps/lit.js";
+import { theme } from "/pages/global/styles/theme.js";
 
 export class StagedIngredient extends LitElement {
   constructor(ingredient, amount, unit) {
@@ -10,13 +10,16 @@ export class StagedIngredient extends LitElement {
     this.unit = unit;
   }
 
-  static styles = css`
-    div {
-      border: solid green 1px;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
-  `;
+  static styles = [
+    theme,
+    css`
+      div {
+        border: solid green 1px;
+        padding: 1rem;
+        box-sizing: border-box;
+      }
+    `,
+  ];
 
   render() {
     return html`
@@ -36,17 +39,5 @@ export class StagedIngredient extends LitElement {
         <input type="text" name="unit" placeholder="unit" value=${this.unit} />
       </div>
     `;
-  }
-
-  setIngredient(ingredient) {
-    this.ingredient = ingredient;
-  }
-
-  setAmount(amount) {
-    this.amount = amount;
-  }
-
-  setUnit(unit) {
-    this.unit = unit;
   }
 }

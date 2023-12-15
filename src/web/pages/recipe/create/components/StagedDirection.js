@@ -1,5 +1,6 @@
 import { createToast } from "/pages/global/components/Toast.js";
 import { LitElement, html, css } from "/deps/lit.js";
+import { theme } from "/pages/global/styles/theme.js";
 
 export class StagedDirection extends LitElement {
   constructor(detail) {
@@ -7,11 +8,14 @@ export class StagedDirection extends LitElement {
 
     this.detail = detail;
   }
-  static styles = css`
-    textarea {
-      border: solid green 1px;
-    }
-  `;
+  static styles = [
+    theme,
+    css`
+      textarea {
+        border: solid green 1px;
+      }
+    `,
+  ];
 
   render() {
     return html`<textarea>${this.detail}</textarea>`;

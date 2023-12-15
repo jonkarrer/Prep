@@ -1,6 +1,6 @@
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
-let ingredientController = document.getElementById("ingredient_controller");
+let ingredientController = document.querySelector("ingredient-controller");
 let directionSection = document.getElementById("direction_section");
 let directionController = document.getElementById("direction_controller");
 
@@ -16,7 +16,8 @@ function hideElements(elements) {
 }
 
 function hideIngredientSection() {
-  hideElements([ingredientSection, ingredientController]);
+  ingredientController.removeAttribute("show");
+  hideElements([ingredientSection]);
 }
 
 function hideGeneralSection() {
@@ -32,7 +33,8 @@ function showGeneralSection() {
 }
 
 function showIngredientSection() {
-  showElements([ingredientSection, ingredientController]);
+  ingredientController.setAttribute("show", "");
+  showElements([ingredientSection]);
 }
 
 function showDirectionSection() {

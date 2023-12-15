@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "/deps/lit.js";
+import { theme } from "/pages/global/styles/theme.js";
 import { StagedIngredient } from "./StagedIngredient.js";
 import { createToast } from "/pages/global/components/Toast.js";
 import { unitsFullNames } from "/assets/units.js";
@@ -6,8 +7,9 @@ import { ingredients } from "/assets/ingredients.js";
 
 export class IngredientController extends LitElement {
   static styles = [
+    theme,
     css`
-      :host() {
+      :host {
         display: none;
       }
       :host([show]) {
@@ -25,29 +27,26 @@ export class IngredientController extends LitElement {
         background-color: lightgrey;
         padding: 1rem;
       }
+
+      input {
+        height: 1.8rem;
+        width: 100%;
+      }
+
       .TopRow {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
+
       .CreateButton {
         background-color: green;
         color: white;
       }
-      .IngredientController input {
-        height: 1.8rem;
-        width: 100%;
 
-        background-color: rgba(0, 0, 0, 0.05);
-        z-index: 1;
-      }
-
-      .IngredientWrapper {
-        position: relative;
-        margin-top: 1rem;
-      }
       .AmountWrapper,
-      .UnitWrapper {
+      .UnitWrapper,
+      .IngredientWrapper {
         position: relative;
       }
       .AmountWrapper,
@@ -71,12 +70,6 @@ export class IngredientController extends LitElement {
 
         opacity: 0.5;
         z-index: 0;
-      }
-      .IngredientWrapper::after {
-        content: var(--ingredient-autocomplete);
-      }
-      .UnitWrapper::after {
-        content: var(--unit-autocomplete);
       }
 
       .AmountWrapper__fraction-hint {
@@ -108,7 +101,6 @@ export class IngredientController extends LitElement {
       }
       .UnitWrapper__autocomplete-input,
       .IngredientWrapper__autocomplete-input {
-        color: red;
         z-index: 1;
       }
     `,

@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 let apiKey = "apiKey=5f4f516e6e5348b5847962c2b3c86ec4";
+// let apiKey = "apiKey=76cc1ddbdebf4016ac72414e263c4ef3";
 let numberOfRecipes = 100;
 let random_endpoint = `https://api.spoonacular.com/recipes/random?${apiKey}&number=${numberOfRecipes}`;
 

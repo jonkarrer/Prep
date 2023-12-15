@@ -16,10 +16,14 @@ export class StagedIngredient extends LitElement {
       div {
         border: solid green 1px;
         padding: 1rem;
-        box-sizing: border-box;
       }
     `,
   ];
+
+  // render as light dom
+  createRenderRoot() {
+    return this;
+  }
 
   render() {
     return html`

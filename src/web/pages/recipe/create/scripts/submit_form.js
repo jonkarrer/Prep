@@ -13,6 +13,9 @@ async function submitForm(event) {
   const directions = formData.getAll("direction");
   const tags = formData.getAll("tag");
 
+  console.log("ingredients", ingredients);
+  console.log("directions", directions);
+
   let servings = formData.get("servings");
   let recipe = {
     title: formData.get("title"),

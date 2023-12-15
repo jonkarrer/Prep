@@ -17,8 +17,13 @@ export class StagedDirection extends LitElement {
     `,
   ];
 
+  // render as light dom
+  createRenderRoot() {
+    return this;
+  }
+
   render() {
-    return html`<textarea>${this.detail}</textarea>`;
+    return html`<textarea name="direction">${this.detail}</textarea>`;
   }
 }
 

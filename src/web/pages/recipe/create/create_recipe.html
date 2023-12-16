@@ -25,20 +25,6 @@
         </nav>
       </header>
 
-      <div id="direction_controller" class="DirectionController">
-        <span
-          class="IngredientController__add-button"
-          id="create_direction_button"
-          >Plus
-        </span>
-        <textarea
-          id="direction_controller_direction"
-          placeholder="Input direction"
-        ></textarea>
-      </div>
-
-      <ingredient-controller></ingredient-controller>
-
       <form id="recipe_form" action="/recipe/create" method="POST">
         <section id="general_section" class="General">
           <h2>New Recipe</h2>
@@ -64,12 +50,17 @@
         <section id="ingredient_section" class="Ingredients">
           <h3>Ingredients</h3>
           <div id="staged_ingredient_anchor"></div>
+
+          <ingredient-controller></ingredient-controller>
         </section>
+
         <section id="direction_section" class="Directions">
           <h3>Directions</h3>
           <ol>
             <div id="staged_direction_anchor"></div>
           </ol>
+
+          <direction-controller></direction-controller>
         </section>
       </form>
     </main>

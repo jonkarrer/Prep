@@ -9,12 +9,6 @@ export class IngredientController extends LitElement {
   static styles = [
     theme,
     css`
-      :host {
-        display: none;
-      }
-      :host([show]) {
-        display: block;
-      }
       .Root {
         position: fixed;
         bottom: 48px;
@@ -151,13 +145,11 @@ export class IngredientController extends LitElement {
   }
 
   handleAmountInput(e) {
-    console.log("input", e.target.value);
     this.amount = e.target.value;
     this.fractionHint = this.showFractionHint(this.amount) ?? "";
   }
 
   handleAmountKeyPress(e) {
-    console.log("keypress", e.target.value);
     return ["e", "E", "+", "-", "/"].includes(e.key) && e.preventDefault();
   }
 

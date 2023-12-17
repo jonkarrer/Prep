@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/pages/global/styles/index.css" />
+    <link rel="stylesheet" href="/pages/recipe/all/all_recipes.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
 
     <title>Your Recipes</title>
@@ -39,6 +39,7 @@
     <app-bar></app-bar>
     <script>
       function searchRecipes(e) {
+        console.log("comment");
         let listContainer = document.getElementById("list_container");
         let searchValue = e.target.value.toLowerCase();
         let recipes = listContainer.querySelectorAll("a");

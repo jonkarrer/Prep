@@ -9,7 +9,7 @@ use crate::{
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
-use sqlx::{mysql::MySqlPool, FromRow};
+use sqlx::mysql::MySqlPool;
 
 impl Database<MySqlPool> {
     pub async fn new(config: &DbConfig) -> Database<MySqlPool> {

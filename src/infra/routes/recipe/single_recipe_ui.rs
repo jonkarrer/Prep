@@ -22,7 +22,7 @@ pub async fn handle_single_recipe_ui(
 
     // Fetch single recipe
     let recipe = repo
-        .select_by_recipe_id(&recipe_id)
+        .select_recipe_by_id(&recipe_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 

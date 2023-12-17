@@ -23,7 +23,7 @@ pub async fn handle_all_recipes_ui(
 
     // Fetch all recipes
     let recipes = repo
-        .select_all_recipe_metadata_for_user(&session.user_id)
+        .select_all_recipe_details_for_user(&session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 

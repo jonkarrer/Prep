@@ -1,16 +1,18 @@
 use crate::{
     app::{
         configs::DbConfig,
-        interface::{Database, PantryRepository, RecipeRepository, UserRepository},
+        interface::{
+            Database, MealPlanRepository, PantryRepository, RecipeRepository, UserRepository,
+        },
     },
     domain::entity::{
-        Direction, Ingredient, PantryItem, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails,
-        Tag, User,
+        Direction, Ingredient, MealPlan, MealPlanDetails, PantryItem, PasswordResetToken, Recipe,
+        RecipeArgs, RecipeDetails, Tag, User,
     },
 };
 use anyhow::{Context, Result};
 use serde_json::Value;
-use sqlx::mysql::MySqlPool;
+use sqlx::{mysql::MySqlPool, Row};
 
 impl Database<MySqlPool> {
     pub async fn new(config: &DbConfig) -> Database<MySqlPool> {
@@ -393,6 +395,49 @@ impl PantryRepository for Database<MySqlPool> {
         .fetch_all(&self.pool)
         .await
         .context("Could Not Select Pantry Items For User")
+    }
+}
+
+#[async_trait::async_trait]
+impl MealPlanRepository for Database<MySqlPool> {
+    async fn select_all_meal_plans(&self, user_id: &str) -> Result<Vec<MealPlan>> {
+        let mut meal_plans = Vec::new();
+
+        let meal_plan_details: Vec<MealPlanDetails> = sqlx::query_as(
+            r#"
+            SELECT meal_plan_id, meal_plan_name
+            FROM meal_plans
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Could Not Select Meal Plans For User")?;
+
+        for plan in &meal_plan_details {
+            let recipe_ids_in_plan: Vec<String> = sqlx::query(
+                r#"
+                SELECT recipe_id
+                FROM meal_plans_to_recipes
+                WHERE meal_plan_id = ?
+                "#,
+            )
+            .bind(&plan.meal_plan_id)
+            .fetch_all(&self.pool)
+            .await?
+            .iter()
+            .map(|row| row.get(0))
+            .collect();
+
+            meal_plans.push(MealPlan {
+                meal_plan_id: plan.meal_plan_id.to_string(),
+                meal_plan_name: plan.meal_plan_name.to_string(),
+                recipes: recipe_ids_in_plan,
+            })
+        }
+
+        Ok(meal_plans)
     }
 }
 #[cfg(test)]

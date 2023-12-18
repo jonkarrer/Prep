@@ -143,6 +143,70 @@ async fn seed_pantry_and_common_ingredients(user_id: &str) -> anyhow::Result<()>
     Ok(())
 }
 
+async fn seed_meal_plans(user_id: &str) -> anyhow::Result<()> {
+    let db_configs = DbConfig::default();
+    let pool = MySqlPool::connect(db_configs.connection_string().as_str())
+        .await
+        .expect("Failed connection with database");
+
+    let mut transaction = pool.begin().await.expect("Transaction failed to start");
+
+    let meal_plan_names = [
+        "meal plan one",
+        "meal plan two",
+        "meal plan three",
+        "meal plan four",
+    ];
+
+    let recipe_ids: Vec<String> = sqlx::query!(
+        r#"
+        SELECT recipe_id FROM recipes
+        WHERE user_id = ?
+        "#,
+        user_id
+    )
+    .fetch_all(&pool)
+    .await?
+    .iter()
+    .map(|row| row.recipe_id.clone())
+    .collect();
+
+    for name in meal_plan_names {
+        let meal_plan_id = uuid::Uuid::new_v4().to_string();
+        sqlx::query!(
+            r#"
+            INSERT INTO meal_plans (meal_plan_id, user_id, meal_plan_name)
+            VALUES (?,?,?)
+            "#,
+            meal_plan_id,
+            user_id,
+            name
+        )
+        .execute(&mut *transaction)
+        .await?;
+
+        for recipe_id in &recipe_ids[0..4] {
+            sqlx::query!(
+                r#"
+            INSERT INTO meal_plans_to_recipes (meal_plan_id, recipe_id)
+            VALUES (?,?)
+            "#,
+                meal_plan_id,
+                recipe_id
+            )
+            .execute(&mut *transaction)
+            .await?;
+        }
+    }
+
+    transaction
+        .commit()
+        .await
+        .expect("Failed to commit meal_plans transaction");
+
+    Ok(())
+}
+
 async fn seed_with_users() -> anyhow::Result<()> {
     let users = vec![
         ("usr1@mail.com", "usr1password"),
@@ -186,5 +250,6 @@ async fn main() -> anyhow::Result<()> {
     seed_with_users().await?;
     seed_with_sessions().await?;
     seed_pantry_and_common_ingredients(&user_id).await?;
+    seed_meal_plans(&user_id).await?;
     Ok(())
 }

@@ -34,8 +34,8 @@ export class AppBar extends LitElement {
         <a href="/dash"> Home </a>
         <a href="/recipe/all"> Recipes </a>
         <a href="/pantry/all"> Pantry </a>
-        <div>Meals</div>
-        <div href="/usr/profile">Profile</div>
+        <a href="/meal/all"> Meals </a>
+        <a href="/usr/profile">Profile</a>
       </footer>
     `;
   }

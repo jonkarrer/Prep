@@ -11,5 +11,5 @@ pub struct MealPlanDetails {
 pub struct MealPlan {
     pub meal_plan_id: String,
     pub meal_plan_name: String,
-    pub recipes: Vec<String>,
+    pub recipe_ids: Vec<String>,
 }

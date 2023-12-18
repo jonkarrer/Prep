@@ -1,10 +1,11 @@
 use crate::{
     app::{
         configs::DbConfig,
-        interface::{Database, RecipeRepository, UserRepository},
+        interface::{Database, PantryRepository, RecipeRepository, UserRepository},
     },
     domain::entity::{
-        Direction, Ingredient, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails, Tag, User,
+        Direction, Ingredient, PantryItem, PasswordResetToken, Recipe, RecipeArgs, RecipeDetails,
+        Tag, User,
     },
 };
 use anyhow::{Context, Result};
@@ -230,7 +231,7 @@ impl RecipeRepository for Database<MySqlPool> {
         &self,
         user_id: &str,
     ) -> Result<Vec<RecipeDetails>> {
-        let recipe_details: Vec<RecipeDetails> = sqlx::query_as(
+        sqlx::query_as(
             r#"
             SELECT recipe_id, recipe_title, servings, favorite
             FROM recipes
@@ -240,9 +241,7 @@ impl RecipeRepository for Database<MySqlPool> {
         .bind(user_id)
         .fetch_all(&self.pool)
         .await
-        .context("Failed to select recipe details by user id")?;
-
-        Ok(recipe_details)
+        .context("Failed to select recipe details by user id")
     }
 
     async fn select_recipe_details_by_id(&self, recipe_id: &str) -> Result<RecipeDetails> {
@@ -300,7 +299,7 @@ impl UserRepository for Database<MySqlPool> {
     }
 
     async fn get_user_by_email(&self, email: &str) -> Result<User> {
-        let user: User = sqlx::query_as(
+        sqlx::query_as(
             r#"
             SELECT user_id, email, profile_pic_url, role
             FROM users
@@ -310,13 +309,11 @@ impl UserRepository for Database<MySqlPool> {
         .bind(email)
         .fetch_one(&self.pool)
         .await
-        .context("Failed to find user_id by email in database")?;
-
-        Ok(user)
+        .context("Failed to find user_id by email in database")
     }
 
     async fn get_user_by_id(&self, user_id: &str) -> Result<User> {
-        let user: User = sqlx::query_as(
+        sqlx::query_as(
             r#"
             SELECT user_id, email, profile_pic_url, role
             FROM users
@@ -326,9 +323,7 @@ impl UserRepository for Database<MySqlPool> {
         .bind(user_id)
         .fetch_one(&self.pool)
         .await
-        .context("Failed to find user_id by email in database")?;
-
-        Ok(user)
+        .context("Failed to find user_id by email in database")
     }
 
     async fn insert_password_reset_token(
@@ -361,7 +356,7 @@ impl UserRepository for Database<MySqlPool> {
             WHERE user_id = ?
             "#,
         )
-        .bind(&user_id)
+        .bind(user_id)
         .fetch_one(&self.pool)
         .await
         .context("Failed to select recipe details by id")
@@ -381,6 +376,23 @@ impl UserRepository for Database<MySqlPool> {
         .await?;
 
         Ok(())
+    }
+}
+
+#[async_trait::async_trait]
+impl PantryRepository for Database<MySqlPool> {
+    async fn select_all_pantry_items(&self, user_id: &str) -> Result<Vec<PantryItem>> {
+        sqlx::query_as(
+            r#"
+            SELECT user_id, ingredient_name, in_stock
+            FROM pantry
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Could Not Select Pantry Items For User")
     }
 }
 #[cfg(test)]

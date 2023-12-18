@@ -6,3 +6,6 @@ pub use users::*;
 
 mod database;
 pub use database::*;
+
+mod pantry;
+pub use pantry::*;

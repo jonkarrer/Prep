@@ -34,6 +34,10 @@ export const theme = css`
   *::after {
     box-sizing: border-box;
   }
+  body,
+  html {
+    overscroll-behavior-y: none;
+  }
 
   input,
   button,

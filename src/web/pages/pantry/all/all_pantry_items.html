@@ -3,10 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/pages/recipe/all/all_pantry_items.css" />
+    <script type="module" src="/pages/global/components/index.js"></script>
+
     <title>Pantry</title>
   </head>
   <body>
-    <ul>
+    <header>
+      <input
+        placeholder="Search"
+        type="search"
+        name="search"
+        id="search_box"
+        oninput="searchRecipes(event)"
+      />
+      <button>Filter</button>
+      <button>
+        <a href="/recipe/create">Create</a>
+      </button>
+    </header>
+    <ul id="list_container">
       {% for item in pantry_items %}
       <li>
         {{ item.ingredient_name }} {% if item.in_stock %}
@@ -17,5 +34,24 @@
       </li>
       {% endfor %}
     </ul>
+    <app-bar></app-bar>
+
+    <script>
+      function searchRecipes(e) {
+        console.log("comment");
+        let listContainer = document.getElementById("list_container");
+        let searchValue = e.target.value.toLowerCase();
+        let recipes = listContainer.querySelectorAll("li");
+
+        for (recipe of recipes) {
+          let recipeName = recipe.innerText.toLowerCase();
+          if (!recipeName.startsWith(searchValue)) {
+            recipe.classList.add("hidden");
+          } else {
+            recipe.classList.remove("hidden");
+          }
+        }
+      }
+    </script>
   </body>
 </html>

@@ -33,8 +33,8 @@ export class AppBar extends LitElement {
       <footer>
         <a href="/dash"> Home </a>
         <a href="/recipe/all"> Recipes </a>
+        <a href="/pantry/all"> Pantry </a>
         <div>Meals</div>
-        <div>Pantry</div>
         <div href="/usr/profile">Profile</div>
       </footer>
     `;

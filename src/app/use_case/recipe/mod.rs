@@ -25,7 +25,7 @@ pub async fn get_random_recipes() {
 
 pub async fn get_all_unique_ingredients() {
     let db = db_client().await;
-    let recipes = db
+    let _recipes = db
         .select_all_recipe_details_for_user(TEST_USER_ID)
         .await
         .unwrap();

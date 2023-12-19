@@ -18,7 +18,7 @@ pub async fn handle_all_pantry_items_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/pantry/all/*.html")
+    let tera = Tera::new("src/web/pages/pantry/all/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch all pantry items
@@ -32,7 +32,7 @@ pub async fn handle_all_pantry_items_ui(
     context.insert::<Vec<PantryItem>, &str>("pantry_items", &pantry_items);
 
     let rendered_html = tera
-        .render("all_pantry_items.html", &context)
+        .render("all_pantry_items.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Serve template

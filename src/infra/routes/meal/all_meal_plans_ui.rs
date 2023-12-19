@@ -18,7 +18,7 @@ pub async fn handle_all_meal_plans_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/meal/all/*.html")
+    let tera = Tera::new("src/web/pages/meal/all/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch all meal plans
@@ -32,7 +32,7 @@ pub async fn handle_all_meal_plans_ui(
     context.insert::<Vec<MealPlan>, &str>("meal_plans", &meal_plans);
 
     let rendered_html = tera
-        .render("all_meal_plans.html", &context)
+        .render("all_meal_plans.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Serve template

@@ -17,7 +17,7 @@ pub async fn handle_single_meal_plan_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/meal/single/*.html")
+    let tera = Tera::new("src/web/pages/meal/single/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch single meal plan
@@ -26,6 +26,7 @@ pub async fn handle_single_meal_plan_ui(
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
+    // Get recipes in meal plan
     let mut recipes_in_plan = Vec::new();
     for recipe_id in meal_plan.recipe_ids {
         let recipe_details = repo.select_recipe_details_by_id(&recipe_id).await?;
@@ -38,7 +39,7 @@ pub async fn handle_single_meal_plan_ui(
     context.insert::<Vec<RecipeDetails>, &str>("recipes", &recipes_in_plan);
 
     let rendered_html = tera
-        .render("single_meal_plan.html", &context)
+        .render("single_meal_plan.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     Ok(Html(rendered_html))

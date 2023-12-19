@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/pages/global/styles/index.css" />
+    <link rel="stylesheet" href="/pages/pantry/all/all_pantry_items.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
 
-    <title>Your Recipes</title>
+    <title>Pantry</title>
   </head>
   <body>
     <header>
@@ -18,37 +18,36 @@
         id="search_box"
         oninput="searchRecipes(event)"
       />
-      <button>Filter</button>
       <button>
-        <a href="/recipe/create">Create</a>
+        <a>Add</a>
       </button>
     </header>
-    <main>
-      <ul id="list_container">
-        {% for recipe in recipes %}
-        <li>
-          <a href="/recipe/select/{{ recipe.recipe_id }}">
-            {{ recipe.recipe_title }}
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-      <div id="recipes_list_anchor"></div>
-    </main>
-
+    <ul id="list_container">
+      {% for item in pantry_items %}
+      <li>
+        {{ item.ingredient_name }} {% if item.in_stock %}
+        <input type="checkbox" checked />
+        {% else %}
+        <input type="checkbox" />
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
     <app-bar></app-bar>
+
     <script>
       function searchRecipes(e) {
+        console.log("comment");
         let listContainer = document.getElementById("list_container");
         let searchValue = e.target.value.toLowerCase();
-        let recipes = listContainer.querySelectorAll("a");
+        let recipes = listContainer.querySelectorAll("li");
 
         for (recipe of recipes) {
           let recipeName = recipe.innerText.toLowerCase();
           if (!recipeName.startsWith(searchValue)) {
-            recipe.parentElement.classList.add("hidden");
+            recipe.classList.add("hidden");
           } else {
-            recipe.parentElement.classList.remove("hidden");
+            recipe.classList.remove("hidden");
           }
         }
       }

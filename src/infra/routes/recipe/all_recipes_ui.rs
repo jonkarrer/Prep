@@ -18,12 +18,12 @@ pub async fn handle_all_recipes_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/all/*.html")
+    let tera = Tera::new("src/web/pages/recipe/all/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch all recipes
     let recipes = repo
-        .select_all_recipe_metadata_for_user(&session.user_id)
+        .select_all_recipe_details_for_user(&session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
@@ -32,7 +32,7 @@ pub async fn handle_all_recipes_ui(
     context.insert::<Vec<RecipeDetails>, &str>("recipes", &recipes);
 
     let rendered_html = tera
-        .render("all_recipes.html", &context)
+        .render("all_recipes.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Serve template

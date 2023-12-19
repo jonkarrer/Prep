@@ -17,12 +17,12 @@ pub async fn handle_single_recipe_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/single/*.html")
+    let tera = Tera::new("src/web/pages/recipe/single/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch single recipe
     let recipe = repo
-        .select_by_recipe_id(&recipe_id)
+        .select_recipe_by_id(&recipe_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
@@ -35,7 +35,7 @@ pub async fn handle_single_recipe_ui(
     context.insert::<Vec<Tag>, &str>("tags", &recipe.tags);
 
     let rendered_html = tera
-        .render("single_recipe.html", &context)
+        .render("single_recipe.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     Ok(Html(rendered_html))

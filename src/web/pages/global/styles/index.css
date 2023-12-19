@@ -1,11 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --pri-color: #25383b;
   --sec-color: #e9f0f2;
@@ -31,16 +25,6 @@ a {
   text-underline-offset: 4px;
   text-decoration: underline;
   color: inherit;
-}
-
-input,
-button,
-select,
-textarea {
-  font: inherit;
-}
-::placeholder {
-  opacity: 0.5;
 }
 
 h1,
@@ -106,6 +90,26 @@ h1 {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body,
+html {
+  overscroll-behavior-y: none;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  outline: none;
+  border: none;
+}
+::placeholder {
+  opacity: 0.5;
 }
 
 /* Fix mobile Safari increase font-size on landscape mode */

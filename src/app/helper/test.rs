@@ -8,7 +8,7 @@ use brize_auth::{config::Expiry, entity::Session};
 
 pub const TEST_USER_NAME: &str = "seed_user@gmail.com";
 pub const TEST_USER_PASSWORD: &str = "seeder_password";
-pub const TEST_USER_ID: &str = "1b11a136-e7c2-44bf-8cda-c44fd4330f49";
+pub const TEST_USER_ID: &str = "8e73026e-b4c1-425b-b8f8-6d006406f31d";
 
 pub async fn get_test_session() -> Result<Session> {
     let user = db_client().await.get_user_by_email(TEST_USER_NAME).await?;

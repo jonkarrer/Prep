@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/pages/pantry/all/all_pantry_items.css" />
+    <script type="module" src="/pages/global/components/index.js"></script>
+
+    <title>Meal Plans</title>
+  </head>
+  <body>
+    <ul id="list_container">
+      {% for plan in meal_plans %}
+      <li>
+        <a href="/meal/select/{{ plan.meal_plan_id }}">
+          {{ plan.meal_plan_name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <app-bar></app-bar>
+  </body>
+</html>

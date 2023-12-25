@@ -13,3 +13,8 @@ pub struct MealPlan {
     pub meal_plan_name: String,
     pub recipe_ids: Vec<String>,
 }
+
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct MealPlanArgs {
+    pub recipe_ids: Vec<String>,
+}

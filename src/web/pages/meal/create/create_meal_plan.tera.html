@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/pages/meal/create/create_meal_plan.css" />
+    <title>Create Meal Plan</title>
+  </head>
+  <body>
+    <form onsubmit="submitMealPlanForm(event)">
+      <div id="meal_plan_recipe_anchor"></div>
+      <button type="submit">Save Plan</button>
+    </form>
+
+    <button onclick="openRecipeOptions(event)">Add Recipe</button>
+
+    <section class="RecipeOptions" id="recipe_options">
+      <input
+        placeholder="Search"
+        type="search"
+        name="search"
+        id="search_box"
+        oninput="searchRecipes(event)"
+      />
+      <ul id="list_container">
+        {% for recipe in recipes %}
+        <li
+          data-recipe="{{ recipe.recipe_id }}"
+          onclick="addRecipeToMealPlan(event)"
+        >
+          {{ recipe.recipe_title }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <script>
+      let recipe_ids = [];
+      function addRecipeToMealPlan(e) {
+        let recipeId = e.target.dataset.recipe;
+        let recipeTitle = e.target.innerText;
+
+        if (recipeId) {
+          recipe_ids.push(recipeId);
+
+          createRecipeElement(recipeTitle);
+        }
+
+        console.log("ids", recipe_ids);
+      }
+
+      function createRecipeElement(recipeTitle) {
+        let recipeEl = document.createElement("h4");
+        recipeEl.innerText = recipeTitle;
+
+        let anchorEl = document.getElementById("meal_plan_recipe_anchor");
+        anchorEl.insertAdjacentElement("beforebegin", recipeEl);
+      }
+
+      function openRecipeOptions() {
+        let recipeOptionsEl = document.getElementById("recipe_options");
+
+        recipeOptionsEl.classList.toggle("show");
+      }
+
+      function submitMealPlanForm(e) {}
+
+      function searchRecipes(e) {
+        let listContainer = document.getElementById("list_container");
+        let searchValue = e.target.value.toLowerCase();
+        let recipes = listContainer.querySelectorAll("li");
+
+        for (recipe of recipes) {
+          let recipeName = recipe.innerText.toLowerCase();
+          if (!recipeName.startsWith(searchValue)) {
+            recipe.classList.add("hidden");
+          } else {
+            recipe.classList.remove("hidden");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -8,10 +8,11 @@
     <title>Create Meal Plan</title>
   </head>
   <body>
-    <form onsubmit="submitMealPlanForm(event)">
+    <input type="text" name="meal-plan-name" id="meal_plan_name" />
+    <section>
       <div id="meal_plan_recipe_anchor"></div>
-      <button type="submit">Save Plan</button>
-    </form>
+      <button onclick="submitMealPlanForm(event)">Save Plan</button>
+    </section>
 
     <button onclick="openRecipeOptions(event)">Add Recipe</button>
 
@@ -63,7 +64,25 @@
         recipeOptionsEl.classList.toggle("show");
       }
 
-      function submitMealPlanForm(e) {}
+      function submitMealPlanForm(e) {
+        let mealPlanName = document.getElementById("meal_plan_name").value;
+        let mealPlanArgs = {
+          meal_plan_name: mealPlanName,
+          recipe_ids: recipe_ids,
+        };
+
+        try {
+          fetch("/meal/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(mealPlanArgs),
+          });
+        } catch (e) {
+          console.log("error", e);
+        }
+      }
 
       function searchRecipes(e) {
         let listContainer = document.getElementById("list_container");

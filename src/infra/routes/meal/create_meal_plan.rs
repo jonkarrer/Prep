@@ -1,5 +1,5 @@
 use crate::{
-    app::interface::{Database, RecipeRepository},
+    app::interface::{Database, MealPlanRepository, RecipeRepository},
     domain::entity::{MealPlanArgs, RecipeDetails},
 };
 use brize_auth::entity::Session;
@@ -41,9 +41,12 @@ pub async fn handle_create_meal_plan_ui(
 
 #[handler]
 pub async fn handle_create_meal_plan(
-    Json(recipes_in_plan): Json<MealPlanArgs>,
+    Json(meal_plan_args): Json<MealPlanArgs>,
     Data(repo): Data<&Database<MySqlPool>>,
     Data(session): Data<&Session>,
-) -> Result<Json<MealPlanArgs>> {
-    Ok(Json(recipes_in_plan))
+) -> Result<()> {
+    repo.create_meal_plan(meal_plan_args, &session.user_id)
+        .await?;
+
+    Ok(())
 }

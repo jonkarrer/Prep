@@ -1,6 +1,6 @@
 use crate::{
     app::interface::{Database, MealPlanRepository},
-    domain::entity::{MealPlan, MealPlanDetails},
+    domain::entity::{MealPlan, MealPlanArgs, MealPlanDetails},
 };
 use anyhow::{Context, Result};
 use sqlx::{mysql::MySqlPool, Row};
@@ -73,5 +73,48 @@ impl MealPlanRepository for Database<MySqlPool> {
         .collect();
 
         Ok(recipe_ids)
+    }
+
+    async fn create_meal_plan(&self, meal_plan_args: MealPlanArgs, user_id: &str) -> Result<()> {
+        let meal_plan_id = uuid::Uuid::new_v4().to_string();
+
+        sqlx::query(
+            r#"
+            INSERT INTO meal_plans (meal_plan_id, meal_plan_name, user_id)
+            VALUES (?,?,?)
+            "#,
+        )
+        .bind(&meal_plan_id)
+        .bind(meal_plan_args.meal_plan_name)
+        .bind(user_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to create meal plan")?;
+
+        let mut transaction = self
+            .pool
+            .begin()
+            .await
+            .expect("Transaction failed to start");
+
+        for recipe_id in &meal_plan_args.recipe_ids {
+            sqlx::query(
+                r#"
+            INSERT INTO meal_plans_to_recipes (meal_plan_id, recipe_id)
+            VALUES (?,?)
+            "#,
+            )
+            .bind(&meal_plan_id)
+            .bind(recipe_id)
+            .execute(&mut *transaction)
+            .await?;
+        }
+
+        transaction
+            .commit()
+            .await
+            .expect("Failed to commit transaction");
+
+        Ok(())
     }
 }

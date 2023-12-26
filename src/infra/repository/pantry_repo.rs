@@ -20,4 +20,20 @@ impl PantryRepository for Database<MySqlPool> {
         .await
         .context("Could Not Select Pantry Items For User")
     }
+    async fn create_pantry_item(&self, name: String, user_id: &str) -> Result<String> {
+        // TODO change column name to pantry_item_name
+        sqlx::query(
+            r#"
+            INSERT INTO pantry (ingredient_name, user_id)
+            VALUES (?,?)
+            "#,
+        )
+        .bind(&name)
+        .bind(user_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to insert pantry item")?;
+
+        Ok(name)
+    }
 }

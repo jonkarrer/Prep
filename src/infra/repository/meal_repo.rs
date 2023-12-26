@@ -95,14 +95,14 @@ impl MealPlanRepository for Database<MySqlPool> {
             .pool
             .begin()
             .await
-            .expect("Transaction failed to start");
+            .context("Transaction failed to start")?;
 
         for recipe_id in &meal_plan_args.recipe_ids {
             sqlx::query(
                 r#"
-            INSERT INTO meal_plans_to_recipes (meal_plan_id, recipe_id)
-            VALUES (?,?)
-            "#,
+                INSERT INTO meal_plans_to_recipes (meal_plan_id, recipe_id)
+                VALUES (?,?)
+                "#,
             )
             .bind(&meal_plan_id)
             .bind(recipe_id)
@@ -113,7 +113,7 @@ impl MealPlanRepository for Database<MySqlPool> {
         transaction
             .commit()
             .await
-            .expect("Failed to commit transaction");
+            .context("Failed to commit transaction")?;
 
         Ok(())
     }

@@ -24,6 +24,15 @@ KEY_TWO: 76cc1ddbdebf4016ac72414e263c4ef3
 ## Roadmap
 
 - [] Meal plans page
-  - [] auto generate meal plans based on like ingredients and exclude desserts for up to 5 days - allow user to create their own meal plans
+
+  - [] auto generate meal plans based on like ingredients and exclude desserts for up to 5 days
+  - [] allow user to create their own meal plans
+
 - [] Pantry page
+
   - [] use ingredients in db as the pantry list and then allow users to select "in stock" or "out of stock" and then auto generate a shopping list for them as well as let them make their own.
+  - [] allow users to make their own pantry items
+
+- [] Shopping Lists
+  - [] Generate shopping list off of pantry out of stock items
+  - [] Generate shopping list from meal plans

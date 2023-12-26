@@ -10,34 +10,73 @@
     <title>Pantry</title>
   </head>
   <body>
-    <header>
-      <input
-        placeholder="Search"
-        type="search"
-        name="search"
-        id="search_box"
-        oninput="searchRecipes(event)"
-      />
-      <button>
-        <a>Add</a>
-      </button>
-    </header>
-    <ul id="list_container">
-      {% for item in pantry_items %}
-      <li>
-        {{ item.ingredient_name }} {% if item.in_stock %}
-        <input type="checkbox" checked />
-        {% else %}
-        <input type="checkbox" />
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
+    <main>
+      <header>
+        <input
+          placeholder="Search"
+          type="search"
+          name="search"
+          id="search_box"
+          oninput="searchRecipes(event)"
+        />
+        <button onclick="showPantryController()">Add</button>
+      </header>
+      <ul id="list_container">
+        {% for item in pantry_items %}
+        <li>
+          {{ item.ingredient_name }} {% if item.in_stock %}
+          <input type="checkbox" checked />
+          {% else %}
+          <input type="checkbox" />
+          {% endif %}
+        </li>
+        {% endfor %}
+        <div id="pantry_items_anchor"></div>
+      </ul>
+      <section class="PantryController" id="pantry_controller">
+        <input
+          type="text"
+          id="pantry_item_input"
+          placeholder="Ingredient Name"
+        />
+        <button onclick="savePantryItem()">Save Item</button>
+      </section>
+    </main>
     <app-bar></app-bar>
 
     <script>
+      async function savePantryItem() {
+        let pantryItemName = document.getElementById("pantry_item_input").value;
+
+        try {
+          let res = await fetch("/pantry/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: pantryItemName,
+          });
+
+          let item_name = await res.text();
+
+          let pantryItemEl = document.createElement("li");
+          let checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          pantryItemEl.innerText = item_name;
+          pantryItemEl.appendChild(checkbox);
+
+          let anchorEl = document.getElementById("pantry_items_anchor");
+          anchorEl.insertAdjacentElement("beforebegin", pantryItemEl);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      function showPantryController() {
+        let PantryControllerEl = document.getElementById("pantry_controller");
+        PantryControllerEl.classList.toggle("show");
+      }
+
       function searchRecipes(e) {
-        console.log("comment");
         let listContainer = document.getElementById("list_container");
         let searchValue = e.target.value.toLowerCase();
         let recipes = listContainer.querySelectorAll("li");

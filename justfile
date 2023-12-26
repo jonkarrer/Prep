@@ -6,7 +6,7 @@ teardown-app:
     docker compose down
 
 # ---- Development ----
-start-dev:
+run-dev:
     cargo run --bin prep
 
 # ---- DATABASE ----
@@ -17,7 +17,13 @@ echo-db-url:
 init-db env_config:
     export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh && cargo run --bin seeder
 
+start-db:
+    docker start mysql
+
 stop-db:
+    docker stop mysql
+
+kill-db:
     docker kill mysql && docker rm -f mysql
 
 ## migrations

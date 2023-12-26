@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/pages/meal/create/create_meal_plan.css" />
+    <title>Create Meal Plan</title>
+  </head>
+  <body>
+    <a href="/meal/all">Back</a>
+    <input type="text" name="meal-plan-name" id="meal_plan_name" />
+    <section>
+      <div id="meal_plan_recipe_anchor"></div>
+      <button onclick="submitMealPlanForm(event)">Save Plan</button>
+    </section>
+
+    <button onclick="openRecipeOptions(event)">Add Recipe</button>
+
+    <section class="RecipeOptions" id="recipe_options">
+      <input
+        placeholder="Search"
+        type="search"
+        name="search"
+        id="search_box"
+        oninput="searchRecipes(event)"
+      />
+      <ul id="list_container">
+        {% for recipe in recipes %}
+        <li
+          data-recipe="{{ recipe.recipe_id }}"
+          onclick="addRecipeToMealPlan(event)"
+        >
+          {{ recipe.recipe_title }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <script>
+      let recipe_ids = [];
+      function addRecipeToMealPlan(e) {
+        let recipeId = e.target.dataset.recipe;
+        let recipeTitle = e.target.innerText;
+
+        if (recipeId) {
+          recipe_ids.push(recipeId);
+
+          createRecipeElement(recipeTitle);
+        }
+
+        console.log("ids", recipe_ids);
+      }
+
+      // TODO get the route to return the name of the plan to confirm success
+      function createRecipeElement(recipeTitle) {
+        let recipeEl = document.createElement("h4");
+        recipeEl.innerText = recipeTitle;
+
+        let anchorEl = document.getElementById("meal_plan_recipe_anchor");
+        anchorEl.insertAdjacentElement("beforebegin", recipeEl);
+      }
+
+      function openRecipeOptions() {
+        let recipeOptionsEl = document.getElementById("recipe_options");
+
+        recipeOptionsEl.classList.toggle("show");
+      }
+
+      function submitMealPlanForm(e) {
+        let mealPlanName = document.getElementById("meal_plan_name").value;
+        let mealPlanArgs = {
+          meal_plan_name: mealPlanName,
+          recipe_ids: recipe_ids,
+        };
+
+        try {
+          fetch("/meal/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(mealPlanArgs),
+          });
+        } catch (e) {
+          console.log("error", e);
+        }
+      }
+
+      function searchRecipes(e) {
+        let listContainer = document.getElementById("list_container");
+        let searchValue = e.target.value.toLowerCase();
+        let recipes = listContainer.querySelectorAll("li");
+
+        for (recipe of recipes) {
+          let recipeName = recipe.innerText.toLowerCase();
+          if (!recipeName.startsWith(searchValue)) {
+            recipe.classList.add("hidden");
+          } else {
+            recipe.classList.remove("hidden");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -270,12 +270,14 @@ impl RecipeRepository for Database<MySqlPool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::app::{configs::DbConfig, helper::get_test_recipe_args};
+    use crate::app::{
+        clients::db_client,
+        helper::{get_random_recipe_id, get_test_recipe_args},
+    };
 
     #[tokio::test]
     async fn test_recipe_repo_creation() {
-        let config = DbConfig::default();
-        let repo = Database::new(&config).await;
+        let repo = db_client().await;
 
         let recipe_args = get_test_recipe_args();
         let recipe_id = repo
@@ -285,5 +287,15 @@ mod tests {
 
         let recipe = repo.select_recipe_by_id(&recipe_id).await.unwrap();
         assert_eq!(&recipe.recipe_title, "Oatmeal");
+    }
+
+    #[tokio::test]
+    async fn test_recipe_repo_select_recipe_by_id() {
+        let recipe_id = get_random_recipe_id().await.unwrap();
+        let repo = db_client().await;
+
+        let recipe = repo.select_recipe_by_id(&recipe_id).await.unwrap();
+
+        assert!(recipe.recipe_title.len() != 0)
     }
 }

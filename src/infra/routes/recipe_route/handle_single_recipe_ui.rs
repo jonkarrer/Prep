@@ -16,6 +16,7 @@ pub async fn handle_single_recipe_ui(
     recipe_id: Path<String>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
+    dbg!(&recipe_id);
     // Init template engine
     let tera = Tera::new("src/web/pages/recipe/single/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;

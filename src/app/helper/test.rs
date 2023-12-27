@@ -1,6 +1,6 @@
 use crate::{
     app::clients::{db_client, session_client},
-    app::interface::UserRepository,
+    app::interface::{RecipeRepository, UserRepository},
     domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs},
 };
 use anyhow::Result;
@@ -17,6 +17,15 @@ pub async fn get_test_session() -> Result<Session> {
         .await
         .start_session(&user.user_id, Expiry::Month(1))
         .await
+}
+
+pub async fn get_random_recipe_id() -> Result<String> {
+    let db = db_client().await;
+    let user = db.get_user_by_email(TEST_USER_NAME).await?;
+
+    let all_recipes = db.select_all_recipe_details_for_user(&user.user_id).await?;
+
+    Ok(all_recipes[0].recipe_id.to_string())
 }
 
 pub fn get_test_recipe_args() -> RecipeArgs {

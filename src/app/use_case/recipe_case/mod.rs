@@ -1,6 +1,9 @@
 mod create_recipe;
 pub use create_recipe::*;
 
+mod select_recipe;
+pub use select_recipe::*;
+
 mod validate_recipe_args;
 pub use validate_recipe_args::*;
 
@@ -8,7 +11,7 @@ pub use validate_recipe_args::*;
 mod tests {
     use super::*;
     use crate::app::clients::db_client;
-    use crate::app::helper::{get_test_recipe_args, get_test_session};
+    use crate::app::helper::{get_random_recipe_id, get_test_recipe_args, get_test_session};
     use crate::domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs};
 
     #[tokio::test]
@@ -22,6 +25,16 @@ mod tests {
             .unwrap();
 
         assert_eq!(recipe.recipe_title, "Oatmeal")
+    }
+
+    #[tokio::test]
+    async fn test_case_select_recipe() {
+        let recipe_id = get_random_recipe_id().await.unwrap();
+        let repo = db_client().await;
+
+        let recipe = select_recipe(&repo, &recipe_id).await.unwrap();
+
+        assert!(recipe.recipe_title.len() != 0)
     }
 
     #[test]

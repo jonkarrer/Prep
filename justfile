@@ -39,13 +39,22 @@ run-migration env_config:
 # ---- Tests ----
 test-all:
     -cargo test
-    
-test-repo:
-    -cargo test recipe_repository
 
-# Use Cases
+# Auth Tests
 test-use-case-auth:
-    -cargo test auth_case
+    -cargo test authentication
+
+# Recipe Tests
+test-recipe-repo:
+    -cargo test recipe_repo
+test-recipe-case:
+    -cargo test recipe_case
+test-recipe-route:
+    -cargo test recipe_route
+test-recipe-all:
+    just test-recipe-repo
+    just test-recipe-case
+    just test-recipe-route
 
 # Routes
 test-routes:

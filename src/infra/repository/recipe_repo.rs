@@ -8,13 +8,11 @@ use sqlx::mysql::MySqlPool;
 
 #[async_trait::async_trait]
 impl RecipeRepository for Database<MySqlPool> {
-    async fn create_recipe_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String> {
-        let mut transaction = self
-            .pool
-            .begin()
-            .await
-            .expect("transaction failed to start");
-
+    async fn create_recipe_from_args(
+        &self,
+        recipe_args: RecipeArgs,
+        user_id: &str,
+    ) -> Result<String> {
         let recipe_id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             r#"
@@ -24,27 +22,36 @@ impl RecipeRepository for Database<MySqlPool> {
         )
         .bind(&recipe_id)
         .bind(user_id)
-        .bind(recipe.title)
-        .bind(recipe.servings)
+        .bind(recipe_args.title)
+        .bind(recipe_args.servings)
         .execute(&self.pool)
-        .await?;
+        .await
+        .context("Failed to insert into recipes")?;
 
-        for ingredient in recipe.ingredients {
+        let mut transaction = self
+            .pool
+            .begin()
+            .await
+            .expect("Failed to start transaction");
+
+        for ingredient in recipe_args.ingredients {
             sqlx::query(
                 r#"
-                INSERT INTO ingredients (recipe_id, ingredient_name, amount, unit)
-                VALUES (?,?,?,?)
+                INSERT INTO ingredients (recipe_id, user_id, ingredient_name, amount, unit)
+                VALUES (?,?,?,?,?)
                 "#,
             )
             .bind(&recipe_id)
+            .bind(user_id)
             .bind(ingredient.name)
             .bind(ingredient.amount)
             .bind(ingredient.unit)
             .execute(&mut *transaction)
-            .await?;
+            .await
+            .context("Failed to insert into ingredients")?;
         }
 
-        for direction in recipe.directions {
+        for direction in recipe_args.directions {
             sqlx::query(
                 r#"
                 INSERT INTO directions (recipe_id, direction_details, step_order)
@@ -55,10 +62,11 @@ impl RecipeRepository for Database<MySqlPool> {
             .bind(direction.details)
             .bind(direction.step_order)
             .execute(&mut *transaction)
-            .await?;
+            .await
+            .context("Failed to insert into directions")?;
         }
 
-        for tag_name in recipe.tags {
+        for tag_name in recipe_args.tags {
             sqlx::query(
                 r#"
                 INSERT INTO tags (recipe_id, tag_name)
@@ -68,13 +76,14 @@ impl RecipeRepository for Database<MySqlPool> {
             .bind(&recipe_id)
             .bind(tag_name)
             .execute(&mut *transaction)
-            .await?;
+            .await
+            .context("Failed to insert into tags")?;
         }
 
         transaction
             .commit()
             .await
-            .expect("Failed to commit transaction");
+            .context("Failed to commit transaction")?;
 
         Ok(recipe_id)
     }
@@ -264,7 +273,7 @@ mod tests {
     use crate::app::{configs::DbConfig, helper::get_test_recipe_args};
 
     #[tokio::test]
-    async fn test_recipe_repository() {
+    async fn test_recipe_repo_creation() {
         let config = DbConfig::default();
         let repo = Database::new(&config).await;
 
@@ -273,6 +282,7 @@ mod tests {
             .create_recipe_from_args(recipe_args, "test_user_id")
             .await
             .unwrap();
+
         let recipe = repo.select_recipe_by_id(&recipe_id).await.unwrap();
         assert_eq!(&recipe.recipe_title, "Oatmeal");
     }

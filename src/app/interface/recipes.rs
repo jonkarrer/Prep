@@ -3,7 +3,11 @@ use anyhow::Result;
 
 #[async_trait::async_trait]
 pub trait RecipeRepository: Send + Sync {
-    async fn create_recipe_from_args(&self, recipe: RecipeArgs, user_id: &str) -> Result<String>;
+    async fn create_recipe_from_args(
+        &self,
+        recipe_args: RecipeArgs,
+        user_id: &str,
+    ) -> Result<String>;
     async fn select_recipe_by_id(&self, recipe_id: &str) -> Result<Recipe>;
     async fn select_recipe_by_title(&self, recipe_title: &str, user_id: &str) -> Result<Recipe>;
     async fn delete(&self, id: &str) -> Result<()>;

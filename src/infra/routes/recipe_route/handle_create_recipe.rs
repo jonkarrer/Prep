@@ -1,0 +1,32 @@
+use crate::{
+    app::{
+        interface::Database,
+        use_case::{create_recipe, validate_recipe_args},
+    },
+    domain::entity::{Recipe, RecipeArgs},
+};
+use brize_auth::entity::Session;
+use poem::{
+    handler,
+    http::StatusCode,
+    web::{Data, Json},
+    Error, Result,
+};
+use sqlx::MySqlPool;
+
+#[handler]
+pub async fn handle_create_recipe(
+    Json(recipe_args): Json<RecipeArgs>,
+    Data(repo): Data<&Database<MySqlPool>>,
+    Data(session): Data<&Session>,
+) -> Result<Json<Recipe>> {
+    if !validate_recipe_args(&recipe_args) {
+        return Err(Error::from_status(StatusCode::BAD_REQUEST));
+    }
+
+    let recipe = create_recipe(repo, recipe_args, &session.user_id)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_GATEWAY))?;
+
+    Ok(Json(recipe))
+}

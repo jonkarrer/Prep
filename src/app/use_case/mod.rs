@@ -1,5 +1,5 @@
-mod authentication;
-pub use authentication::*;
+mod auth_case;
+pub use auth_case::*;
 
-mod recipe;
-pub use recipe::*;
+mod recipe_case;
+pub use recipe_case::*;

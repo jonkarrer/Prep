@@ -33,7 +33,7 @@ mod tests {
     use crate::app::clients::db_client;
     use crate::app::helper::{get_test_recipe_args, get_test_session};
     use crate::domain::constants::SESSION_COOKIE_KEY;
-    use crate::domain::entity::Recipe;
+    use crate::domain::entity::{Recipe, RecipeDetails};
     use crate::infra::middleware::AuthGuard;
 
     #[tokio::test]
@@ -69,7 +69,7 @@ mod tests {
 
         resp.assert_status_is_ok();
 
-        let json: Recipe = resp.json().await.value().deserialize();
+        let json: RecipeDetails = resp.json().await.value().deserialize();
         assert_eq!(json.recipe_title, "Oatmeal");
     }
 }

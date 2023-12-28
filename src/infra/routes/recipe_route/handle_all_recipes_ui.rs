@@ -43,10 +43,7 @@ pub async fn handle_all_recipes_ui(
 mod tests {
     use super::*;
     use crate::{
-        app::{
-            clients::db_client,
-            helper::{get_random_recipe_id, get_test_session},
-        },
+        app::{clients::db_client, helper::get_test_session},
         domain::constants::SESSION_COOKIE_KEY,
         infra::middleware::AuthGuard,
     };

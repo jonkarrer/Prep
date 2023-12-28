@@ -12,8 +12,7 @@ pub trait RecipeRepository: Send + Sync {
     async fn select_recipe_by_title(&self, recipe_title: &str, user_id: &str) -> Result<Recipe>;
     async fn delete(&self, id: &str) -> Result<()>;
     async fn update(&self, new_recipe: Recipe, id: &str) -> Result<()>;
-    async fn select_all_recipe_details_for_user(&self, user_id: &str)
-        -> Result<Vec<RecipeDetails>>;
+    async fn select_all_recipes_details(&self, user_id: &str) -> Result<Vec<RecipeDetails>>;
     async fn select_ingredients_for_recipe(&self, recipe_id: &str) -> Result<Vec<Ingredient>>;
     async fn select_directions_for_recipe(&self, recipe_id: &str) -> Result<Vec<Direction>>;
     async fn select_tags_for_recipe(&self, recipe_id: &str) -> Result<Vec<Tag>>;

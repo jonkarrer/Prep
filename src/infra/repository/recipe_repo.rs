@@ -216,10 +216,7 @@ impl RecipeRepository for Database<MySqlPool> {
         Ok(())
     }
 
-    async fn select_all_recipe_details_for_user(
-        &self,
-        user_id: &str,
-    ) -> Result<Vec<RecipeDetails>> {
+    async fn select_all_recipes_details(&self, user_id: &str) -> Result<Vec<RecipeDetails>> {
         sqlx::query_as(
             r#"
             SELECT recipe_id, recipe_title, servings, favorite
@@ -272,7 +269,7 @@ mod tests {
     use super::*;
     use crate::app::{
         clients::db_client,
-        helper::{get_random_recipe_id, get_test_recipe_args},
+        helper::{get_random_recipe_id, get_test_recipe_args, get_test_user_id},
     };
 
     #[tokio::test]
@@ -297,5 +294,15 @@ mod tests {
         let recipe = repo.select_recipe_by_id(&recipe_id).await.unwrap();
 
         assert!(recipe.recipe_title.len() != 0)
+    }
+
+    #[tokio::test]
+    async fn test_recipe_repo_select_recipes_details() {
+        let user_id = get_test_user_id().await.unwrap();
+        let repo = db_client().await;
+
+        let recipes = repo.select_all_recipes_details(&user_id).await.unwrap();
+
+        assert!(recipes.len() != 0)
     }
 }

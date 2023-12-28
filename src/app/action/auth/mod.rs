@@ -34,7 +34,7 @@ mod tests {
     };
 
     #[tokio::test]
-    async fn test_case_register_new_user() {
+    async fn test_action_register_new_user() {
         // Register user
         let random_str = &uuid::Uuid::new_v4().to_string();
         let user_name = &random_str[..10];
@@ -49,7 +49,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_case_login_user() {
+    async fn test_action_login_user() {
         // Login user
         let repo = db_client().await;
         let session = login_user(TEST_USER_NAME, TEST_USER_PASSWORD)
@@ -62,7 +62,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_case_logout_user() {
+    async fn test_action_logout_user() {
         // Create a session
         let session_client = session_client().await;
         let session = session_client
@@ -79,7 +79,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_case_reset_user_password() {
+    async fn test_action_reset_user_password() {
         // Register user
         let random_str = &uuid::Uuid::new_v4().to_string();
         let user_name = &random_str[..10];
@@ -123,7 +123,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_case_update_user_email() {
+    async fn test_action_update_user_email() {
         // Register user
         let random_str = &uuid::Uuid::new_v4().to_string();
         let user_name = &random_str[..10];

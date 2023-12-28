@@ -54,7 +54,7 @@ mod tests {
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
-    async fn test_route_select_recipe() {
+    async fn test_route_single_recipe() {
         // build route
         let ep = Route::new()
             .at("/recipe/select/:id", get(handle_single_recipe_ui))

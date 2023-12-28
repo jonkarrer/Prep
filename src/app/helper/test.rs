@@ -19,11 +19,16 @@ pub async fn get_test_session() -> Result<Session> {
         .await
 }
 
+pub async fn get_test_user_id() -> Result<String> {
+    let session = get_test_session().await?;
+    Ok(session.user_id)
+}
+
 pub async fn get_random_recipe_id() -> Result<String> {
     let db = db_client().await;
     let user = db.get_user_by_email(TEST_USER_NAME).await?;
 
-    let all_recipes = db.select_all_recipe_details_for_user(&user.user_id).await?;
+    let all_recipes = db.select_all_recipes_details(&user.user_id).await?;
 
     Ok(all_recipes[0].recipe_id.to_string())
 }

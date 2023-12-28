@@ -41,19 +41,19 @@ test-all:
     -cargo test
 
 # Auth Tests
-test-use-case-auth:
+test-auth-action:
     -cargo test authentication
 
 # Recipe Tests
 test-recipe-repo:
     -cargo test recipe_repo
-test-recipe-case:
-    -cargo test recipe_case
+test-recipe-action:
+    -cargo test recipe_action
 test-recipe-route:
     -cargo test recipe_route
 test-recipe-all:
     just test-recipe-repo
-    just test-recipe-case
+    just test-recipe-action
     just test-recipe-route
 
 # Routes

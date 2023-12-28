@@ -1,5 +1,5 @@
 use crate::{
-    app::interface::{Database, RecipeRepository},
+    app::{interface::Database, use_case::select_recipe},
     domain::entity::{Direction, Ingredient, Tag},
 };
 use poem::{
@@ -16,14 +16,12 @@ pub async fn handle_single_recipe_ui(
     recipe_id: Path<String>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
-    dbg!(&recipe_id);
     // Init template engine
     let tera = Tera::new("src/web/pages/recipe/single/*.tera.html")
-        .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Fetch single recipe
-    let recipe = repo
-        .select_recipe_by_id(&recipe_id)
+    let recipe = select_recipe(repo, &recipe_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 

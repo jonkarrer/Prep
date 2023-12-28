@@ -77,7 +77,7 @@ mod tests {
     async fn test_route_select_recipe() {
         // build route
         let ep = Route::new()
-            .at("/select/:id", get(handle_single_recipe_ui))
+            .at("/recipe/select/:id", get(handle_single_recipe_ui))
             .with(AddData::new(db_client().await))
             .with(AuthGuard);
 

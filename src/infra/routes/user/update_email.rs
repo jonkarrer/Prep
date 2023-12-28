@@ -1,5 +1,5 @@
 use crate::{
-    app::{interface::Database, use_case::update_user_email},
+    app::{action::update_user_email, interface::Database},
     domain::entity::UpdateEmailForm,
 };
 use brize_auth::entity::Session;

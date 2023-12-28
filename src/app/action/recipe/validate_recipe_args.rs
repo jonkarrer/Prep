@@ -1,41 +1,34 @@
-mod create_recipe;
-pub use create_recipe::*;
+use crate::domain::entity::RecipeArgs;
 
-mod select_recipe;
-pub use select_recipe::*;
+pub fn validate_recipe_args(recipe: &RecipeArgs) -> bool {
+    let title = recipe.title.as_str();
 
-mod validate_recipe_args;
-pub use validate_recipe_args::*;
+    if title.len() == 0 || recipe.ingredients.len() == 0 || recipe.directions.len() == 0 {
+        return false;
+    }
+
+    for dir in recipe.directions.iter() {
+        if dir.details.len() == 0 {
+            return false;
+        }
+    }
+
+    for ing in recipe.ingredients.iter() {
+        let ingredient_name = ing.name.as_str();
+
+        if ingredient_name.len() == 0 {
+            return false;
+        }
+    }
+
+    true
+}
 
 #[cfg(test)]
 mod tests {
+    use crate::domain::entity::{DirectionArgs, IngredientArgs};
+
     use super::*;
-    use crate::app::clients::db_client;
-    use crate::app::helper::{get_random_recipe_id, get_test_recipe_args, get_test_session};
-    use crate::domain::entity::{DirectionArgs, IngredientArgs, RecipeArgs};
-
-    #[tokio::test]
-    async fn test_case_create_recipe() {
-        let repo = db_client().await;
-        let recipe_args = get_test_recipe_args();
-        let session = get_test_session().await.unwrap();
-
-        let recipe = create_recipe(&repo, recipe_args, &session.user_id)
-            .await
-            .unwrap();
-
-        assert_eq!(recipe.recipe_title, "Oatmeal")
-    }
-
-    #[tokio::test]
-    async fn test_case_select_recipe() {
-        let recipe_id = get_random_recipe_id().await.unwrap();
-        let repo = db_client().await;
-
-        let recipe = select_recipe(&repo, &recipe_id).await.unwrap();
-
-        assert!(recipe.recipe_title.len() != 0)
-    }
 
     #[test]
     fn test_case_validate_recipe_args() {

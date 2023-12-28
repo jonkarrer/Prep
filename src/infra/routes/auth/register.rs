@@ -1,7 +1,7 @@
 use crate::{
     app::{
+        action::{register_new_user, start_session_for_user},
         interface::Database,
-        use_case::{register_new_user, start_session_for_user},
     },
     domain::constants::SESSION_COOKIE_KEY,
 };

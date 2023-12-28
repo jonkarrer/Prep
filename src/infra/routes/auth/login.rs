@@ -1,4 +1,4 @@
-use crate::{app::use_case::login_user, domain::constants::SESSION_COOKIE_KEY};
+use crate::{app::action::login_user, domain::constants::SESSION_COOKIE_KEY};
 use poem::{handler, http::StatusCode, web::Form, Error, Response, Result};
 
 #[derive(serde::Deserialize)]

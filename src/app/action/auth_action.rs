@@ -1,23 +1,109 @@
-mod verify_user_credentials;
-pub use verify_user_credentials::*;
+use crate::{
+    app::{
+        clients::{auth_client, db_client, session_client},
+        interface::UserRepository,
+    },
+    domain::entity::{UpdateEmailForm, UpdatePasswordForm, UserId},
+};
+use anyhow::Result;
+use brize_auth::{config::Expiry, entity::Session};
 
-mod start_session_for_user;
-pub use start_session_for_user::*;
+pub async fn login_user(user_name: &str, password: &str) -> Result<Session> {
+    let user_id = verify_user_credentials(user_name, password).await?;
+    start_session_for_user(&user_id.0).await
+}
 
-mod login_user;
-pub use login_user::*;
+pub async fn logout_user(session: &Session, csrf_token: &str) -> Result<()> {
+    match session.match_csrf_token(csrf_token) {
+        true => {
+            session_client()
+                .await
+                .destroy_session(&session.session_id)
+                .await
+        }
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
+}
 
-mod logout_user;
-pub use logout_user::*;
+pub async fn register_new_user<T: UserRepository>(
+    user_name: &str,
+    password: &str,
+    repo: &T,
+) -> Result<UserId> {
+    let creds_id = auth_client().await.register(user_name, password).await?;
+    let user_id = repo.create_user(user_name, creds_id.as_str()).await?;
 
-mod register_new_user;
-pub use register_new_user::*;
+    Ok(UserId(user_id))
+}
 
-mod reset_user_password;
-pub use reset_user_password::*;
+pub async fn reset_password<T: UserRepository>(
+    session: &Session,
+    repo: &T,
+    form: &UpdatePasswordForm,
+) -> Result<()> {
+    match session.match_csrf_token(&form.csrf_token) {
+        true => {
+            let auth = auth_client().await;
 
-mod update_user_email;
-pub use update_user_email::*;
+            // Validate current auth
+            auth.verify_credentials(&form.current_email, &form.current_password)
+                .await?;
+
+            // Verify reset token is healthy and valid
+            let reset_token = repo.get_password_reset_token(&session.user_id).await?;
+            if reset_token.match_token(&form.reset_token) {
+                // Update user password
+                let user = repo.get_user_by_id(&session.user_id).await?;
+                auth.update_password(&user.email, &form.new_password)
+                    .await?;
+            } else {
+                return Err(anyhow::anyhow!("Unauthorized"));
+            }
+
+            Ok(())
+        }
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
+}
+
+pub async fn start_session_for_user(user_id: &str) -> Result<Session> {
+    session_client()
+        .await
+        .start_session(user_id, Expiry::Month(1))
+        .await
+}
+
+pub async fn update_user_email<T: UserRepository>(
+    session: &Session,
+    repo: &T,
+    form: &UpdateEmailForm,
+) -> Result<()> {
+    match session.match_csrf_token(&form.csrf_token) {
+        true => {
+            let auth = auth_client().await;
+            let user = repo.get_user_by_id(&session.user_id).await?;
+            let old_user_email = user.email;
+
+            repo.update_email(&form.new_email, &session.user_id).await?;
+            auth.update_user_name(&old_user_email, &form.new_email)
+                .await?;
+
+            Ok(())
+        }
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
+}
+
+pub async fn verify_user_credentials(user_name: &str, password: &str) -> Result<UserId> {
+    // verify credentials
+    let client = auth_client().await;
+    client.verify_credentials(user_name, password).await?;
+
+    // get user id by user name
+    let user = db_client().await.get_user_by_email(user_name).await?;
+
+    Ok(UserId(user.user_id))
+}
 
 #[cfg(test)]
 mod tests {

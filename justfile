@@ -36,36 +36,30 @@ run-migration env_config:
     && export SKIP_DOCKER=true \
     && ./scripts/init_db.sh
 
-# ---- Tests ----------------------------------------------------------
+# ----------------
+# ---- Tests -------------
+# ----------------
 # General Tests
-test-all:
+test-all-modules:
     -cargo test
-test-routes:
+test-all-routes:
     -cargo test routes
+test-all-repos:
+    -cargo test repository
+test-all-actions:
+    -cargo test action
 
-# Auth Tests
-test-auth-action:
-    -cargo test auth_action
-test-auth-route:
-    -cargo test auth_route
-test-auth-all:
-    just test-auth-route
-    just test-auth-action
-
-# Recipe Tests
-test-recipe-repo:
-    -cargo test recipe_repo
-test-recipe-action:
-    -cargo test recipe_action
-test-recipe-route:
-    -cargo test recipe_route
-test-recipe-all:
-    just test-recipe-repo
-    just test-recipe-action
-    just test-recipe-route
-
-
-
+# Module Tests
+test-repo module_name:
+    -cargo test {{module_name}}_repo
+test-action module_name:
+    -cargo test {{module_name}}_action
+test-route module_name:
+    -cargo test {{module_name}}_route
+test-all module_name:
+    just test-{{module_name}}-repo
+    just test-{{module_name}}-action
+    just test-{{module_name}}-route
 
 # Scripts
 hit-recipe-api:

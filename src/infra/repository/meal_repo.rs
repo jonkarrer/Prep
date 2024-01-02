@@ -5,7 +5,6 @@ use crate::{
 use anyhow::{Context, Result};
 use sqlx::{mysql::MySqlPool, Row};
 
-#[async_trait::async_trait]
 impl MealPlanRepository for Database<MySqlPool> {
     async fn select_all_meal_plans(&self, user_id: &str) -> Result<Vec<MealPlan>> {
         let mut meal_plans = Vec::new();

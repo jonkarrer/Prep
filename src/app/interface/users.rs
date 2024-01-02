@@ -1,7 +1,6 @@
 use crate::domain::entity::{PasswordResetToken, User};
 use anyhow::Result;
 
-#[async_trait::async_trait]
 pub trait UserRepository: Sync + Send {
     async fn create_user(&self, email: &str, credentials_id: &str) -> Result<String>;
     async fn get_user_by_email(&self, email: &str) -> Result<User>;

@@ -1,6 +1,6 @@
 CREATE TABLE pantry (
     row_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id CHAR(36) NOT NULL,
-    pantry_item_name VARCHAR(255) NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
     in_stock BOOLEAN DEFAULT FALSE
 )

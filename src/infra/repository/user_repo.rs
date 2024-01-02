@@ -5,7 +5,6 @@ use crate::{
 use anyhow::{Context, Result};
 use sqlx::mysql::MySqlPool;
 
-#[async_trait::async_trait]
 impl UserRepository for Database<MySqlPool> {
     async fn create_user(&self, email: &str, credentials_id: &str) -> Result<String> {
         let user_id = uuid::Uuid::new_v4().to_string();

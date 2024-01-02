@@ -12,11 +12,11 @@ use sqlx::MySqlPool;
 
 #[handler]
 pub async fn handle_create_pantry_item(
-    pantry_item_name: String,
+    item_name: String,
     Data(repo): Data<&Database<MySqlPool>>,
     Data(session): Data<&Session>,
 ) -> Result<Json<PantryItem>> {
-    let pantry_item = create_pantry_item(repo, &pantry_item_name, &session.user_id).await?;
+    let pantry_item = create_pantry_item(repo, &item_name, &session.user_id).await?;
 
     Ok(Json(pantry_item))
 }

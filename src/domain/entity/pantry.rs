@@ -4,6 +4,6 @@ use sqlx::FromRow;
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct PantryItem {
     pub user_id: String,
-    pub name: String,
+    pub item_name: String,
     pub in_stock: bool,
 }

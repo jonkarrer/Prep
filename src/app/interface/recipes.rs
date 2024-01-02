@@ -1,7 +1,6 @@
 use crate::domain::entity::{Direction, Ingredient, Recipe, RecipeArgs, RecipeDetails, Tag};
 use anyhow::Result;
 
-#[async_trait::async_trait]
 pub trait RecipeRepository: Send + Sync {
     async fn create_recipe_from_args(
         &self,

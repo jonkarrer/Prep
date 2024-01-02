@@ -6,7 +6,6 @@ use anyhow::{Context, Result};
 use serde_json::Value;
 use sqlx::mysql::MySqlPool;
 
-#[async_trait::async_trait]
 impl RecipeRepository for Database<MySqlPool> {
     async fn create_recipe_from_args(
         &self,

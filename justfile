@@ -57,9 +57,9 @@ test-action module_name:
 test-route module_name:
     -cargo test {{module_name}}_route
 test-all module_name:
-    just test-{{module_name}}-repo
-    just test-{{module_name}}-action
-    just test-{{module_name}}-route
+    just test-repo {{module_name}}
+    just test-action {{module_name}}
+    just test-route {{module_name}}
 
 # Scripts
 hit-recipe-api:

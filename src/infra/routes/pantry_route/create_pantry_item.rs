@@ -5,8 +5,9 @@ use crate::{
 use brize_auth::entity::Session;
 use poem::{
     handler,
+    http::StatusCode,
     web::{Data, Json},
-    Result,
+    Error, Result,
 };
 use sqlx::MySqlPool;
 
@@ -16,7 +17,9 @@ pub async fn handle_create_pantry_item(
     Data(repo): Data<&Database<MySqlPool>>,
     Data(session): Data<&Session>,
 ) -> Result<Json<PantryItem>> {
-    let pantry_item = create_pantry_item(repo, &item_name, &session.user_id).await?;
+    let pantry_item = create_pantry_item(repo, &item_name, &session.user_id)
+        .await
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::BAD_REQUEST))?;
 
     Ok(Json(pantry_item))
 }

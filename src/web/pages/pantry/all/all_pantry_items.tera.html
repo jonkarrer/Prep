@@ -24,7 +24,7 @@
       <ul id="list_container">
         {% for item in pantry_items %}
         <li>
-          {{ item.ingredient_name }} {% if item.in_stock %}
+          {{ item.item_name }} {% if item.in_stock %}
           <input type="checkbox" checked />
           {% else %}
           <input type="checkbox" />

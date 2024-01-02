@@ -18,7 +18,6 @@
         id="search_box"
         oninput="searchRecipes(event)"
       />
-      <button>Filter</button>
       <button>
         <a href="/recipe/create">Create</a>
       </button>
@@ -26,11 +25,37 @@
     <main>
       <ul id="list_container">
         {% for recipe in recipes %}
-        <li>
-          <a href="/recipe/select/{{ recipe.recipe_id }}">
-            {{ recipe.recipe_title }}
-          </a>
-        </li>
+        <a href="/recipe/select/{{ recipe.recipe_id }}">
+          <li class="RecipeCard">
+            <div class="RecipeCard__header">
+              <span>Thu, Oct 5 2023</span>
+              <span>Edit</span>
+            </div>
+
+            <h2 class="RecipeCard__title">{{ recipe.recipe_title }}</h2>
+            <div class="RecipeCard__directions">
+              <ol>
+                <li>
+                  Borem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
+                  eu turpis molestie, dictum est a, mattis
+                </li>
+                <li>
+                  tellus. Sed dignissim, metus nec fringilla accumsan, risus sem
+                  sollicitudin lacus, ut interdum tellus elit
+                </li>
+              </ol>
+            </div>
+
+            <div class="RecipeCard__footer">
+              <span>6 servings</span>
+
+              <div class="RecipeCard__tag-container">
+                <span>Tag Name</span>
+                <span>Tag Name</span>
+              </div>
+            </div>
+          </li>
+        </a>
         {% endfor %}
       </ul>
     </main>

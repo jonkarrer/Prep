@@ -1,13 +1,24 @@
 @import url("/pages/global/styles/index.css");
 
-li {
-  margin: 20px;
-  background-color: var(--sec-color);
+.hidden {
+  display: none;
+}
+
+.RecipeCard {
+  margin: 1rem;
   padding: 1.5rem;
+  background-color: var(--sec-color);
+  border: 1px solid black;
   border-radius: 1.5rem;
   box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.65);
 }
 
-.hidden {
-  display: none;
+.RecipeCard__header {
+  height: 2rem;
+  border-bottom: 1px solid black;
+}
+
+.RecipeCard__footer {
+  height: 2rem;
+  border-top: 1px solid black;
 }

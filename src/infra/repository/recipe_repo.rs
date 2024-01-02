@@ -298,7 +298,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_recipe_repo_select_recipes_details() {
-        let user_id = get_test_user_id().await.unwrap();
+        let user_id = get_test_user_id().await;
         let repo = db_client().await;
 
         let recipes = repo.select_all_recipes_details(&user_id).await.unwrap();

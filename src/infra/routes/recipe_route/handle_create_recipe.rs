@@ -54,7 +54,7 @@ mod tests {
         let test_client = TestClient::new(ep);
 
         // get a session token
-        let session = get_test_session().await.unwrap();
+        let session = get_test_session().await;
 
         // create fake recipe
         let test_recipe = get_test_recipe_args();

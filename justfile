@@ -43,7 +43,6 @@ test-all:
 test-routes:
     -cargo test routes
 
-
 # Auth Tests
 test-auth-action:
     -cargo test auth_action

@@ -25,7 +25,7 @@ mod tests {
     async fn test_case_create_recipe() {
         let repo = db_client().await;
         let recipe_args = get_test_recipe_args();
-        let session = get_test_session().await.unwrap();
+        let session = get_test_session().await;
 
         let recipe = create_recipe(&repo, recipe_args, &session.user_id)
             .await

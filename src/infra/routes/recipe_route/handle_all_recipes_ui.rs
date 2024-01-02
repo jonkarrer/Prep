@@ -60,7 +60,7 @@ mod tests {
         let test_client = TestClient::new(ep);
 
         // get a session token
-        let session = get_test_session().await.unwrap();
+        let session = get_test_session().await;
 
         // run test
         let resp = test_client

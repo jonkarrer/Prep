@@ -36,7 +36,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_action_get_all_recipe_details_for_user() {
-        let user_id = get_test_user_id().await.unwrap();
+        let user_id = get_test_user_id().await;
         let repo = db_client().await;
 
         let recipes = get_all_recipe_details_for_user(&repo, &user_id)

@@ -113,7 +113,7 @@ async fn seed_pantry_and_common_ingredients(user_id: &str) -> anyhow::Result<()>
         if i < 30 {
             sqlx::query!(
                 r#"
-            INSERT INTO pantry (user_id, ingredient_name)
+            INSERT INTO pantry (user_id, item_name)
             VALUES (?,?)
             "#,
                 &user_id,

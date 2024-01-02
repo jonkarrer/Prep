@@ -12,7 +12,6 @@ name = "prep"
 
 [dependencies]
 anyhow = "1.0.75"
-async-trait = "0.1.74"
 base64 = "0.21.5"
 brize_auth = {version="0.10.0", features = ["mysql", "sessions"]} 
 chrono = { version = "0.4.31", features = ["serde"] }

@@ -1,7 +1,7 @@
 use crate::{
     app::{
+        action::{register_new_user, start_session_for_user},
         interface::Database,
-        use_case::{register_new_user, start_session_for_user},
     },
     domain::constants::SESSION_COOKIE_KEY,
 };
@@ -129,8 +129,11 @@ mod tests {
         // create random user creds
         let random_str = &uuid::Uuid::new_v4().to_string();
         let email = &random_str[..10];
-        let password = "secret-test-password";
-        let form_data = [("email", email), ("password", password)];
+        let password = "secret-test-password-12";
+        let form_data = [
+            ("email", format!("{}12@gmail.com", &email)),
+            ("password", password.to_string()),
+        ];
 
         // run test
         let resp = test_client

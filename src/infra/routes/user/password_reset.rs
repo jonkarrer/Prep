@@ -1,7 +1,7 @@
 use crate::{
     app::{
+        action::reset_password,
         interface::{Database, UserRepository},
-        use_case::reset_password,
     },
     domain::entity::{PasswordResetToken, UpdatePasswordForm},
 };

@@ -1,12 +1,12 @@
-mod login;
-mod logout;
-mod register;
+mod handle_login;
+mod handle_logout;
+mod handle_register;
 
 use crate::{app::configs::StaticPath, infra::middleware::AuthGuard};
-use login::*;
-use logout::*;
+use handle_login::*;
+use handle_logout::*;
+use handle_register::*;
 use poem::{endpoint::StaticFileEndpoint, get, post, EndpointExt, Route};
-use register::*;
 
 pub fn use_auth_routes() -> Route {
     Route::new()

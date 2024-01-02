@@ -1,4 +1,4 @@
-use crate::{app::use_case::logout_user, domain::constants::SESSION_COOKIE_KEY};
+use crate::{app::action::logout_user, domain::constants::SESSION_COOKIE_KEY};
 use brize_auth::entity::Session;
 use poem::{
     handler,

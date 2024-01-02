@@ -55,9 +55,7 @@ mod tests {
     use crate::{
         app::{
             clients::db_client,
-            helper::{
-                get_random_recipe_id, get_test_recipe_args, get_test_session, get_test_user_id,
-            },
+            helper::{get_random_recipe_id, get_test_recipe_args, get_test_user_id},
         },
         domain::entity::{DirectionArgs, IngredientArgs},
     };
@@ -85,20 +83,18 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_case_create_recipe() {
+    async fn test_action_create_recipe() {
         let repo = db_client().await;
         let recipe_args = get_test_recipe_args();
-        let session = get_test_session().await;
+        let user_id = get_test_user_id().await;
 
-        let recipe = create_recipe(&repo, recipe_args, &session.user_id)
-            .await
-            .unwrap();
+        let recipe = create_recipe(&repo, recipe_args, &user_id).await.unwrap();
 
         assert_eq!(recipe.recipe_title, "Oatmeal")
     }
 
     #[test]
-    fn test_case_validate_recipe_args() {
+    fn test_action_validate_recipe_args() {
         let mut correct_recipe_args = RecipeArgs {
             title: "Oatmeal".to_string(),
             servings: 2.0,

@@ -1,24 +1,143 @@
 @import url("/pages/global/styles/index.css");
 
-.hidden {
-  display: none;
+main {
+  padding: 1rem;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+
+  margin: 1rem;
+}
+.Header__right-panel {
+  display: flex;
+  gap: 1rem;
 }
 
 .RecipeCard {
-  margin: 1rem;
-  padding: 1.5rem;
-  background-color: var(--sec-color);
-  border: 1px solid black;
-  border-radius: 1.5rem;
-  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.65);
+  display: grid;
+  gap: 24px;
+
+  width: 100%;
+  padding-bottom: 24px;
+  border-bottom: solid 1px var(--contrast);
+
+  text-align: left;
+}
+.RecipeCard:not(:first-child) {
+  margin-top: 15px;
+}
+.RecipeCard__top-row {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.RecipeCard__title {
+  font-size: var(--xl);
+  color: var(--contrast);
+  max-width: 250px;
+}
+.RecipeCard.hidden {
+  display: none;
 }
 
-.RecipeCard__header {
-  height: 2rem;
-  border-bottom: 1px solid black;
+.ModifyTools {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  height: 18px;
+}
+.ModifyTools__icon {
+  height: 18px;
+  width: 18px;
+}
+.ModifyTools__checkbox {
+  height: 18px;
+  width: 18px;
+
+  border: var(--solid-border);
+}
+.ModifyTools__icon:last-child {
+  margin: 0 18px;
 }
 
-.RecipeCard__footer {
-  height: 2rem;
-  border-top: 1px solid black;
+.TagBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.TagBar__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 9px;
+
+  font-size: var(--xs);
+  color: var(--contrast);
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+}
+
+.ActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 9px;
+  width: max-content;
+
+  font-size: var(--sm);
+  color: var(--contrast);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+
+  cursor: pointer;
+}
+.ActionButton__text {
+  font-size: var(--md);
+  color: var(--contrast);
+}
+.ActionButton__text--right {
+  margin-left: 9px;
+}
+.ActionButton__text--left {
+  margin-right: 9px;
+}
+.ActionButton__icon {
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
+}
+
+.SearchBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: max-content;
+  padding-right: 9px;
+
+  font-size: var(--sm);
+  color: var(--contrast);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+
+  cursor: pointer;
+}
+.SearchBar__input {
+  padding: 6px 9px;
+}
+
+.SearchBar__icon {
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
 }

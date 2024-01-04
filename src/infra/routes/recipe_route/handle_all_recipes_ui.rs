@@ -31,9 +31,8 @@ pub async fn handle_all_recipes_ui(
     let mut context = Context::new();
     context.insert::<Vec<RecipeDetails>, &str>("recipes", &recipes);
 
-    let rendered_html = tera
-        .render("all_recipes.tera.html", &context)
-        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+    let rendered_html = tera.render("all_recipes.tera.html", &context).unwrap();
+    // .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Serve template
     Ok(Html(rendered_html))

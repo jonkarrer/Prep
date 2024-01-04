@@ -1,14 +1,64 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  background-color: unset;
+  box-sizing: border-box;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-weight: 500;
+  list-style: none;
+}
 
 :root {
-  --pri-color: #25383b;
-  --sec-color: #e9f0f2;
-  --tri-color: #cbccc3;
-  --quad-color: #aeb3b0;
-  --text-color: #162019;
+  --primary: #a5a5a5;
+  --contrast: #161616;
+  --accent: #840000;
+  --darker: #5a5a5a;
+  --lighter: #c5c5c5;
 
-  --pri-font: "Raleway", sans-serif;
+  --solid-border: 1px solid var(--contrast);
+  --dashed-border: 1px dashed var(--darker);
+  --border-radius: 3px;
+  --outline: 1px solid var(--accent);
+
+  --xs: 11px;
+  --sm: 12px;
+  --md: 14px;
+  --rg: 16px;
+  --lg: 20px;
+  --xl: 28px;
+  --2xl: 32px;
+  --3xl: 38px;
+  --4xl: 44px;
+  --5xl: 54px;
+
+  --pri-font: "Bai Jamjuree", sans-serif;
   --sec-font: "Montserrat", sans-serif;
+}
+
+html,
+body {
+  background-color: var(--primary);
+}
+
+::placeholder {
+  color: var(--darker);
+}
+input {
+  border-radius: var(--border-radius);
+  padding: 12px 15px;
+  font-size: var(--rg);
+  outline: none;
+}
+a {
+  text-decoration: unset;
+  color: inherit;
+}
+button {
+  border: none;
+  outline: none;
+  color: inherit;
 }
 
 html {
@@ -19,12 +69,6 @@ html,
 body {
   background-color: var(--quad-color);
   height: 100svh;
-}
-
-a {
-  text-underline-offset: 4px;
-  text-decoration: underline;
-  color: inherit;
 }
 
 h1,
@@ -42,12 +86,6 @@ ul,
 li,
 ol {
   font-family: var(--sec-font);
-}
-
-h1 {
-  font-size: 4.5em;
-  font-weight: 700;
-  color: var(--text-color);
 }
 
 .slideInDown {

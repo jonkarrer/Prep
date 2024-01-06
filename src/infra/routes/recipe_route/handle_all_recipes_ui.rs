@@ -1,6 +1,6 @@
 use crate::{
-    app::interface::{Database, RecipeRepository},
-    domain::entity::RecipeDetails,
+    app::{action::get_all_recipe_details_for_user, interface::Database},
+    domain::entity::RecipeCard,
 };
 use brize_auth::entity::Session;
 use poem::{
@@ -22,17 +22,17 @@ pub async fn handle_all_recipes_ui(
         .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
 
     // Fetch all recipes
-    let recipes = repo
-        .select_all_recipes_details(&session.user_id)
+    let recipes = get_all_recipe_details_for_user(repo, &session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
     // Inject recipes into template
     let mut context = Context::new();
-    context.insert::<Vec<RecipeDetails>, &str>("recipes", &recipes);
+    context.insert::<Vec<RecipeCard>, &str>("recipes", &recipes);
 
-    let rendered_html = tera.render("all_recipes.tera.html", &context).unwrap();
-    // .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+    let rendered_html = tera
+        .render("all_recipes.tera.html", &context)
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Serve template
     Ok(Html(rendered_html))

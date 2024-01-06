@@ -129,13 +129,14 @@
                   />
                 </svg>
               </button>
-
-              <div class="ModifyTools__checkbox"></div>
             </div>
           </div>
 
           <div class="TagBar">
-            <p class="TagBar__tag">{{ recipe.servings }} Portions</p>
+            <p class="TagBar__tag">{{ recipe.servings }} Servings</p>
+            {% for tag in recipe.tags %}
+            <p class="TagBar__tag">{{ tag.tag_name }}</p>
+            {% endfor %}
           </div>
         </a>
         {% endfor %}

@@ -45,19 +45,12 @@ main {
 
 .ModifyTools {
   display: flex;
-  gap: 1rem;
   align-items: baseline;
   height: 18px;
 }
 .ModifyTools__icon {
-  height: 18px;
-  width: 18px;
-}
-.ModifyTools__checkbox {
-  height: 18px;
-  width: 18px;
-
-  border: var(--solid-border);
+  height: 1.2rem;
+  width: 1.2rem;
 }
 .ModifyTools__icon:last-child {
   margin: 0 18px;
@@ -66,6 +59,7 @@ main {
 .TagBar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .TagBar__tag {

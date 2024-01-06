@@ -17,8 +17,8 @@ pub async fn handle_single_recipe_ui(
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/single/*.tera.html")
-        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+    let tera = Tera::new("src/web/pages/recipe/single/*.tera.html").unwrap();
+    // .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Fetch single recipe
     let recipe = get_single_recipe(repo, &recipe_id)
@@ -29,13 +29,15 @@ pub async fn handle_single_recipe_ui(
     let mut context = Context::new();
     context.insert("title", &recipe.recipe_title);
     context.insert("favorite", &recipe.favorite);
+    context.insert("servings", &recipe.servings);
+    context.insert("ingredient_count", &recipe.ingredients.len());
+    context.insert("direction_count", &recipe.directions.len());
     context.insert::<Vec<Ingredient>, &str>("ingredients", &recipe.ingredients);
     context.insert::<Vec<Direction>, &str>("directions", &recipe.directions);
     context.insert::<Vec<Tag>, &str>("tags", &recipe.tags);
 
-    let rendered_html = tera
-        .render("single_recipe.tera.html", &context)
-        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+    let rendered_html = tera.render("single_recipe.tera.html", &context).unwrap();
+    // .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     Ok(Html(rendered_html))
 }

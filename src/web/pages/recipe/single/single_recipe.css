@@ -1,0 +1,143 @@
+body {
+  margin-top: 4rem;
+  background-color: var(--sec-color);
+}
+
+main {
+  display: grid;
+}
+article {
+  padding: 1rem;
+}
+
+.outline {
+  font-size: var(--sm);
+  color: var(--darker);
+
+  width: 250px;
+  margin-bottom: 4px;
+
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+h1 {
+  font-size: var(--3xl);
+  color: var(--contrast);
+}
+.ingredient .text {
+  margin-top: 0.8rem;
+}
+.ingredient,
+.direction {
+  margin-top: 15px;
+}
+.directions_wrapper {
+  margin-top: 32px;
+}
+
+/* ing */
+.text {
+  text-align: left;
+  color: var(--contrast);
+}
+strong {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* dir */
+.direction {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.text {
+  font-size: var(--rg);
+  color: var(--contrast);
+  line-height: 1.5;
+}
+.order {
+  font-size: var(--rg);
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.TagBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+.TagBar__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 9px;
+
+  font-size: var(--xs);
+  color: var(--contrast);
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+}
+.Headline {
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--contrast);
+  color: var(--contrast);
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+}
+.Header__right-panel {
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.ActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 9px;
+  width: max-content;
+
+  font-size: var(--sm);
+  color: var(--contrast);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+
+  cursor: pointer;
+}
+.ActionButton__text {
+  color: var(--contrast);
+}
+.ActionButton__text--right {
+  font-size: var(--xs);
+  margin-left: 9px;
+}
+.ActionButton__text--left {
+  font-size: var(--xs);
+  margin-right: 9px;
+}
+.ActionButton__icon {
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
+}

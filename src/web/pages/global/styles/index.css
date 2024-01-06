@@ -11,6 +11,12 @@
 }
 
 :root {
+  --pri-color: #25383b;
+  --sec-color: #e9f0f2;
+  --tri-color: #cbccc3;
+  --quad-color: #aeb3b0;
+  --text-color: #162019;
+
   --primary: #a5a5a5;
   --contrast: #161616;
   --accent: #840000;
@@ -35,11 +41,6 @@
 
   --pri-font: "Bai Jamjuree", sans-serif;
   --sec-font: "Montserrat", sans-serif;
-}
-
-html,
-body {
-  background-color: var(--primary);
 }
 
 ::placeholder {
@@ -67,7 +68,6 @@ html {
 
 html,
 body {
-  background-color: var(--quad-color);
   height: 100svh;
 }
 

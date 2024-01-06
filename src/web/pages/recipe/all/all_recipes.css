@@ -1,18 +1,29 @@
 @import url("/pages/global/styles/index.css");
 
+body {
+  background-color: var(--sec-color);
+  margin-top: 4rem;
+}
 main {
   padding: 1rem;
 }
 
 .Header {
+  position: fixed;
+  top: 0;
+
   display: flex;
   justify-content: space-between;
 
-  margin: 1rem;
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
 }
 .Header__right-panel {
   display: flex;
   gap: 1rem;
+  padding-left: 1rem;
 }
 
 .RecipeCard {
@@ -45,6 +56,7 @@ main {
 
 .ModifyTools {
   display: flex;
+  gap: 1rem;
   align-items: baseline;
   height: 18px;
 }
@@ -53,7 +65,7 @@ main {
   width: 1.2rem;
 }
 .ModifyTools__icon:last-child {
-  margin: 0 18px;
+  margin: 0 0.2rem;
 }
 
 .TagBar {
@@ -93,13 +105,14 @@ main {
   cursor: pointer;
 }
 .ActionButton__text {
-  font-size: var(--md);
   color: var(--contrast);
 }
 .ActionButton__text--right {
+  font-size: var(--xs);
   margin-left: 9px;
 }
 .ActionButton__text--left {
+  font-size: var(--xs);
   margin-right: 9px;
 }
 .ActionButton__icon {
@@ -112,12 +125,11 @@ main {
 .SearchBar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
-  width: max-content;
-  padding-right: 9px;
+  padding-right: 6px;
 
-  font-size: var(--sm);
+  font-size: var(--xs);
   color: var(--contrast);
 
   border-radius: var(--border-radius);
@@ -127,6 +139,7 @@ main {
 }
 .SearchBar__input {
   padding: 6px 9px;
+  width: 80%;
 }
 
 .SearchBar__icon {

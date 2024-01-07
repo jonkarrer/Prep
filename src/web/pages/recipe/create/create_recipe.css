@@ -11,7 +11,6 @@ main {
 
 article {
   margin-top: 1.5rem;
-  padding: 0 15px;
 }
 
 .General,
@@ -36,6 +35,13 @@ nav {
 
 input[name="title"] {
   font-size: var(--xl);
+  border: var(--dashed-border);
+  width: 100%;
+  margin: 1rem 0;
+}
+input[name="servings"] {
+  font-size: var(--rg);
+  border: var(--dashed-border);
 }
 
 .Header {
@@ -60,40 +66,6 @@ input[name="title"] {
   padding-bottom: 15px;
   border-bottom: 1px solid var(--contrast);
   color: var(--contrast);
-}
-
-.ActionButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 6px 9px;
-  width: max-content;
-
-  font-size: var(--sm);
-  color: var(--contrast);
-
-  border-radius: var(--border-radius);
-  border: var(--solid-border);
-
-  cursor: pointer;
-}
-.ActionButton__text {
-  color: var(--contrast);
-}
-.ActionButton__text--right {
-  font-size: var(--xs);
-  margin-left: 9px;
-}
-.ActionButton__text--left {
-  font-size: var(--xs);
-  margin-right: 9px;
-}
-.ActionButton__icon {
-  height: 12px;
-  width: 12px;
-  min-width: 12px;
-  min-height: 12px;
 }
 
 /* MD */

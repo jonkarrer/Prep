@@ -1,5 +1,5 @@
-import { StaticDirection } from "../components/StaticDirection.js";
-import { StaticIngredient } from "../components/StaticIngredient.js";
+import { StaticDirection } from "../../components/StaticDirection.js";
+import { StaticIngredient } from "../../components/StaticIngredient.js";
 
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");

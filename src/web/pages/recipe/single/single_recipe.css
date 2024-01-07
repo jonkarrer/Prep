@@ -78,37 +78,3 @@ h1 {
   gap: 1rem;
   padding-left: 1rem;
 }
-
-.ActionButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 6px 9px;
-  width: max-content;
-
-  font-size: var(--sm);
-  color: var(--contrast);
-
-  border-radius: var(--border-radius);
-  border: var(--solid-border);
-
-  cursor: pointer;
-}
-.ActionButton__text {
-  color: var(--contrast);
-}
-.ActionButton__text--right {
-  font-size: var(--xs);
-  margin-left: 9px;
-}
-.ActionButton__text--left {
-  font-size: var(--xs);
-  margin-right: 9px;
-}
-.ActionButton__icon {
-  height: 12px;
-  width: 12px;
-  min-width: 12px;
-  min-height: 12px;
-}

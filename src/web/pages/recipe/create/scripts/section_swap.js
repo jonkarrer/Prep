@@ -1,3 +1,5 @@
+import { StaticIngredient } from "../components/StaticIngredient.js";
+
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
 let directionSection = document.getElementById("direction_section");
@@ -76,9 +78,11 @@ function updateRecipePreview() {
 
   const ingredientAnchor = document.getElementById("preview_ingredient_anchor");
   for (let i = 0; i < ingredients.length; i++) {
-    let ingredientEl = document.createElement("p");
-    let ingString = `${amounts[i]} ${units[i]} ${ingredients[i]}`;
-    ingredientEl.innerText = ingString;
+    let ingredientEl = new StaticIngredient(
+      amounts[i],
+      units[i],
+      ingredients[i]
+    );
     ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
   }
 

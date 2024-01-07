@@ -2,11 +2,16 @@
 
 body {
   height: 100svh;
-  margin: 0;
+  background-color: var(--sec-color);
+}
+main {
+  margin: 0 1rem;
+  margin-top: 4rem;
 }
 
-section {
-  margin: 0 1.2rem;
+article {
+  margin-top: 1.5rem;
+  padding: 0 15px;
 }
 
 .General,
@@ -20,6 +25,77 @@ section {
   display: block;
 }
 
+nav {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 1rem;
+
+  border-bottom: 1px solid var(--text-color);
+}
+
+input[name="title"] {
+  font-size: var(--xl);
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+}
+.Header__right-panel {
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.Headline {
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--contrast);
+  color: var(--contrast);
+}
+
+.ActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 9px;
+  width: max-content;
+
+  font-size: var(--sm);
+  color: var(--contrast);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+
+  cursor: pointer;
+}
+.ActionButton__text {
+  color: var(--contrast);
+}
+.ActionButton__text--right {
+  font-size: var(--xs);
+  margin-left: 9px;
+}
+.ActionButton__text--left {
+  font-size: var(--xs);
+  margin-right: 9px;
+}
+.ActionButton__icon {
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
+}
+
 /* MD */
 @media (min-width: 768px) {
   .General,
@@ -30,13 +106,4 @@ section {
   form {
     display: flex;
   }
-}
-/* LG */
-@media (min-width: 1024px) {
-}
-/* XL */
-@media (min-width: 1280px) {
-}
-/* XXL */
-@media (min-width: 1536px) {
 }

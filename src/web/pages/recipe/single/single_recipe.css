@@ -25,25 +25,13 @@ h1 {
   font-size: var(--3xl);
   color: var(--contrast);
 }
-.ingredient .text {
-  margin-top: 0.8rem;
-}
+
 .ingredient,
 .direction {
   margin-top: 15px;
 }
 .directions_wrapper {
   margin-top: 32px;
-}
-
-/* ing */
-.text {
-  text-align: left;
-  color: var(--contrast);
-}
-strong {
-  font-weight: 600;
-  color: var(--accent);
 }
 
 /* dir */

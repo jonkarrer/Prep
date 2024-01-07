@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="/pages/recipe/single/single_recipe.css" />
     <link rel="stylesheet" href="/pages/global/styles/index.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
+    <script
+      type="module"
+      src="/pages/recipe/create/components/index.js"
+    ></script>
 
     <title>{{ title }}</title>
   </head>
@@ -96,10 +100,11 @@
 
         <div class="ingredient">
           {% for ing in ingredients %}
-          <div class="text">
-            <strong>{{ ing.amount }}</strong> <strong>{{ ing.unit }}</strong>,
-            {{ing.ingredient_name }}
-          </div>
+          <static-ingredient
+            amount="{{ ing.amount }}"
+            unit="{{ ing.unit }}"
+            ingredient="{{ ing.ingredient_name }}"
+          ></static-ingredient>
           {% endfor %}
         </div>
       </article>

@@ -15,36 +15,109 @@
   </head>
 
   <body>
+    <header class="Header">
+      <a class="ActionButton" href="/recipe/all">
+        <div class="ActionButton__icon">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M81.1606 41.1831H22.3894L57.5657 10.6473C58.1282 10.1552 57.7867 9.24109 57.0434 9.24109H48.1539C47.7622 9.24109 47.3905 9.38171 47.0992 9.63283L9.14051 42.5692C8.79286 42.8706 8.51404 43.2431 8.32295 43.6617C8.13186 44.0802 8.03296 44.5349 8.03296 44.995C8.03296 45.4551 8.13186 45.9098 8.32295 46.3283C8.51404 46.7469 8.79286 47.1194 9.14051 47.4208L47.3202 80.5581C47.4709 80.6886 47.6517 80.7589 47.8425 80.7589H57.0334C57.7767 80.7589 58.1182 79.8348 57.5557 79.3527L22.3894 48.817H81.1606C81.6026 48.817 81.9642 48.4554 81.9642 48.0134V41.9866C81.9642 41.5447 81.6026 41.1831 81.1606 41.1831Z"
+              fill="black"
+            />
+          </svg>
+        </div>
+
+        <div class="ActionButton__text--right">Back</div>
+      </a>
+
+      <div class="Header__right-panel">
+        <a class="ActionButton">
+          <button
+            class="ActionButton__text--left"
+            type="submit"
+            form="recipe_form"
+          >
+            Save
+          </button>
+
+          <div class="ActionButton__icon">
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 90 90"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M70.0213 22.5301L62.6585 15.1674L26.2266 51.5893L24.6597 60.529L33.5894 58.952L70.0213 22.5301Z"
+              />
+              <path
+                d="M81.9641 77.5447H8.03557C6.25767 77.5447 4.82129 78.981 4.82129 80.7589V84.375C4.82129 84.817 5.1829 85.1786 5.62486 85.1786H84.3749C84.8168 85.1786 85.1784 84.817 85.1784 84.375V80.7589C85.1784 78.981 83.7421 77.5447 81.9641 77.5447ZM19.4563 69.1072C19.6572 69.1072 19.8581 69.0871 20.059 69.0569L36.9541 66.0938C37.155 66.0536 37.3458 65.9632 37.4865 65.8125L80.0657 23.2333C80.1588 23.1403 80.2327 23.03 80.2831 22.9085C80.3335 22.7869 80.3595 22.6567 80.3595 22.5251C80.3595 22.3936 80.3335 22.2633 80.2831 22.1418C80.2327 22.0203 80.1588 21.9099 80.0657 21.817L63.3715 5.11274C63.1807 4.92189 62.9295 4.82144 62.6583 4.82144C62.3871 4.82144 62.136 4.92189 61.9452 5.11274L19.3659 47.692C19.2153 47.8426 19.1249 48.0234 19.0847 48.2243L16.1215 65.1194C16.0238 65.6575 16.0587 66.2113 16.2232 66.7329C16.3878 67.2545 16.6769 67.7281 17.0657 68.1127C17.7287 68.7556 18.5624 69.1072 19.4563 69.1072ZM26.2264 51.5893L62.6583 15.1674L70.0211 22.5301L33.5891 58.952L24.6595 60.529L26.2264 51.5893Z"
+                fill="#000"
+              />
+            </svg>
+          </div>
+        </a>
+
+        <a class="ActionButton" href="/recipe/all">
+          <div class="ActionButton__text--left">Cancel</div>
+
+          <div class="ActionButton__icon">
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 90 90"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M22.9723 77.9464H67.0281L69.4589 26.5179H20.5415L22.9723 77.9464Z"
+              />
+              <path
+                d="M80.3573 19.2857H67.5001V11.25C67.5001 7.70425 64.6173 4.82144 61.0716 4.82144H28.9287C25.383 4.82144 22.5001 7.70425 22.5001 11.25V19.2857H9.643C7.86509 19.2857 6.42871 20.7221 6.42871 22.5V25.7143C6.42871 26.1563 6.79032 26.5179 7.23228 26.5179H13.2992L15.7803 79.0514C15.941 82.4766 18.7736 85.1786 22.1988 85.1786H67.8015C71.2367 85.1786 74.0593 82.4866 74.22 79.0514L76.701 26.5179H82.768C83.21 26.5179 83.5716 26.1563 83.5716 25.7143V22.5C83.5716 20.7221 82.1352 19.2857 80.3573 19.2857ZM29.7323 12.0536H60.268V19.2857H29.7323V12.0536ZM67.028 77.9464H22.9722L20.5414 26.5179H69.4588L67.028 77.9464Z"
+                fill="#000"
+              />
+            </svg>
+          </div>
+        </a>
+      </div>
+    </header>
     <main>
-      <header>
-        <button><a href="/recipe/all">Back</a></button>
-        <nav>
-          <span id="general_nav">General</span>
-          <span id="ingredient_nav">Ingredients</span>
-          <span id="direction_nav">Directions</span>
-        </nav>
-      </header>
+      <nav>
+        <span id="general_nav">General</span>
+        <span id="ingredient_nav">Ingredients</span>
+        <span id="direction_nav">Directions</span>
+      </nav>
 
       <form id="recipe_form" action="/recipe/create" method="POST">
-        <section id="general_section" class="General">
-          <h2>New Recipe</h2>
+        <section id="general_section" class="General show">
           <input type="text" name="title" placeholder="title" />
           <br />
           <input type="number" name="servings" placeholder="servings" />
-          <h4>Tags</h4>
-          <recipe-tag></recipe-tag>
 
-          <h4>Ingredients</h4>
-          <div id="ingredients_preview">
-            <div id="preview_ingredient_anchor"></div>
-          </div>
+          <article>
+            <h2 class="Headline">Ingredients</h2>
+            <div id="ingredients_preview">
+              <div id="preview_ingredient_anchor"></div>
+            </div>
+          </article>
 
-          <h4>Directions</h4>
-          <ol id="directions_preview">
-            <div id="preview_direction_anchor"></div>
-          </ol>
+          <article>
+            <h2 class="Headline">Directions</h2>
+            <ol id="directions_preview">
+              <div id="preview_direction_anchor"></div>
+            </ol>
+          </article>
 
-          <button type="submit">Submit</button>
+          <article>
+            <h2 class="Headline">Tags</h2>
+            <recipe-tag></recipe-tag>
+          </article>
         </section>
 
         <section id="ingredient_section" class="Ingredients">

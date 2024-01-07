@@ -113,10 +113,10 @@
         <article>
           <h2 class="Headline">Directions</h2>
           {% for dir in directions %}
-          <div class="direction">
-            <div class="order">{{ dir.step_order }}</div>
-            <p class="text">{{ dir.direction_details }}</p>
-          </div>
+          <static-direction
+            order="{{ dir.step_order }}"
+            details="{{ dir.direction_details }}"
+          ></static-direction>
           {% endfor %}
         </article>
       </div>

@@ -34,23 +34,6 @@ h1 {
   margin-top: 32px;
 }
 
-/* dir */
-.direction {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-.text {
-  font-size: var(--rg);
-  color: var(--contrast);
-  line-height: 1.5;
-}
-.order {
-  font-size: var(--rg);
-  color: var(--accent);
-  font-weight: bold;
-}
-
 .TagBar {
   display: flex;
   align-items: center;

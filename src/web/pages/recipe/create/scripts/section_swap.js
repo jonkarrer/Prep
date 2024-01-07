@@ -1,3 +1,4 @@
+import { StaticDirection } from "../components/StaticDirection.js";
 import { StaticIngredient } from "../components/StaticIngredient.js";
 
 let generalSection = document.getElementById("general_section");
@@ -88,23 +89,18 @@ function updateRecipePreview() {
 
   const directionAnchor = document.getElementById("preview_direction_anchor");
   for (let i = 0; i < directions.length; i++) {
-    let directionEl = document.createElement("li");
-    directionEl.innerText = directions[i];
+    let directionEl = new StaticDirection(i + 1, directions[i]);
     directionAnchor.insertAdjacentElement("beforebegin", directionEl);
   }
 }
 
 function removeStalePreviewItems() {
-  let ingredientContainer = document.getElementById("ingredients_preview");
-  let ingredients = ingredientContainer.querySelectorAll("p");
-
+  let ingredients = document.querySelectorAll("static-ingredient");
   for (let ing of ingredients) {
     ing.remove();
   }
 
-  let directionContainer = document.getElementById("directions_preview");
-  let directions = directionContainer.querySelectorAll("li");
-
+  let directions = document.querySelectorAll("static-direction");
   for (let dir of directions) {
     dir.remove();
   }

@@ -113,7 +113,9 @@
 
           <article>
             <h2 class="Headline">Tags</h2>
-            <recipe-tag></recipe-tag>
+            <ul class="Tags__stack">
+              <div id="preview_tag_anchor"></div>
+            </ul>
           </article>
         </section>
 
@@ -132,9 +134,15 @@
         </section>
 
         <section id="tag_section" class="Tags">
-          <ol>
+          <ul id="tag_container" class="Tags__stack">
+            {% for tag in tags %}
+            <label onclick="checkRecipeTag(event)">
+              <p>{{tag.tag_name}}</p>
+              <input value="{{ tag.tag_name }}" name="tag" type="checkbox" />
+            </label>
+            {% endfor %}
             <div id="staged_tag_anchor"></div>
-          </ol>
+          </ul>
         </section>
       </form>
     </main>
@@ -142,5 +150,21 @@
     <app-bar></app-bar>
 
     <script type="module" src="/pages/recipe/create/scripts/index.js"></script>
+
+    <script>
+      function checkRecipeTag(e) {
+        let el = e.currentTarget;
+        let checkbox = el.querySelector("input");
+        let tagName = el.querySelector("p");
+        console.log("tagname", tagName);
+        checkbox.checked = !checkbox.checked;
+
+        if (checkbox.checked) {
+          tagName.classList.add("Checked");
+        } else {
+          tagName.classList.remove("Checked");
+        }
+      }
+    </script>
   </body>
 </html>

@@ -1,3 +1,4 @@
+/**** Action Button ****/
 .ActionButton {
   display: flex;
   align-items: center;
@@ -30,4 +31,12 @@
   width: 12px;
   min-width: 12px;
   min-height: 12px;
+}
+
+/**** Headline ****/
+.Headline {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--contrast);
+  color: var(--contrast);
 }

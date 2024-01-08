@@ -28,6 +28,7 @@
   --dashed-border: 1px dashed var(--darker);
   --border-radius: 3px;
   --outline: 1px solid var(--accent);
+  --button-padding: 6px 9px;
 
   --xs: 11px;
   --sm: 12px;

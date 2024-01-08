@@ -15,13 +15,35 @@ article {
 
 .General,
 .Ingredients,
-.Directions {
+.Directions,
+.Tags {
   display: none;
 }
 .General.show,
 .Ingredients.show,
-.Directions.show {
+.Directions.show,
+.Tags.show {
   display: block;
+}
+
+.Tags__stack {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.Tags__stack input {
+  display: none;
+}
+.Tags__stack p {
+  background-color: var(--sec-color);
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+
+  padding: var(--button-padding);
+}
+.Tags__stack p.Checked {
+  color: var(--sec-color);
+  background-color: var(--accent);
 }
 
 nav {
@@ -73,12 +95,6 @@ input[name="servings"] {
   display: flex;
   gap: 1rem;
   padding-left: 1rem;
-}
-
-.Headline {
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--contrast);
-  color: var(--contrast);
 }
 
 /* MD */

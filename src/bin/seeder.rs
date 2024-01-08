@@ -81,10 +81,11 @@ async fn seed_with_recipes(user_id: &str) -> anyhow::Result<()> {
         for tag in recipe.tags {
             sqlx::query!(
                 r#"
-                INSERT INTO tags (recipe_id, tag_name)
-                VALUES (?,?)
+                INSERT INTO tags (recipe_id, user_id, tag_name)
+                VALUES (?,?,?)
                 "#,
                 recipe_id,
+                user_id,
                 tag,
             )
             .execute(&mut *transaction)

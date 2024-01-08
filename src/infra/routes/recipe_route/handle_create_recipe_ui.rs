@@ -1,7 +1,11 @@
 use crate::{
-    app::{action::get_single_recipe, interface::Database},
+    app::{
+        action::get_single_recipe,
+        interface::{Database, RecipeRepository},
+    },
     domain::entity::{Direction, Ingredient, Tag},
 };
+use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
@@ -12,32 +16,26 @@ use sqlx::MySqlPool;
 use tera::{Context, Tera};
 
 #[handler]
-pub async fn handle_single_recipe_ui(
-    recipe_id: Path<String>,
+pub async fn handle_create_recipe_ui(
+    Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/single/*.tera.html")
+    let tera = Tera::new("src/web/pages/recipe/create/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Fetch single recipe
-    let recipe = get_single_recipe(repo, &recipe_id)
+    let tags = repo
+        .select_tags_for_user(&session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
     // Inject recipes into template
     let mut context = Context::new();
-    context.insert("title", &recipe.recipe_title);
-    context.insert("favorite", &recipe.favorite);
-    context.insert("servings", &recipe.servings);
-    context.insert("ingredient_count", &recipe.ingredients.len());
-    context.insert("direction_count", &recipe.directions.len());
-    context.insert::<Vec<Ingredient>, &str>("ingredients", &recipe.ingredients);
-    context.insert::<Vec<Direction>, &str>("directions", &recipe.directions);
-    context.insert::<Vec<Tag>, &str>("tags", &recipe.tags);
+    context.insert::<Vec<Tag>, &str>("tags", &tags);
 
     let rendered_html = tera
-        .render("single_recipe.tera.html", &context)
+        .render("create_recipe.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     Ok(Html(rendered_html))
@@ -47,10 +45,7 @@ pub async fn handle_single_recipe_ui(
 mod tests {
     use super::*;
     use crate::{
-        app::{
-            clients::db_client,
-            helper::{get_random_recipe_id, get_test_session},
-        },
+        app::{clients::db_client, helper::get_test_session},
         domain::constants::SESSION_COOKIE_KEY,
         infra::middleware::AuthGuard,
     };
@@ -59,8 +54,9 @@ mod tests {
     #[tokio::test]
     async fn test_route_single_recipe() {
         // build route
+        let path = "/recipe/create";
         let ep = Route::new()
-            .at("/recipe/select/:id", get(handle_single_recipe_ui))
+            .at(path, get(handle_create_recipe_ui))
             .with(AddData::new(db_client().await))
             .with(AuthGuard);
 
@@ -68,10 +64,6 @@ mod tests {
 
         // get a session token
         let session = get_test_session().await;
-
-        // get random recipe id to use
-        let recipe_id = get_random_recipe_id().await.unwrap();
-        let path = format!("/recipe/select/{}", recipe_id);
 
         // run test
         let resp = test_client

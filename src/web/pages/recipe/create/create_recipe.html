@@ -83,14 +83,13 @@
           </div>
         </a>
       </div>
-    </header>
-    <main>
       <nav>
-        <span id="general_nav">General</span>
+        <span class="active" id="general_nav">General</span>
         <span id="ingredient_nav">Ingredients</span>
         <span id="direction_nav">Directions</span>
       </nav>
-
+    </header>
+    <main>
       <form id="recipe_form" action="/recipe/create" method="POST">
         <section id="general_section" class="General show">
           <input type="text" name="title" placeholder="title" />
@@ -118,7 +117,6 @@
         </section>
 
         <section id="ingredient_section" class="Ingredients">
-          <h3>Ingredients</h3>
           <div id="staged_ingredient_anchor"></div>
 
           <ingredient-controller></ingredient-controller>

@@ -5,6 +5,10 @@ let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
 let directionSection = document.getElementById("direction_section");
 
+let generalNav = document.getElementById("general_nav");
+let ingredientNav = document.getElementById("ingredient_nav");
+let directionNav = document.getElementById("direction_nav");
+
 function showElements(elements) {
   for (let el of elements) {
     el.classList.add("show");
@@ -17,31 +21,36 @@ function hideElements(elements) {
 }
 
 function hideIngredientSection() {
+  makeNaveInactive(ingredientNav);
   hideElements([ingredientSection]);
 }
 
 function hideGeneralSection() {
+  makeNaveInactive(generalNav);
   hideElements([generalSection]);
 }
 
 function hideDirectionSection() {
+  makeNaveInactive(directionNav);
   hideElements([directionSection]);
 }
 
 function showGeneralSection() {
+  makeNavActive(generalNav);
   showElements([generalSection]);
 }
 
 function showIngredientSection() {
+  makeNavActive(ingredientNav);
   showElements([ingredientSection]);
 }
 
 function showDirectionSection() {
+  makeNavActive(directionNav);
   showElements([directionSection]);
 }
 
 function showSection(section_id) {
-  console.log("section", section_id);
   switch (section_id) {
     case "general_section":
       showGeneralSection();
@@ -104,6 +113,14 @@ function removeStalePreviewItems() {
   for (let dir of directions) {
     dir.remove();
   }
+}
+
+function makeNavActive(el) {
+  el.classList.add("active");
+}
+
+function makeNaveInactive(el) {
+  el.classList.remove("active");
 }
 
 export function useSectionSwap() {

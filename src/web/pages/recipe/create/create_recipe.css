@@ -6,7 +6,7 @@ body {
 }
 main {
   margin: 0 1rem;
-  margin-top: 4rem;
+  margin-top: 7rem;
 }
 
 article {
@@ -25,12 +25,24 @@ article {
 }
 
 nav {
+  position: fixed;
+  top: 3.5rem;
+  left: 0;
+
   display: flex;
   justify-content: space-between;
 
-  padding: 1rem;
+  padding: 0.6rem 1rem;
+  width: 100%;
 
-  border-bottom: 1px solid var(--text-color);
+  background-color: var(--sec-color);
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.1);
+}
+nav .active {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.6rem;
+  text-decoration-thickness: 4px;
 }
 
 input[name="title"] {
@@ -55,6 +67,7 @@ input[name="servings"] {
   width: 100%;
 
   padding: 1rem;
+  z-index: 100;
 }
 .Header__right-panel {
   display: flex;

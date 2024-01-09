@@ -148,6 +148,9 @@ textarea {
   outline: none;
   border: none;
 }
+textarea {
+  resize: none;
+}
 ::placeholder {
   opacity: 0.5;
 }

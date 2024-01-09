@@ -11,31 +11,44 @@ export class IngredientController extends LitElement {
     css`
       .Root {
         position: fixed;
-        bottom: 48px;
+        bottom: 1rem;
         left: 0;
         right: 0;
 
-        width: 80%;
-        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
-        background-color: lightgrey;
-        padding: 1rem;
+        width: 90%;
+        margin: auto;
+        padding: 1.5rem 1.5rem;
+
+        box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+        border-radius: var(--border-radius);
       }
 
+      button {
+        padding: 0.5rem 0;
+        font-size: var(--lg);
+
+        background-color: var(--accent);
+        color: var(--sec-color);
+        border-radius: var(--border-radius);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+      }
       input {
-        height: 1.8rem;
+        padding: 0.5rem 1rem;
         width: 100%;
+
+        border-radius: var(--border-radius);
+        box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
       }
 
       .TopRow {
         display: flex;
         align-items: center;
         justify-content: space-between;
-      }
-
-      .CreateButton {
-        background-color: green;
-        color: white;
+        gap: 1rem;
       }
 
       .AmountWrapper,
@@ -45,7 +58,7 @@ export class IngredientController extends LitElement {
       }
       .AmountWrapper,
       .UnitWrapper {
-        width: 40%;
+        width: 50%;
       }
       .IngredientWrapper::after,
       .UnitWrapper::after {
@@ -96,6 +109,7 @@ export class IngredientController extends LitElement {
       .UnitWrapper__autocomplete-input,
       .IngredientWrapper__autocomplete-input {
         z-index: 1;
+        color: rgba(0, 0, 0, 0.3);
       }
     `,
   ];
@@ -187,6 +201,11 @@ export class IngredientController extends LitElement {
 
   handleUnitInput(e) {
     this.unit = e.target.value;
+    if (this.unit.length == 0) {
+      this.unitAutoCompleteHint = "";
+      return;
+    }
+
     this.unitAutoCompleteHint =
       this.filterAutoCompleteOptions(unitsFullNames, this.unit)[0] ?? "";
   }
@@ -204,6 +223,11 @@ export class IngredientController extends LitElement {
 
   handleIngredientInput(e) {
     this.ingredient = e.target.value;
+    if (this.ingredient.length == 0) {
+      this.ingredientAutoCompleteHint = "";
+      return;
+    }
+
     this.ingredientAutoCompleteHint =
       this.filterAutoCompleteOptions(ingredients, this.ingredient)[0] ?? "";
   }
@@ -248,10 +272,6 @@ export class IngredientController extends LitElement {
               .value=${this.unitAutoCompleteHint || ""}
             />
           </div>
-
-          <span class="CreateButton" @click="${this.createStagedIngredient}">
-            Plus
-          </span>
         </div>
 
         <div class="IngredientWrapper">
@@ -269,6 +289,7 @@ export class IngredientController extends LitElement {
             .value=${this.ingredientAutoCompleteHint || ""}
           />
         </div>
+        <button @click="${this.createStagedIngredient}">Commit</button>
       </div>
     `;
   }

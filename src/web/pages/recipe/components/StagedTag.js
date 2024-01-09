@@ -1,5 +1,4 @@
 import { LitElement, html, css } from "/deps/lit.js";
-import { theme } from "/pages/global/styles/theme.js";
 
 export class StagedTag extends LitElement {
   static properties = {

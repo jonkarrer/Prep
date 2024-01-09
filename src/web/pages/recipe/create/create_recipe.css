@@ -31,20 +31,6 @@ article {
   gap: 1rem;
   flex-wrap: wrap;
 }
-.Tags__stack input {
-  display: none;
-}
-.Tags__stack p {
-  background-color: var(--sec-color);
-  border: var(--solid-border);
-  border-radius: var(--border-radius);
-
-  padding: var(--button-padding);
-}
-.Tags__stack p.Checked {
-  color: var(--sec-color);
-  background-color: var(--accent);
-}
 
 nav {
   position: fixed;
@@ -65,6 +51,9 @@ nav .active {
   text-decoration: underline;
   text-underline-offset: 0.6rem;
   text-decoration-thickness: 4px;
+}
+nav span {
+  cursor: pointer;
 }
 
 input[name="title"] {
@@ -97,6 +86,22 @@ input[name="servings"] {
   padding-left: 1rem;
 }
 
+.StagedTag p {
+  background-color: var(--sec-color);
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+
+  padding: var(--button-padding);
+
+  cursor: pointer;
+}
+.StagedTag .checked {
+  color: var(--sec-color);
+  background-color: var(--accent);
+}
+.StagedTag [type="checkbox"] {
+  display: none;
+}
 /* MD */
 @media (min-width: 768px) {
   .General,

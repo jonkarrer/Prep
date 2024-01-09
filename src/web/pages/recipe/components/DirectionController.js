@@ -36,7 +36,7 @@ export class DirectionController extends LitElement {
     return true;
   }
 
-  createStagedDirection(e) {
+  createStagedDirection() {
     if (!this.runDirectionValidation()) {
       return;
     }

@@ -10,16 +10,6 @@ export class StagedIngredient extends LitElement {
     this.unit = unit;
   }
 
-  static styles = [
-    theme,
-    css`
-      div {
-        border: solid green 1px;
-        padding: 1rem;
-      }
-    `,
-  ];
-
   // render as light dom
   createRenderRoot() {
     return this;
@@ -27,7 +17,7 @@ export class StagedIngredient extends LitElement {
 
   render() {
     return html`
-      <div>
+      <div class="StagedIngredient">
         <input
           type="text"
           name="ingredient"

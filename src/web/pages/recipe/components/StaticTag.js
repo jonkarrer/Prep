@@ -27,6 +27,6 @@ export class StaticTag extends LitElement {
   ];
 
   render() {
-    return html` <p>${this.tagName}</p>`;
+    return html`<p>${this.tagName}</p>`;
   }
 }

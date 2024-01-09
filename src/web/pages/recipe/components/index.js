@@ -5,9 +5,11 @@ import { DirectionController } from "./DirectionController.js";
 import { StaticIngredient } from "./StaticIngredient.js";
 import { StaticDirection } from "./StaticDirection.js";
 import { StaticTag } from "./StaticTag.js";
+import { StagedTag } from "./StagedTag.js";
 
 customElements.define("staged-ingredient", StagedIngredient);
 customElements.define("staged-direction", StagedDirection);
+customElements.define("staged-tag", StagedTag);
 customElements.define("ingredient-controller", IngredientController);
 customElements.define("direction-controller", DirectionController);
 customElements.define("static-ingredient", StaticIngredient);

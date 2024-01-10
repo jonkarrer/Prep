@@ -36,6 +36,7 @@ impl<E: Endpoint> Endpoint for AuthGuardImpl<E> {
                     .validate_session(&session_token)
                     .await
                     .map_err(|_| Error::from_status(StatusCode::UNAUTHORIZED))?;
+
                 req.extensions_mut().insert(session);
                 return self.0.call(req).await;
 

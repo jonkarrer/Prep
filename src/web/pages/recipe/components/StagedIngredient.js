@@ -14,15 +14,14 @@ export class StagedIngredient extends LitElement {
     return this;
   }
 
+  removeIngredient(e) {
+    e.target.parentNode.remove();
+  }
+
   render() {
     return html`
       <div class="StagedIngredient">
-        <input
-          type="text"
-          name="ingredient"
-          placeholder="ingredient"
-          value=${this.ingredient}
-        />
+        <button @click=${this.removeIngredient}>X</button>
         <input
           type="number"
           name="amount"
@@ -30,6 +29,12 @@ export class StagedIngredient extends LitElement {
           value=${this.amount}
         />
         <input type="text" name="unit" placeholder="unit" value=${this.unit} />
+        <input
+          type="text"
+          name="ingredient"
+          placeholder="ingredient"
+          value=${this.ingredient}
+        />
       </div>
     `;
   }

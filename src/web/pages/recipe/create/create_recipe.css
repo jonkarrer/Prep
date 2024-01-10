@@ -6,7 +6,7 @@ body {
 }
 main {
   margin: 0 1rem;
-  margin-top: 7rem;
+  margin-top: 8rem;
 }
 
 article {
@@ -24,6 +24,10 @@ article {
 .Directions.show,
 .Tags.show {
   display: block;
+}
+
+.Ingredients {
+  padding-bottom: 15rem;
 }
 
 .Tags__stack {
@@ -60,7 +64,7 @@ input[name="title"] {
   font-size: var(--xl);
   border: var(--dashed-border);
   width: 100%;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 input[name="servings"] {
   font-size: var(--rg);
@@ -86,6 +90,84 @@ input[name="servings"] {
   padding-left: 1rem;
 }
 
+.StagedIngredient {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
+  gap: 1rem;
+
+  margin: 2rem 1.5rem;
+  padding: 1.5rem;
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+}
+.StagedIngredient button {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 100%;
+  background-color: var(--accent);
+  color: var(--sec-color);
+
+  transform: translate(30%, -30%);
+}
+.StagedIngredient input {
+  padding: 0.5rem 1rem;
+  width: 100%;
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+}
+.StagedIngredient input[name="amount"] {
+  grid-column: 1;
+}
+.StagedIngredient input[name="unit"] {
+  grid-column: 2;
+}
+.StagedIngredient input[name="ingredient"] {
+  grid-column: 1 / span 2;
+}
+
+.StagedDirection {
+  position: relative;
+
+  margin: 2rem 1.5rem;
+  padding: 0.5rem;
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+  list-style: decimal;
+}
+.StagedDirection textarea {
+  width: 100%;
+
+  text-align: left;
+  vertical-align: top;
+  line-height: normal;
+  height: auto;
+}
+.StagedDirection button {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 100%;
+  background-color: var(--accent);
+  color: var(--sec-color);
+
+  transform: translate(30%, -30%);
+}
+
 .StagedTag p {
   background-color: var(--sec-color);
   border: var(--solid-border);
@@ -102,6 +184,7 @@ input[name="servings"] {
 .StagedTag [type="checkbox"] {
   display: none;
 }
+
 /* MD */
 @media (min-width: 768px) {
   .General,

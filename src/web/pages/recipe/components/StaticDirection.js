@@ -28,6 +28,9 @@ export class StaticDirection extends LitElement {
         font-size: var(--rg);
         color: var(--contrast);
         line-height: 1.5;
+
+        max-width: 100%;
+        word-break: break-all;
       }
       .order {
         font-size: var(--rg);

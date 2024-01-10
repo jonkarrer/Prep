@@ -187,6 +187,7 @@ button:disabled {
 
 /* Remove list styles (bullets/numbers) */
 ul,
+ol,
 menu,
 summary {
   list-style: none;

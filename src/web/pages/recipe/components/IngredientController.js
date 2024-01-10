@@ -21,8 +21,9 @@ export class IngredientController extends LitElement {
 
         width: 90%;
         margin: auto;
-        padding: 1.5rem 1.5rem;
+        padding: 1.5rem;
 
+        background-color: var(--sec-color);
         box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
         border-radius: var(--border-radius);
       }

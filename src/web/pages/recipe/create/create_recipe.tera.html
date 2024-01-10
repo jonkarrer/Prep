@@ -92,7 +92,7 @@
     </header>
     <main>
       <form id="recipe_form" action="/recipe/create" method="POST">
-        <section id="general_section" class="General show">
+        <section id="general_section" class="General">
           <input type="text" name="title" placeholder="title" />
           <br />
           <input type="number" name="servings" placeholder="servings" />
@@ -119,7 +119,7 @@
           </article>
         </section>
 
-        <section id="ingredient_section" class="Ingredients">
+        <section id="ingredient_section" class="Ingredients show">
           <div id="staged_ingredient_anchor"></div>
 
           <ingredient-controller></ingredient-controller>

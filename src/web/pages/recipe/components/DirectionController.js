@@ -24,14 +24,14 @@ export class DirectionController extends LitElement {
 
         width: 90%;
         margin: auto;
-        padding: 1.5rem 1.5rem;
+        padding: 1rem;
 
-        box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
         border-radius: var(--border-radius);
       }
 
       textarea {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1rem;
         height: 120px;
         resize: none;
         border-radius: var(--border-radius);

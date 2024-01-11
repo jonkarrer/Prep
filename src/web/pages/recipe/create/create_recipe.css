@@ -185,6 +185,23 @@ input[name="servings"] {
   display: none;
 }
 
+.AddItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: rgba(0, 0, 0, 0.5);
+
+  border: var(--dashed-border);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+.AddItem__icon {
+  height: 1rem;
+  width: 1rem;
+
+  opacity: 0.5;
+}
 /* MD */
 @media (min-width: 768px) {
   .General,

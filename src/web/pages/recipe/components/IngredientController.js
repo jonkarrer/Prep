@@ -21,10 +21,10 @@ export class IngredientController extends LitElement {
 
         width: 90%;
         margin: auto;
-        padding: 1.5rem;
+        padding: 1rem;
 
         background-color: var(--sec-color);
-        box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
         border-radius: var(--border-radius);
       }
 
@@ -38,7 +38,7 @@ export class IngredientController extends LitElement {
         box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
       }
       input {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1rem;
         width: 100%;
 
         border-radius: var(--border-radius);

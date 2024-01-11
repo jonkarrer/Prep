@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
 
-  padding: 6px 9px;
+  padding: var(--button-padding);
   width: max-content;
 
   font-size: var(--sm);

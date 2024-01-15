@@ -104,8 +104,8 @@ main {
   cursor: pointer;
 }
 .SearchBar__input {
-  padding: 6px 9px;
-  width: 80%;
+  padding: 3px 9px;
+  width: 90%;
 }
 
 .SearchBar__icon {

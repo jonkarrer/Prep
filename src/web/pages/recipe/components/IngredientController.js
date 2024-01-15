@@ -15,8 +15,9 @@ export class IngredientController extends LitElement {
         left: 0;
         right: 0;
 
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-flow: row;
         gap: 1rem;
 
         width: 90%;
@@ -27,6 +28,15 @@ export class IngredientController extends LitElement {
         box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
         border-radius: var(--border-radius);
       }
+      .AmountWrapper {
+        grid-column: 1;
+      }
+      .UnitWrapper {
+        grid-column: 2;
+      }
+      .IngredientWrapper {
+        grid-column: 1 / span 2;
+      }
 
       button {
         padding: 0.5rem 0;
@@ -36,7 +46,10 @@ export class IngredientController extends LitElement {
         color: var(--sec-color);
         border-radius: var(--border-radius);
         box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+
+        grid-column: 1 / span 2;
       }
+
       input {
         padding: 0.6rem 1rem;
         width: 100%;
@@ -45,22 +58,12 @@ export class IngredientController extends LitElement {
         box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
       }
 
-      .TopRow {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-
       .AmountWrapper,
       .UnitWrapper,
       .IngredientWrapper {
         position: relative;
       }
-      .AmountWrapper,
-      .UnitWrapper {
-        width: 50%;
-      }
+
       .IngredientWrapper::after,
       .UnitWrapper::after {
         position: absolute;
@@ -129,8 +132,16 @@ export class IngredientController extends LitElement {
     this.ingredient = "";
   }
 
+  clearAndFocusInputs() {
+    let inputs = this.shadowRoot.querySelectorAll("input");
+    console.log("inputs", inputs);
+    inputs.forEach((item) => (item.value = ""));
+
+    let amountInput = this.shadowRoot.querySelector("input[name='amount'");
+    amountInput.focus();
+  }
+
   createStagedIngredient() {
-    console.log("stage ing");
     if (!this.runIngredientValidation()) {
       return;
     }
@@ -143,6 +154,8 @@ export class IngredientController extends LitElement {
 
     const anchor = document.getElementById("staged_ingredient_anchor");
     anchor.insertAdjacentElement("beforebegin", stagedIngredientEl);
+
+    this.clearAndFocusInputs();
   }
 
   runIngredientValidation() {
@@ -247,32 +260,31 @@ export class IngredientController extends LitElement {
   render() {
     return html`
       <div class="Root">
-        <div class="TopRow">
-          <div class="AmountWrapper">
-            <div class="AmountWrapper__fraction-hint">${this.fractionHint}</div>
-            <input
-              type="number"
-              placeholder="amount"
-              @keydown="${this.handleAmountKeyPress}"
-              @input="${this.handleAmountInput}"
-            />
-          </div>
+        <div class="AmountWrapper">
+          <div class="AmountWrapper__fraction-hint">${this.fractionHint}</div>
+          <input
+            type="number"
+            name="amount"
+            placeholder="amount"
+            @keydown="${this.handleAmountKeyPress}"
+            @input="${this.handleAmountInput}"
+          />
+        </div>
 
-          <div class="UnitWrapper">
-            <input
-              class="UnitWrapper__base-input"
-              type="text"
-              name="unit"
-              placeholder="unit"
-              @input="${this.handleUnitInput}"
-              @keydown="${this.handleUnitKeydown}"
-            />
-            <input
-              type="text"
-              class="UnitWrapper__autocomplete-input"
-              .value=${this.unitAutoCompleteHint || ""}
-            />
-          </div>
+        <div class="UnitWrapper">
+          <input
+            class="UnitWrapper__base-input"
+            type="text"
+            name="unit"
+            placeholder="unit"
+            @input="${this.handleUnitInput}"
+            @keydown="${this.handleUnitKeydown}"
+          />
+          <input
+            type="text"
+            class="UnitWrapper__autocomplete-input"
+            .value=${this.unitAutoCompleteHint || ""}
+          />
         </div>
 
         <div class="IngredientWrapper">

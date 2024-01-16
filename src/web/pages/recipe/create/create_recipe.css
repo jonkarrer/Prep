@@ -7,8 +7,11 @@ body {
 main {
   position: absolute;
   left: 0;
-  top: 8rem;
-  margin: 0 1rem;
+  right: 0;
+  top: 7rem;
+
+  width: 90%;
+  margin: auto;
 }
 
 article {
@@ -28,7 +31,8 @@ article {
   display: block;
 }
 
-.Ingredients {
+.Ingredients,
+.Directions {
   margin-bottom: 15rem;
 }
 
@@ -100,14 +104,15 @@ input[name="servings"] {
   grid-auto-flow: row;
   gap: 1rem;
 
-  margin: 1rem 0.5rem;
+  margin: 1rem;
   padding: 1.5rem;
 
   border: var(--solid-border);
   border-radius: var(--border-radius);
   box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
 }
-.StagedIngredient button {
+.StagedIngredient button,
+.StagedDirection button {
   position: absolute;
   top: 0;
   right: 0;
@@ -144,8 +149,8 @@ input[name="servings"] {
 .StagedDirection {
   position: relative;
 
-  margin: 2rem 1.5rem;
   padding: 0.5rem;
+  margin: 1rem;
 
   border: var(--solid-border);
   border-radius: var(--border-radius);
@@ -159,21 +164,10 @@ input[name="servings"] {
   line-height: normal;
   height: auto;
 }
-.StagedDirection button {
-  position: absolute;
-  top: 0;
-  right: 0;
 
-  width: 24px;
-  height: 24px;
-
-  border-radius: 100%;
-  background-color: var(--accent);
-  color: var(--sec-color);
-
-  transform: translate(30%, -30%);
+.Tags {
+  margin-top: 1rem;
 }
-
 .StagedTag p {
   background-color: var(--sec-color);
   border: var(--solid-border);

@@ -4,11 +4,8 @@
 * {
   margin: 0;
   padding: 0;
-  background-color: unset;
-  box-sizing: border-box;
   font-family: "Bai Jamjuree", sans-serif;
   font-weight: 500;
-  list-style: none;
 }
 
 :root {
@@ -90,22 +87,6 @@ ol {
   font-family: var(--sec-font);
 }
 
-.slideInDown {
-  animation: slideInDown 0.5s ease;
-  animation-fill-mode: forwards;
-}
-@keyframes slideInDown {
-  from {
-    transform: translate3d(0, -120%, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-    visibility: visible;
-  }
-}
-
 .Logo {
   width: 1.8rem;
   height: 1.8rem;
@@ -131,10 +112,7 @@ ol {
 *::after {
   box-sizing: border-box;
 }
-* {
-  margin: 0;
-  padding: 0;
-}
+
 body,
 html {
   overscroll-behavior-y: none;

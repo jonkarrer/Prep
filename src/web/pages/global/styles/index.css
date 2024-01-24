@@ -70,23 +70,6 @@ body {
   height: 100svh;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--pri-font);
-}
-
-p,
-a,
-input,
-button,
-ul,
-li,
-ol {
-  font-family: var(--sec-font);
-}
-
 .Logo {
   width: 1.8rem;
   height: 1.8rem;
@@ -125,6 +108,7 @@ textarea {
   font: inherit;
   outline: none;
   border: none;
+  background-color: unset;
 }
 textarea {
   resize: none;

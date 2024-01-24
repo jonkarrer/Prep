@@ -34,7 +34,7 @@ p,
 a {
   font-size: var(--main-text-font-size);
   font-weight: 500;
-  color: var(--sec-color);
+  color: var(--sec-color) !important;
 }
 
 a:hover {

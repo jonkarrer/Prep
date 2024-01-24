@@ -84,18 +84,28 @@
         </a>
       </div>
       <nav>
-        <span class="active" id="general_nav">General</span>
-        <span id="ingredient_nav">Ingredients</span>
-        <span id="direction_nav">Directions</span>
-        <span id="tag_nav">Tags</span>
+        <div class="active" id="general_nav">General</div>
+        <div id="ingredient_nav">Ingredients</div>
+        <div id="direction_nav">Directions</div>
+        <div id="tag_nav">Tags</div>
       </nav>
     </header>
     <main>
       <form id="recipe_form" action="/recipe/create" method="POST">
         <section id="general_section" class="General show">
-          <input type="text" name="title" placeholder="title" />
+          <input
+            type="text"
+            name="title"
+            placeholder="title"
+            oninput="validateTitleInput(event)"
+          />
           <br />
-          <input type="number" name="servings" placeholder="servings" />
+          <input
+            type="number"
+            name="servings"
+            placeholder="servings"
+            oninput="validateServingInput(event)"
+          />
 
           <article>
             <h2 class="Headline">Ingredients</h2>
@@ -144,5 +154,23 @@
     </main>
 
     <script type="module" src="/pages/recipe/create/scripts/index.js"></script>
+
+    <script>
+      function validateTitleInput(e) {
+        if (e.target.value?.length > 0) {
+          e.target.style.border = "var(--solid-border)";
+        } else {
+          e.target.style.border = "var(--dashed-border)";
+        }
+      }
+
+      function validateServingInput(e) {
+        if (e.target.value?.length > 0) {
+          e.target.style.border = "var(--solid-border)";
+        } else {
+          e.target.style.border = "var(--dashed-border)";
+        }
+      }
+    </script>
   </body>
 </html>

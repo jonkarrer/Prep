@@ -5,7 +5,6 @@ export class Toast extends LitElement {
   constructor() {
     super();
     this.message = "An error has occurred";
-    this.slideInDown = "slideInDown";
   }
 
   static styles = [
@@ -56,10 +55,6 @@ export class Toast extends LitElement {
 
   setMessage(message) {
     this.message = message ? message : "An Error Has Occurred";
-  }
-
-  setSlideDown(shouldSlide) {
-    this.slideDown = shouldSlide;
   }
 
   render() {

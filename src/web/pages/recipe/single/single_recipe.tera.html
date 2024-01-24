@@ -88,7 +88,7 @@
         <div class="TagBar">
           <p class="TagBar__tag">{{ servings }} Servings</p>
           <p class="TagBar__tag">{{ ingredient_count }} Ingredients</p>
-          <p class="TagBar__tag">{{ direction_count }} Ingredients</p>
+          <p class="TagBar__tag">{{ direction_count }} Directions</p>
         </div>
       </article>
 
@@ -120,11 +120,11 @@
 
       <article>
         <h2 class="Headline">Tags</h2>
-        {% for tag in tags %}
         <div class="TagBar">
+          {% for tag in tags %}
           <p class="TagBar__tag">{{ tag.tag_name }}</p>
+          {% endfor %}
         </div>
-        {% endfor %}
       </article>
     </main>
   </body>

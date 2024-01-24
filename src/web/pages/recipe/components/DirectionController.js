@@ -4,17 +4,12 @@ import { theme } from "/pages/global/styles/theme.js";
 import { StagedDirection } from "./StagedDirection.js";
 
 export class DirectionController extends LitElement {
-  constructor() {
-    super();
-    this.detail = "";
-  }
-
   static styles = [
     theme,
     css`
       .Root {
         position: fixed;
-        bottom: 1rem;
+        bottom: -100%;
         left: 0;
         right: 0;
 
@@ -26,10 +21,13 @@ export class DirectionController extends LitElement {
         margin: auto;
         padding: 1rem;
 
+        background-color: var(--sec-color);
         box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
         border-radius: var(--border-radius);
       }
-
+      .Root.open {
+        bottom: 1rem;
+      }
       textarea {
         padding: 0.6rem 1rem;
         height: 120px;
@@ -48,6 +46,15 @@ export class DirectionController extends LitElement {
       }
     `,
   ];
+
+  static properties = {
+    isOpen: { type: Boolean },
+  };
+
+  constructor() {
+    super();
+    this.detail = "";
+  }
 
   runDirectionValidation() {
     let lenCheck = (i) => i.length === 0;
@@ -74,7 +81,7 @@ export class DirectionController extends LitElement {
 
   render() {
     return html`
-      <div class="Root">
+      <div class="Root ${this.isOpen ? "open" : ""}">
         <textarea
           maxlength="255"
           @input="${this.handleDirectionInput}"

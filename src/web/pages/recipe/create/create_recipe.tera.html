@@ -132,6 +132,18 @@
         <section id="ingredient_section" class="Ingredients">
           <div id="staged_ingredient_anchor"></div>
 
+          <div
+            class="Overlay"
+            id="ingredient_bg_overlay"
+            onclick="closeIngredientController(event)"
+          ></div>
+          <button
+            type="button"
+            class="CreateButton"
+            onclick="openIngredientController()"
+          >
+            Add Ingredient
+          </button>
           <ingredient-controller></ingredient-controller>
         </section>
 
@@ -139,6 +151,20 @@
           <ol>
             <div id="staged_direction_anchor"></div>
           </ol>
+
+          <div
+            class="Overlay"
+            id="direction_bg_overlay"
+            onclick="closeDirectionController(event)"
+          ></div>
+          <button
+            type="button"
+            class="CreateButton"
+            onclick="openDirectionController()"
+          >
+            Add Direction
+          </button>
+
           <direction-controller></direction-controller>
         </section>
 
@@ -170,6 +196,47 @@
         } else {
           e.target.style.border = "var(--dashed-border)";
         }
+      }
+
+      function openIngredientController() {
+        let controllerEl = document.querySelector("ingredient-controller");
+        let backgroundClickEl = document.getElementById(
+          "ingredient_bg_overlay"
+        );
+
+        let amountInputEl =
+          controllerEl.shadowRoot.querySelector("input[name=amount]");
+
+        amountInputEl.focus();
+        backgroundClickEl.classList.add("open");
+        controllerEl.isOpen = true;
+      }
+
+      function closeIngredientController(e) {
+        let controllerEl = document.querySelector("ingredient-controller");
+        let backgroundClickEl = e.target;
+
+        backgroundClickEl.classList.remove("open");
+        controllerEl.isOpen = false;
+      }
+
+      function openDirectionController() {
+        let controllerEl = document.querySelector("direction-controller");
+        let backgroundClickEl = document.getElementById("direction_bg_overlay");
+
+        let textInputEl = controllerEl.shadowRoot.querySelector("textarea");
+
+        textInputEl.focus();
+        backgroundClickEl.classList.add("open");
+        controllerEl.isOpen = true;
+      }
+
+      function closeDirectionController(e) {
+        let controllerEl = document.querySelector("direction-controller");
+        let backgroundClickEl = e.target;
+
+        backgroundClickEl.classList.remove("open");
+        controllerEl.isOpen = false;
       }
     </script>
   </body>

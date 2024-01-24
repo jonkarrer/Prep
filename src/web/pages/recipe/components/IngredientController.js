@@ -9,33 +9,6 @@ export class IngredientController extends LitElement {
   static styles = [
     theme,
     css`
-      .CreateButton {
-        position: fixed;
-        bottom: 2rem;
-        left: 0;
-        right: 0;
-        margin: auto;
-        background-color: var(--accent);
-        border: var(--accent) 1px solid;
-        border-radius: 100%;
-        color: var(--sec-color);
-        height: 4rem;
-        width: 4rem;
-      }
-      .Overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vmax;
-
-        display: none;
-        z-index: 50;
-      }
-      .Overlay.open {
-        display: block;
-      }
-
       .Root {
         position: fixed;
         bottom: -100%;
@@ -154,6 +127,7 @@ export class IngredientController extends LitElement {
     unitAutoCompleteHint: "",
     ingredientAutoCompleteHint: "",
     fractionHint: "",
+    isOpen: { type: Boolean },
   };
 
   constructor() {
@@ -168,8 +142,11 @@ export class IngredientController extends LitElement {
     let inputs = this.shadowRoot.querySelectorAll("input");
     console.log("inputs", inputs);
     inputs.forEach((item) => (item.value = ""));
+    this.amount = "";
+    this.unit = "";
+    this.ingredient = "";
 
-    let amountInput = this.shadowRoot.querySelector("input[name='amount'");
+    let amountInput = this.shadowRoot.querySelector("input[name=amount");
     amountInput.focus();
   }
 
@@ -289,57 +266,9 @@ export class IngredientController extends LitElement {
     }
   }
 
-  openController() {
-    let controllerEl = this.shadowRoot.getElementById("ingredient_controller");
-    let backgroundClickEl = this.shadowRoot.getElementById(
-      "background_click_capture"
-    );
-    let amountInputEl = this.shadowRoot.querySelector("input[name=amount]");
-
-    amountInputEl.focus();
-    backgroundClickEl.classList.add("open");
-    controllerEl.classList.add("open");
-  }
-
-  closeController() {
-    let controllerEl = this.shadowRoot.getElementById("ingredient_controller");
-    let backgroundClickEl = this.shadowRoot.getElementById(
-      "background_click_capture"
-    );
-
-    backgroundClickEl.classList.remove("open");
-    controllerEl.classList.remove("open");
-  }
-
   render() {
     return html`
-      <div
-        class="Overlay"
-        id="background_click_capture"
-        @click="${this.closeController}"
-      ></div>
-      <div class="CreateButton" @click="${this.openController}">
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 75 75"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g clip-path="url(#clip0_2_60)">
-            <path
-              d="M41.25 33.75V18.75H33.75V33.75H18.75V41.25H33.75V56.25H41.25V41.25H56.25V33.75H41.25ZM37.5 75C27.5544 75 18.0161 71.0491 10.9835 64.0165C3.95088 56.9839 0 47.4456 0 37.5C0 27.5544 3.95088 18.0161 10.9835 10.9835C18.0161 3.95088 27.5544 0 37.5 0C47.4456 0 56.9839 3.95088 64.0165 10.9835C71.0491 18.0161 75 27.5544 75 37.5C75 47.4456 71.0491 56.9839 64.0165 64.0165C56.9839 71.0491 47.4456 75 37.5 75Z"
-              fill="#e9f0f2"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_2_60">
-              <rect width="75" height="75" fill="black" />
-            </clipPath>
-          </defs>
-        </svg>
-      </div>
-      <div id="ingredient_controller" class="Root">
+      <div class="Root ${this.isOpen ? "open" : ""}">
         <div class="AmountWrapper">
           <div class="AmountWrapper__fraction-hint">${this.fractionHint}</div>
           <input

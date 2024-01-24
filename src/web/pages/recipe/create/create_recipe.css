@@ -104,7 +104,7 @@ input[name="servings"] {
   grid-auto-flow: row;
   gap: 1rem;
 
-  margin: 1rem;
+  margin: 1rem auto;
   padding: 1.5rem;
 
   border: var(--solid-border);
@@ -195,4 +195,34 @@ input[name="servings"] {
   form {
     display: flex;
   }
+}
+
+.CreateButton {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+
+  padding: 1rem 0;
+  margin: auto;
+  width: 14rem;
+  font-size: var(--lg);
+
+  background-color: var(--accent);
+  color: var(--sec-color);
+  border-radius: var(--border-radius);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vmax;
+
+  display: none;
+  z-index: 50;
+}
+.Overlay.open {
+  display: block;
 }

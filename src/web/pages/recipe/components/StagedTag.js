@@ -1,21 +1,26 @@
 import { LitElement, html, css } from "/deps/lit.js";
 
 export class StagedTag extends LitElement {
+  constructor(name) {
+    super();
+    this.name = name;
+  }
+
   static properties = {
-    tagName: { type: String },
+    name: { type: String },
   };
 
   checkRecipeTagCheckbox(e) {
     let el = e.currentTarget;
     let checkbox = el.querySelector("input");
-    let tagName = el.querySelector("p");
+    let name = el.querySelector("p");
 
     checkbox.checked = !checkbox.checked;
 
     if (checkbox.checked) {
-      tagName.classList.add("checked");
+      name.classList.add("checked");
     } else {
-      tagName.classList.remove("checked");
+      name.classList.remove("checked");
     }
   }
 
@@ -27,8 +32,8 @@ export class StagedTag extends LitElement {
   render() {
     return html`
       <label class="StagedTag" @click="${this.checkRecipeTagCheckbox}">
-        <p>${this.tagName}</p>
-        <input value=${this.tagName} name="tag" type="checkbox" />
+        <p>${this.name}</p>
+        <input value=${this.name} name="tag" type="checkbox" />
       </label>
     `;
   }

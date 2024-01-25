@@ -135,7 +135,7 @@
           <div
             class="Overlay"
             id="ingredient_bg_overlay"
-            onclick="closeIngredientController(event)"
+            onclick="closeIngredientController()"
           ></div>
           <button
             type="button"
@@ -155,7 +155,7 @@
           <div
             class="Overlay"
             id="direction_bg_overlay"
-            onclick="closeDirectionController(event)"
+            onclick="closeDirectionController()"
           ></div>
           <button
             type="button"
@@ -171,10 +171,25 @@
         <section id="tag_section" class="Tags">
           <ul id="tag_container" class="Tags__stack">
             {% for tag in tags %}
-            <staged-tag tagName="{{ tag.tag_name }}"></staged-tag>
+            <staged-tag name="{{ tag.tag_name }}"></staged-tag>
             {% endfor %}
             <div id="staged_tag_anchor"></div>
+
+            <tag-controller></tag-controller>
           </ul>
+
+          <div
+            class="Overlay"
+            id="tag_bg_overlay"
+            onclick="closeTagController()"
+          ></div>
+          <button
+            type="button"
+            class="CreateButton"
+            onclick="openTagController()"
+          >
+            Add Tags
+          </button>
         </section>
       </form>
     </main>
@@ -212,9 +227,11 @@
         controllerEl.isOpen = true;
       }
 
-      function closeIngredientController(e) {
+      function closeIngredientController() {
         let controllerEl = document.querySelector("ingredient-controller");
-        let backgroundClickEl = e.target;
+        let backgroundClickEl = document.getElementById(
+          "ingredient_bg_overlay"
+        );
 
         backgroundClickEl.classList.remove("open");
         controllerEl.isOpen = false;
@@ -231,9 +248,28 @@
         controllerEl.isOpen = true;
       }
 
-      function closeDirectionController(e) {
+      function closeDirectionController() {
         let controllerEl = document.querySelector("direction-controller");
-        let backgroundClickEl = e.target;
+        let backgroundClickEl = document.getElementById("direction_bg_overlay");
+
+        backgroundClickEl.classList.remove("open");
+        controllerEl.isOpen = false;
+      }
+
+      function openTagController() {
+        let controllerEl = document.querySelector("tag-controller");
+        let backgroundClickEl = document.getElementById("tag_bg_overlay");
+
+        let textInputEl = controllerEl.shadowRoot.querySelector("input");
+
+        textInputEl.focus();
+        backgroundClickEl.classList.add("open");
+        controllerEl.isOpen = true;
+      }
+
+      function closeTagController() {
+        let controllerEl = document.querySelector("tag-controller");
+        let backgroundClickEl = document.getElementById("tag_bg_overlay");
 
         backgroundClickEl.classList.remove("open");
         controllerEl.isOpen = false;

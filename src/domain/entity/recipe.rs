@@ -39,3 +39,24 @@ pub struct RecipeDetails {
     pub servings: f32,
     pub favorite: bool,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RecipeCard {
+    pub recipe_id: String,
+    pub recipe_title: String,
+    pub servings: f32,
+    pub favorite: bool,
+    pub tags: Vec<Tag>,
+}
+
+impl RecipeCard {
+    pub fn from(details: RecipeDetails, tags: Vec<Tag>) -> Self {
+        Self {
+            recipe_id: details.recipe_id,
+            recipe_title: details.recipe_title,
+            servings: details.servings,
+            favorite: details.favorite,
+            tags,
+        }
+    }
+}

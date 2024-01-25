@@ -68,11 +68,12 @@ impl RecipeRepository for Database<MySqlPool> {
         for tag_name in recipe_args.tags {
             sqlx::query(
                 r#"
-                INSERT INTO tags (recipe_id, tag_name)
-                VALUES (?,?)
+                INSERT INTO tags (recipe_id, user_id, tag_name)
+                VALUES (?,?,?)
                 "#,
             )
             .bind(&recipe_id)
+            .bind(user_id)
             .bind(tag_name)
             .execute(&mut *transaction)
             .await
@@ -178,7 +179,22 @@ impl RecipeRepository for Database<MySqlPool> {
         .bind(&recipe_id)
         .fetch_all(&self.pool)
         .await
-        .context("Failed to select directions by id")
+        .context("Failed to select tags by recipe_id")
+    }
+
+    async fn select_tags_for_user(&self, user_id: &str) -> Result<Vec<Tag>> {
+        sqlx::query_as(
+            r#"
+            SELECT ANY_VALUE(tag_id) AS tag_id, tag_name
+            FROM tags
+            WHERE user_id = ?
+            GROUP BY tag_name
+            "#,
+        )
+        .bind(&user_id)
+        .fetch_all(&self.pool)
+        .await
+        .context("Failed to select tags by user_id")
     }
 
     async fn update(&self, new_recipe: Recipe, recipe_id: &str) -> Result<()> {

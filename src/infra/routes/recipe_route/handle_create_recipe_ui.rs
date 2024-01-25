@@ -1,40 +1,43 @@
 use crate::{
-    app::{action::get_all_recipe_details_for_user, interface::Database},
-    domain::entity::RecipeCard,
+    app::{
+        action::get_single_recipe,
+        interface::{Database, RecipeRepository},
+    },
+    domain::entity::{Direction, Ingredient, Tag},
 };
 use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Html},
+    web::{Data, Html, Path},
     Error, IntoResponse, Result,
 };
 use sqlx::MySqlPool;
 use tera::{Context, Tera};
 
 #[handler]
-pub async fn handle_all_recipes_ui(
+pub async fn handle_create_recipe_ui(
     Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
     // Init template engine
-    let tera = Tera::new("src/web/pages/recipe/all/*.tera.html")
-        .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
+    let tera = Tera::new("src/web/pages/recipe/create/*.tera.html")
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-    // Fetch all recipes
-    let recipes = get_all_recipe_details_for_user(repo, &session.user_id)
+    // Fetch single recipe
+    let tags = repo
+        .select_tags_for_user(&session.user_id)
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
     // Inject recipes into template
     let mut context = Context::new();
-    context.insert::<Vec<RecipeCard>, &str>("recipes", &recipes);
+    context.insert::<Vec<Tag>, &str>("tags", &tags);
 
     let rendered_html = tera
-        .render("all_recipes.tera.html", &context)
+        .render("create_recipe.tera.html", &context)
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-    // Serve template
     Ok(Html(rendered_html))
 }
 
@@ -49,13 +52,14 @@ mod tests {
     use poem::{get, middleware::AddData, test::TestClient, EndpointExt, Route};
 
     #[tokio::test]
-    async fn test_route_all_recipes() {
+    async fn test_route_single_recipe() {
         // build route
-        let path = "/recipe/all";
+        let path = "/recipe/create";
         let ep = Route::new()
-            .at(path, get(handle_all_recipes_ui))
+            .at(path, get(handle_create_recipe_ui))
             .with(AddData::new(db_client().await))
             .with(AuthGuard);
+
         let test_client = TestClient::new(ep);
 
         // get a session token

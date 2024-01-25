@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/pages/recipe/single/single_recipe.css" />
-    <link rel="stylesheet" href="/pages/global/styles/index.css" />
+    <link rel="stylesheet" href="/pages/recipe/create/create_recipe.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
     <script type="module" src="/pages/recipe/components/index.js"></script>
 
-    <title>{{ title }}</title>
+    <title>Create Recipe</title>
   </head>
+
   <body>
     <header class="Header">
       <a class="ActionButton" href="/recipe/all">
@@ -33,8 +33,14 @@
       </a>
 
       <div class="Header__right-panel">
-        <a class="ActionButton" href="/recipe/edit">
-          <div class="ActionButton__text--left">Edit</div>
+        <a class="ActionButton">
+          <button
+            class="ActionButton__text--left"
+            type="submit"
+            form="recipe_form"
+          >
+            Save
+          </button>
 
           <div class="ActionButton__icon">
             <svg
@@ -55,8 +61,8 @@
           </div>
         </a>
 
-        <a class="ActionButton" href="/recipe/delete">
-          <div class="ActionButton__text--left">Delete</div>
+        <a class="ActionButton" href="/recipe/all">
+          <div class="ActionButton__text--left">Cancel</div>
 
           <div class="ActionButton__icon">
             <svg
@@ -77,55 +83,123 @@
           </div>
         </a>
       </div>
+      <nav>
+        <div class="active" id="general_nav">General</div>
+        <div id="ingredient_nav">Ingredients</div>
+        <div id="direction_nav">Directions</div>
+        <div id="tag_nav">Tags</div>
+      </nav>
     </header>
-
     <main>
-      <article>
-        <div class="recipe-name">
-          <h1>{{ title }}</h1>
-        </div>
+      <form id="recipe_form" action="/recipe/create" method="POST">
+        <section id="general_section" class="General show">
+          <input
+            type="text"
+            name="title"
+            placeholder="title"
+            oninput="validateTitleInput(event)"
+          />
+          <br />
+          <input
+            type="number"
+            name="servings"
+            placeholder="servings"
+            oninput="validateServingInput(event)"
+          />
 
-        <div class="TagBar">
-          <p class="TagBar__tag">{{ servings }} Servings</p>
-          <p class="TagBar__tag">{{ ingredient_count }} Ingredients</p>
-          <p class="TagBar__tag">{{ direction_count }} Directions</p>
-        </div>
-      </article>
+          <article>
+            <h2 class="Headline">Ingredients</h2>
+            <div id="ingredients_preview">
+              <div id="preview_ingredient_anchor"></div>
+            </div>
+          </article>
 
-      <article>
-        <h2 class="Headline">Ingredients</h2>
+          <article>
+            <h2 class="Headline">Directions</h2>
+            <div id="directions_preview">
+              <div id="preview_direction_anchor"></div>
+            </div>
+          </article>
 
-        <div class="ingredient">
-          {% for ing in ingredients %}
-          <static-ingredient
-            amount="{{ ing.amount }}"
-            unit="{{ ing.unit }}"
-            ingredient="{{ ing.ingredient_name }}"
-          ></static-ingredient>
-          {% endfor %}
-        </div>
-      </article>
+          <article>
+            <h2 class="Headline">Tags</h2>
+            <div class="Tags__stack">
+              <div id="preview_tag_anchor"></div>
+            </div>
+          </article>
+        </section>
 
-      <div class="directions_wrapper">
-        <article>
-          <h2 class="Headline">Directions</h2>
-          {% for dir in directions %}
-          <static-direction
-            order="{{ dir.step_order }}"
-            details="{{ dir.direction_details }}"
-          ></static-direction>
-          {% endfor %}
-        </article>
-      </div>
+        <section id="ingredient_section" class="Ingredients">
+          <div id="staged_ingredient_anchor"></div>
 
-      <article>
-        <h2 class="Headline">Tags</h2>
-        <div class="TagBar">
-          {% for tag in tags %}
-          <p class="TagBar__tag">{{ tag.tag_name }}</p>
-          {% endfor %}
-        </div>
-      </article>
+          <div class="Overlay" id="ingredient_bg_overlay"></div>
+          <button
+            type="button"
+            class="CreateButton"
+            id="open_ingredient_controller_button"
+          >
+            Add Ingredient
+          </button>
+          <ingredient-controller></ingredient-controller>
+        </section>
+
+        <section id="direction_section" class="Directions">
+          <ol>
+            <div id="staged_direction_anchor"></div>
+          </ol>
+
+          <div class="Overlay" id="direction_bg_overlay"></div>
+          <button
+            type="button"
+            class="CreateButton"
+            id="open_direction_controller_button"
+          >
+            Add Direction
+          </button>
+
+          <direction-controller></direction-controller>
+        </section>
+
+        <section id="tag_section" class="Tags">
+          <ul id="tag_container" class="Tags__stack">
+            {% for tag in tags %}
+            <staged-tag name="{{ tag.tag_name }}"></staged-tag>
+            {% endfor %}
+            <div id="staged_tag_anchor"></div>
+
+            <tag-controller></tag-controller>
+          </ul>
+
+          <div class="Overlay" id="tag_bg_overlay"></div>
+          <button
+            type="button"
+            class="CreateButton"
+            id="open_tag_controller_button"
+          >
+            Add Tags
+          </button>
+        </section>
+      </form>
     </main>
+
+    <script type="module" src="/pages/recipe/create/scripts/index.js"></script>
+
+    <script>
+      function validateTitleInput(e) {
+        if (e.target.value?.length > 0) {
+          e.target.style.border = "var(--solid-border)";
+        } else {
+          e.target.style.border = "var(--dashed-border)";
+        }
+      }
+
+      function validateServingInput(e) {
+        if (e.target.value?.length > 0) {
+          e.target.style.border = "var(--solid-border)";
+        } else {
+          e.target.style.border = "var(--dashed-border)";
+        }
+      }
+    </script>
   </body>
 </html>

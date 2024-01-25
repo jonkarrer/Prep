@@ -1,13 +1,116 @@
 @import url("/pages/global/styles/index.css");
 
-li {
-  margin: 20px;
+body {
   background-color: var(--sec-color);
-  padding: 1.5rem;
-  border-radius: 1.5rem;
-  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.65);
+  margin-top: 4rem;
+}
+main {
+  padding: 1rem;
 }
 
-.hidden {
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+}
+.Header__right-panel {
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.RecipeCard {
+  display: grid;
+  gap: 24px;
+
+  width: 100%;
+  padding-bottom: 24px;
+  border-bottom: solid 1px var(--contrast);
+
+  text-align: left;
+}
+.RecipeCard:not(:first-child) {
+  margin-top: 15px;
+}
+.RecipeCard__top-row {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.RecipeCard__title {
+  font-size: var(--xl);
+  color: var(--contrast);
+  max-width: 250px;
+}
+.RecipeCard.hidden {
   display: none;
+}
+
+.ModifyTools {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  height: 18px;
+}
+.ModifyTools__icon {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+.ModifyTools__icon:last-child {
+  margin: 0 0.2rem;
+}
+
+.TagBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.TagBar__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 9px;
+
+  font-size: var(--xs);
+  color: var(--contrast);
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+}
+
+.SearchBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-right: 6px;
+
+  font-size: var(--xs);
+  color: var(--contrast);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+
+  cursor: pointer;
+}
+.SearchBar__input {
+  padding: 3px 9px;
+  width: 90%;
+}
+
+.SearchBar__icon {
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
 }

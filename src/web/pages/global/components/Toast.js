@@ -17,17 +17,16 @@ export class Toast extends LitElement {
         right: 0;
         visibility: hidden;
 
-        width: max-content;
-        max-width: 70vw;
-        margin: auto;
-        padding: 1rem;
+        width: 70vw;
+        margin: auto !important;
+        padding: 1rem !important;
 
         border-radius: 1.3rem;
 
         color: var(--sec-color);
-        font-size: 0.8em;
+        font-weight: 500;
         text-align: center;
-        z-index: 1000;
+        z-index: 100000;
       }
       :host([error]) {
         background-color: rgb(154, 41, 41);
@@ -35,20 +34,37 @@ export class Toast extends LitElement {
       :host([warning]) {
         background-color: rgb(154, 145, 41);
       }
+
+      :host([slide]) {
+        animation: slideInDown 0.5s ease;
+        animation-fill-mode: forwards;
+      }
+      @keyframes slideInDown {
+        from {
+          transform: translate3d(0, -120%, 0);
+          visibility: visible;
+        }
+
+        to {
+          transform: translate3d(0, 0, 0);
+          visibility: visible;
+        }
+      }
     `,
   ];
 
-  render() {
-    return html` <div id="toast">${this.message}</div>`;
+  setMessage(message) {
+    this.message = message ? message : "An Error Has Occurred";
   }
 
-  setMessage(message) {
-    this.message = message;
+  render() {
+    return html`<div class="toast">${this.message}</div>`;
   }
 }
 
 export function createToast(warningLevel, message) {
   const toastEl = new Toast();
+  console.log("war", warningLevel, message);
 
   switch (warningLevel) {
     case "info":
@@ -67,7 +83,7 @@ export function createToast(warningLevel, message) {
       break;
   }
 
-  toastEl.classList.add("slideInDown");
+  toastEl.setAttribute("slide", "");
   toastEl.setMessage(message);
 
   setTimeout(() => {

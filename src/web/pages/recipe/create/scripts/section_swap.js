@@ -1,62 +1,71 @@
+import { StaticDirection } from "../../components/StaticDirection.js";
+import { StaticIngredient } from "../../components/StaticIngredient.js";
+import { StaticTag } from "../../components/StaticTag.js";
+import {
+  closeDirectionController,
+  closeIngredientController,
+  closeTagController,
+} from "./toggle_controllers.js";
+
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
 let directionSection = document.getElementById("direction_section");
+let tagSection = document.getElementById("tag_section");
 
-function showElements(elements) {
-  for (let el of elements) {
-    el.classList.add("show");
-  }
-}
-function hideElements(elements) {
-  for (let el of elements) {
-    el.classList.remove("show");
-  }
-}
+let generalNav = document.getElementById("general_nav");
+let ingredientNav = document.getElementById("ingredient_nav");
+let directionNav = document.getElementById("direction_nav");
+let tagNav = document.getElementById("tag_nav");
 
-function hideIngredientSection() {
-  hideElements([ingredientSection]);
+function activateSection(sectionEl, navEl) {
+  sectionEl.classList.add("show");
+  navEl.classList.add("active");
 }
 
-function hideGeneralSection() {
-  hideElements([generalSection]);
+function deactivateSection(sectionEl, navEl) {
+  sectionEl.classList.remove("show");
+  navEl.classList.remove("active");
 }
 
-function hideDirectionSection() {
-  hideElements([directionSection]);
-}
-
-function showGeneralSection() {
-  showElements([generalSection]);
-}
-
-function showIngredientSection() {
-  showElements([ingredientSection]);
-}
-
-function showDirectionSection() {
-  showElements([directionSection]);
+function closeAllControllers() {
+  closeDirectionController();
+  closeIngredientController();
+  closeTagController();
 }
 
 function showSection(section_id) {
-  console.log("section", section_id);
   switch (section_id) {
     case "general_section":
-      showGeneralSection();
-      hideIngredientSection();
-      hideDirectionSection();
+      activateSection(generalSection, generalNav);
+      deactivateSection(ingredientSection, ingredientNav);
+      deactivateSection(directionSection, directionNav);
+      deactivateSection(tagSection, tagNav);
+      closeAllControllers();
       updateRecipePreview();
       break;
 
     case "ingredient_section":
-      showIngredientSection();
-      hideGeneralSection();
-      hideDirectionSection();
+      activateSection(ingredientSection, ingredientNav);
+      deactivateSection(generalSection, generalNav);
+      deactivateSection(directionSection, directionNav);
+      deactivateSection(tagSection, tagNav);
+      closeAllControllers();
       break;
 
     case "direction_section":
-      showDirectionSection();
-      hideGeneralSection();
-      hideIngredientSection();
+      activateSection(directionSection, directionNav);
+      deactivateSection(ingredientSection, ingredientNav);
+      deactivateSection(generalSection, generalNav);
+      deactivateSection(tagSection, tagNav);
+      closeAllControllers();
+      break;
+
+    case "tag_section":
+      activateSection(tagSection, tagNav);
+      deactivateSection(directionSection, directionNav);
+      deactivateSection(ingredientSection, ingredientNav);
+      deactivateSection(generalSection, generalNav);
+      closeAllControllers();
       break;
 
     default:
@@ -73,44 +82,51 @@ function updateRecipePreview() {
   const units = formData.getAll("unit");
   const ingredients = formData.getAll("ingredient");
   const directions = formData.getAll("direction");
+  const tags = formData.getAll("tag");
 
   const ingredientAnchor = document.getElementById("preview_ingredient_anchor");
   for (let i = 0; i < ingredients.length; i++) {
-    let ingredientEl = document.createElement("p");
-    let ingString = `${amounts[i]} ${units[i]} ${ingredients[i]}`;
-    ingredientEl.innerText = ingString;
+    let ingredientEl = new StaticIngredient(
+      amounts[i],
+      units[i],
+      ingredients[i]
+    );
     ingredientAnchor.insertAdjacentElement("beforebegin", ingredientEl);
   }
 
   const directionAnchor = document.getElementById("preview_direction_anchor");
   for (let i = 0; i < directions.length; i++) {
-    let directionEl = document.createElement("li");
-    directionEl.innerText = directions[i];
+    let directionEl = new StaticDirection(i + 1, directions[i]);
     directionAnchor.insertAdjacentElement("beforebegin", directionEl);
+  }
+
+  const tagAnchor = document.getElementById("preview_tag_anchor");
+  for (let i = 0; i < tags.length; i++) {
+    let tagEl = new StaticTag(tags[i]);
+    tagAnchor.insertAdjacentElement("beforebegin", tagEl);
   }
 }
 
 function removeStalePreviewItems() {
-  let ingredientContainer = document.getElementById("ingredients_preview");
-  let ingredients = ingredientContainer.querySelectorAll("p");
-
+  let ingredients = document.querySelectorAll("static-ingredient");
   for (let ing of ingredients) {
     ing.remove();
   }
 
-  let directionContainer = document.getElementById("directions_preview");
-  let directions = directionContainer.querySelectorAll("li");
-
+  let directions = document.querySelectorAll("static-direction");
   for (let dir of directions) {
     dir.remove();
+  }
+
+  let tags = document.querySelectorAll("static-tag");
+  for (let tag of tags) {
+    tag.remove();
   }
 }
 
 export function useSectionSwap() {
-  document.getElementById("general_nav").onclick = () =>
-    showSection("general_section");
-  document.getElementById("ingredient_nav").onclick = () =>
-    showSection("ingredient_section");
-  document.getElementById("direction_nav").onclick = () =>
-    showSection("direction_section");
+  generalNav.onclick = () => showSection("general_section");
+  ingredientNav.onclick = () => showSection("ingredient_section");
+  directionNav.onclick = () => showSection("direction_section");
+  tagNav.onclick = () => showSection("tag_section");
 }

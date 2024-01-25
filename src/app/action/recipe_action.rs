@@ -1,8 +1,8 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 use crate::{
     app::interface::RecipeRepository,
-    domain::entity::{Recipe, RecipeArgs, RecipeDetails},
+    domain::entity::{Recipe, RecipeArgs, RecipeCard, RecipeDetails},
 };
 
 pub async fn create_recipe<T: RecipeRepository>(
@@ -21,8 +21,17 @@ pub async fn get_single_recipe<T: RecipeRepository>(repo: &T, recipe_id: &str) -
 pub async fn get_all_recipe_details_for_user<T: RecipeRepository>(
     repo: &T,
     user_id: &str,
-) -> Result<Vec<RecipeDetails>> {
-    repo.select_all_recipes_details(&user_id).await
+) -> Result<Vec<RecipeCard>> {
+    let recipes = repo.select_all_recipes_details(&user_id).await?;
+
+    let mut recipe_cards = Vec::new();
+    for r in recipes {
+        let tags = repo.select_tags_for_recipe(&r.recipe_id).await?;
+
+        recipe_cards.push(RecipeCard::from(r, tags));
+    }
+
+    Ok(recipe_cards)
 }
 
 pub fn validate_recipe_args(recipe: &RecipeArgs) -> bool {

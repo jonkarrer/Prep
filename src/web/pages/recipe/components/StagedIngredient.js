@@ -1,5 +1,4 @@
 import { LitElement, html, css } from "/deps/lit.js";
-import { theme } from "/pages/global/styles/theme.js";
 
 export class StagedIngredient extends LitElement {
   constructor(ingredient, amount, unit) {
@@ -10,30 +9,19 @@ export class StagedIngredient extends LitElement {
     this.unit = unit;
   }
 
-  static styles = [
-    theme,
-    css`
-      div {
-        border: solid green 1px;
-        padding: 1rem;
-      }
-    `,
-  ];
-
   // render as light dom
   createRenderRoot() {
     return this;
   }
 
+  removeIngredient(e) {
+    e.target.parentNode.remove();
+  }
+
   render() {
     return html`
-      <div>
-        <input
-          type="text"
-          name="ingredient"
-          placeholder="ingredient"
-          value=${this.ingredient}
-        />
+      <div class="StagedIngredient">
+        <button @click=${this.removeIngredient}>X</button>
         <input
           type="number"
           name="amount"
@@ -41,6 +29,12 @@ export class StagedIngredient extends LitElement {
           value=${this.amount}
         />
         <input type="text" name="unit" placeholder="unit" value=${this.unit} />
+        <input
+          type="text"
+          name="ingredient"
+          placeholder="ingredient"
+          value=${this.ingredient}
+        />
       </div>
     `;
   }

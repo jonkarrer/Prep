@@ -6,4 +6,5 @@
 Cargo.lock
 ._*
 .DS_Store
+
 tailwindcss

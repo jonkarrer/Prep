@@ -9,18 +9,49 @@ export class DirectionController extends LitElement {
     css`
       .Root {
         position: fixed;
-        bottom: 48px;
+        bottom: -100%;
         left: 0;
         right: 0;
 
-        width: 80%;
-        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
-        background-color: lightgrey;
+        width: 90%;
+        margin: auto;
         padding: 1rem;
+
+        background-color: var(--sec-color);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+        border-radius: var(--border-radius);
+
+        z-index: 1000;
+      }
+      .Root.open {
+        bottom: 1rem;
+      }
+      textarea {
+        padding: 0.6rem 1rem;
+        height: 120px;
+        resize: none;
+        border-radius: var(--border-radius);
+        box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+      }
+      button {
+        padding: 0.5rem 0;
+        font-size: var(--lg);
+
+        background-color: var(--accent);
+        color: var(--sec-color);
+        border-radius: var(--border-radius);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
       }
     `,
   ];
+
+  static properties = {
+    isOpen: { type: Boolean },
+  };
 
   constructor() {
     super();
@@ -36,7 +67,7 @@ export class DirectionController extends LitElement {
     return true;
   }
 
-  createStagedDirection(e) {
+  createStagedDirection() {
     if (!this.runDirectionValidation()) {
       return;
     }
@@ -52,17 +83,18 @@ export class DirectionController extends LitElement {
 
   render() {
     return html`
-      <div class="Root">
-        <span
-          class="IngredientController__add-button"
-          @click="${this.createStagedDirection}"
-        >
-          Plus
-        </span>
+      <div class="Root ${this.isOpen ? "open" : ""}">
         <textarea
+          maxlength="255"
           @input="${this.handleDirectionInput}"
           placeholder="Input direction"
         ></textarea>
+        <button
+          class="IngredientController__add-button"
+          @click="${this.createStagedDirection}"
+        >
+          Commit
+        </button>
       </div>
     `;
   }

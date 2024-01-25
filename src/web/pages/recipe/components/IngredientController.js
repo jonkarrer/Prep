@@ -11,31 +11,56 @@ export class IngredientController extends LitElement {
     css`
       .Root {
         position: fixed;
-        bottom: 48px;
+        bottom: -100%;
         left: 0;
         right: 0;
 
-        width: 80%;
-        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-flow: row;
+        gap: 1rem;
 
-        background-color: lightgrey;
+        width: 90%;
+        margin: auto;
         padding: 1rem;
+
+        background-color: var(--sec-color);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+        border-radius: var(--border-radius);
+
+        z-index: 1000;
+      }
+      .Root.open {
+        bottom: 1rem;
+      }
+      .AmountWrapper {
+        grid-column: 1;
+      }
+      .UnitWrapper {
+        grid-column: 2;
+      }
+      .IngredientWrapper {
+        grid-column: 1 / span 2;
+      }
+
+      button {
+        padding: 0.5rem 0;
+        font-size: var(--lg);
+
+        background-color: var(--accent);
+        color: var(--sec-color);
+        border-radius: var(--border-radius);
+        box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+
+        grid-column: 1 / span 2;
       }
 
       input {
-        height: 1.8rem;
+        padding: 0.6rem 1rem;
         width: 100%;
-      }
 
-      .TopRow {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .CreateButton {
-        background-color: green;
-        color: white;
+        border-radius: var(--border-radius);
+        box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
       }
 
       .AmountWrapper,
@@ -43,10 +68,7 @@ export class IngredientController extends LitElement {
       .IngredientWrapper {
         position: relative;
       }
-      .AmountWrapper,
-      .UnitWrapper {
-        width: 40%;
-      }
+
       .IngredientWrapper::after,
       .UnitWrapper::after {
         position: absolute;
@@ -96,6 +118,7 @@ export class IngredientController extends LitElement {
       .UnitWrapper__autocomplete-input,
       .IngredientWrapper__autocomplete-input {
         z-index: 1;
+        color: rgba(0, 0, 0, 0.3);
       }
     `,
   ];
@@ -104,6 +127,7 @@ export class IngredientController extends LitElement {
     unitAutoCompleteHint: "",
     ingredientAutoCompleteHint: "",
     fractionHint: "",
+    isOpen: { type: Boolean },
   };
 
   constructor() {
@@ -114,8 +138,19 @@ export class IngredientController extends LitElement {
     this.ingredient = "";
   }
 
+  clearAndFocusInputs() {
+    let inputs = this.shadowRoot.querySelectorAll("input");
+    console.log("inputs", inputs);
+    inputs.forEach((item) => (item.value = ""));
+    this.amount = "";
+    this.unit = "";
+    this.ingredient = "";
+
+    let amountInput = this.shadowRoot.querySelector("input[name=amount");
+    amountInput.focus();
+  }
+
   createStagedIngredient() {
-    console.log("stage ing");
     if (!this.runIngredientValidation()) {
       return;
     }
@@ -128,6 +163,8 @@ export class IngredientController extends LitElement {
 
     const anchor = document.getElementById("staged_ingredient_anchor");
     anchor.insertAdjacentElement("beforebegin", stagedIngredientEl);
+
+    this.clearAndFocusInputs();
   }
 
   runIngredientValidation() {
@@ -187,6 +224,11 @@ export class IngredientController extends LitElement {
 
   handleUnitInput(e) {
     this.unit = e.target.value;
+    if (this.unit.length == 0) {
+      this.unitAutoCompleteHint = "";
+      return;
+    }
+
     this.unitAutoCompleteHint =
       this.filterAutoCompleteOptions(unitsFullNames, this.unit)[0] ?? "";
   }
@@ -204,6 +246,11 @@ export class IngredientController extends LitElement {
 
   handleIngredientInput(e) {
     this.ingredient = e.target.value;
+    if (this.ingredient.length == 0) {
+      this.ingredientAutoCompleteHint = "";
+      return;
+    }
+
     this.ingredientAutoCompleteHint =
       this.filterAutoCompleteOptions(ingredients, this.ingredient)[0] ?? "";
   }
@@ -221,37 +268,32 @@ export class IngredientController extends LitElement {
 
   render() {
     return html`
-      <div class="Root">
-        <div class="TopRow">
-          <div class="AmountWrapper">
-            <div class="AmountWrapper__fraction-hint">${this.fractionHint}</div>
-            <input
-              type="number"
-              placeholder="amount"
-              @keydown="${this.handleAmountKeyPress}"
-              @input="${this.handleAmountInput}"
-            />
-          </div>
+      <div class="Root ${this.isOpen ? "open" : ""}">
+        <div class="AmountWrapper">
+          <div class="AmountWrapper__fraction-hint">${this.fractionHint}</div>
+          <input
+            type="number"
+            name="amount"
+            placeholder="amount"
+            @keydown="${this.handleAmountKeyPress}"
+            @input="${this.handleAmountInput}"
+          />
+        </div>
 
-          <div class="UnitWrapper">
-            <input
-              class="UnitWrapper__base-input"
-              type="text"
-              name="unit"
-              placeholder="unit"
-              @input="${this.handleUnitInput}"
-              @keydown="${this.handleUnitKeydown}"
-            />
-            <input
-              type="text"
-              class="UnitWrapper__autocomplete-input"
-              .value=${this.unitAutoCompleteHint || ""}
-            />
-          </div>
-
-          <span class="CreateButton" @click="${this.createStagedIngredient}">
-            Plus
-          </span>
+        <div class="UnitWrapper">
+          <input
+            class="UnitWrapper__base-input"
+            type="text"
+            name="unit"
+            placeholder="unit"
+            @input="${this.handleUnitInput}"
+            @keydown="${this.handleUnitKeydown}"
+          />
+          <input
+            type="text"
+            class="UnitWrapper__autocomplete-input"
+            .value=${this.unitAutoCompleteHint || ""}
+          />
         </div>
 
         <div class="IngredientWrapper">
@@ -269,6 +311,7 @@ export class IngredientController extends LitElement {
             .value=${this.ingredientAutoCompleteHint || ""}
           />
         </div>
+        <button @click="${this.createStagedIngredient}">Commit</button>
       </div>
     `;
   }

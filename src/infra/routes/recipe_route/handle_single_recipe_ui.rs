@@ -29,6 +29,9 @@ pub async fn handle_single_recipe_ui(
     let mut context = Context::new();
     context.insert("title", &recipe.recipe_title);
     context.insert("favorite", &recipe.favorite);
+    context.insert("servings", &recipe.servings);
+    context.insert("ingredient_count", &recipe.ingredients.len());
+    context.insert("direction_count", &recipe.directions.len());
     context.insert::<Vec<Ingredient>, &str>("ingredients", &recipe.ingredients);
     context.insert::<Vec<Direction>, &str>("directions", &recipe.directions);
     context.insert::<Vec<Tag>, &str>("tags", &recipe.tags);

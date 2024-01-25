@@ -2,22 +2,190 @@
 
 body {
   height: 100svh;
-  margin: 0;
+  background-color: var(--sec-color);
+}
+main {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7rem;
+
+  width: 90%;
+  margin: auto;
 }
 
-section {
-  margin: 0 1.2rem;
+article {
+  margin-top: 1.5rem;
 }
 
 .General,
 .Ingredients,
-.Directions {
+.Directions,
+.Tags {
   display: none;
 }
 .General.show,
 .Ingredients.show,
-.Directions.show {
+.Directions.show,
+.Tags.show {
   display: block;
+}
+
+.General {
+  margin-top: 1rem;
+}
+.Ingredients,
+.Directions {
+  margin-bottom: 15rem;
+}
+
+.Tags__stack {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+nav {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0.6rem 1rem;
+  width: 100%;
+
+  background-color: var(--sec-color);
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.1);
+}
+nav div {
+  cursor: pointer;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--border-radius);
+}
+nav div.active {
+  background-color: var(--accent);
+  color: var(--sec-color);
+}
+
+input[name="title"] {
+  font-size: var(--xl);
+  border: var(--dashed-border);
+  width: 100%;
+  margin-bottom: 1rem;
+}
+input[name="servings"] {
+  font-size: var(--rg);
+  border: var(--dashed-border);
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+  z-index: 100;
+}
+.Header__right-panel {
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.StagedIngredient {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
+  gap: 1rem;
+
+  margin: 1rem;
+  padding: 1.5rem;
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+.StagedIngredient button,
+.StagedDirection button {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 20px;
+  height: 20px;
+
+  font-size: var(--sm);
+
+  border-radius: 100%;
+  background-color: var(--accent);
+  color: var(--sec-color);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+
+  transform: translate(30%, -30%);
+}
+.StagedIngredient input {
+  padding: 0.5rem 1rem;
+  width: 100%;
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+}
+.StagedIngredient input[name="amount"] {
+  grid-column: 1;
+}
+.StagedIngredient input[name="unit"] {
+  grid-column: 2;
+}
+.StagedIngredient input[name="ingredient"] {
+  grid-column: 1 / span 2;
+}
+
+.StagedDirection {
+  position: relative;
+
+  padding: 0.5rem;
+  margin: 1rem;
+
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+  list-style: decimal;
+}
+.StagedDirection textarea {
+  width: 100%;
+
+  text-align: left;
+  vertical-align: top;
+  line-height: normal;
+  height: auto;
+}
+
+.Tags {
+  margin-top: 1rem;
+}
+.StagedTag p {
+  background-color: var(--sec-color);
+  border: var(--solid-border);
+  border-radius: var(--border-radius);
+
+  padding: var(--button-padding);
+
+  cursor: pointer;
+}
+.StagedTag .checked {
+  color: var(--sec-color);
+  background-color: var(--accent);
+}
+.StagedTag [type="checkbox"] {
+  display: none;
 }
 
 /* MD */
@@ -31,12 +199,33 @@ section {
     display: flex;
   }
 }
-/* LG */
-@media (min-width: 1024px) {
+
+.CreateButton {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+
+  padding: 1rem 0;
+  margin: auto;
+  width: 16rem;
+  font-size: var(--lg);
+
+  background-color: var(--accent);
+  color: var(--sec-color);
+  border-radius: var(--border-radius);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
 }
-/* XL */
-@media (min-width: 1280px) {
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vmax;
+
+  display: none;
+  z-index: 50;
 }
-/* XXL */
-@media (min-width: 1536px) {
+.Overlay.open {
+  display: block;
 }

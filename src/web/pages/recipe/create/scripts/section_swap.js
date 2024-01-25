@@ -1,6 +1,11 @@
 import { StaticDirection } from "../../components/StaticDirection.js";
 import { StaticIngredient } from "../../components/StaticIngredient.js";
 import { StaticTag } from "../../components/StaticTag.js";
+import {
+  closeDirectionController,
+  closeIngredientController,
+  closeTagController,
+} from "./toggle_controllers.js";
 
 let generalSection = document.getElementById("general_section");
 let ingredientSection = document.getElementById("ingredient_section");
@@ -22,6 +27,12 @@ function deactivateSection(sectionEl, navEl) {
   navEl.classList.remove("active");
 }
 
+function closeAllControllers() {
+  closeDirectionController();
+  closeIngredientController();
+  closeTagController();
+}
+
 function showSection(section_id) {
   switch (section_id) {
     case "general_section":
@@ -29,6 +40,7 @@ function showSection(section_id) {
       deactivateSection(ingredientSection, ingredientNav);
       deactivateSection(directionSection, directionNav);
       deactivateSection(tagSection, tagNav);
+      closeAllControllers();
       updateRecipePreview();
       break;
 
@@ -37,6 +49,7 @@ function showSection(section_id) {
       deactivateSection(generalSection, generalNav);
       deactivateSection(directionSection, directionNav);
       deactivateSection(tagSection, tagNav);
+      closeAllControllers();
       break;
 
     case "direction_section":
@@ -44,6 +57,7 @@ function showSection(section_id) {
       deactivateSection(ingredientSection, ingredientNav);
       deactivateSection(generalSection, generalNav);
       deactivateSection(tagSection, tagNav);
+      closeAllControllers();
       break;
 
     case "tag_section":
@@ -51,6 +65,7 @@ function showSection(section_id) {
       deactivateSection(directionSection, directionNav);
       deactivateSection(ingredientSection, ingredientNav);
       deactivateSection(generalSection, generalNav);
+      closeAllControllers();
       break;
 
     default:

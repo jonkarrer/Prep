@@ -132,15 +132,11 @@
         <section id="ingredient_section" class="Ingredients">
           <div id="staged_ingredient_anchor"></div>
 
-          <div
-            class="Overlay"
-            id="ingredient_bg_overlay"
-            onclick="closeIngredientController()"
-          ></div>
+          <div class="Overlay" id="ingredient_bg_overlay"></div>
           <button
             type="button"
             class="CreateButton"
-            onclick="openIngredientController()"
+            id="open_ingredient_controller_button"
           >
             Add Ingredient
           </button>
@@ -152,15 +148,11 @@
             <div id="staged_direction_anchor"></div>
           </ol>
 
-          <div
-            class="Overlay"
-            id="direction_bg_overlay"
-            onclick="closeDirectionController()"
-          ></div>
+          <div class="Overlay" id="direction_bg_overlay"></div>
           <button
             type="button"
             class="CreateButton"
-            onclick="openDirectionController()"
+            id="open_direction_controller_button"
           >
             Add Direction
           </button>
@@ -178,15 +170,11 @@
             <tag-controller></tag-controller>
           </ul>
 
-          <div
-            class="Overlay"
-            id="tag_bg_overlay"
-            onclick="closeTagController()"
-          ></div>
+          <div class="Overlay" id="tag_bg_overlay"></div>
           <button
             type="button"
             class="CreateButton"
-            onclick="openTagController()"
+            id="open_tag_controller_button"
           >
             Add Tags
           </button>
@@ -211,68 +199,6 @@
         } else {
           e.target.style.border = "var(--dashed-border)";
         }
-      }
-
-      function openIngredientController() {
-        let controllerEl = document.querySelector("ingredient-controller");
-        let backgroundClickEl = document.getElementById(
-          "ingredient_bg_overlay"
-        );
-
-        let amountInputEl =
-          controllerEl.shadowRoot.querySelector("input[name=amount]");
-
-        amountInputEl.focus();
-        backgroundClickEl.classList.add("open");
-        controllerEl.isOpen = true;
-      }
-
-      function closeIngredientController() {
-        let controllerEl = document.querySelector("ingredient-controller");
-        let backgroundClickEl = document.getElementById(
-          "ingredient_bg_overlay"
-        );
-
-        backgroundClickEl.classList.remove("open");
-        controllerEl.isOpen = false;
-      }
-
-      function openDirectionController() {
-        let controllerEl = document.querySelector("direction-controller");
-        let backgroundClickEl = document.getElementById("direction_bg_overlay");
-
-        let textInputEl = controllerEl.shadowRoot.querySelector("textarea");
-
-        textInputEl.focus();
-        backgroundClickEl.classList.add("open");
-        controllerEl.isOpen = true;
-      }
-
-      function closeDirectionController() {
-        let controllerEl = document.querySelector("direction-controller");
-        let backgroundClickEl = document.getElementById("direction_bg_overlay");
-
-        backgroundClickEl.classList.remove("open");
-        controllerEl.isOpen = false;
-      }
-
-      function openTagController() {
-        let controllerEl = document.querySelector("tag-controller");
-        let backgroundClickEl = document.getElementById("tag_bg_overlay");
-
-        let textInputEl = controllerEl.shadowRoot.querySelector("input");
-
-        textInputEl.focus();
-        backgroundClickEl.classList.add("open");
-        controllerEl.isOpen = true;
-      }
-
-      function closeTagController() {
-        let controllerEl = document.querySelector("tag-controller");
-        let backgroundClickEl = document.getElementById("tag_bg_overlay");
-
-        backgroundClickEl.classList.remove("open");
-        controllerEl.isOpen = false;
       }
     </script>
   </body>

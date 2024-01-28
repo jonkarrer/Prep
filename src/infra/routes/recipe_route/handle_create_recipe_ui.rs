@@ -1,15 +1,12 @@
 use crate::{
-    app::{
-        action::get_single_recipe,
-        interface::{Database, RecipeRepository},
-    },
-    domain::entity::{Direction, Ingredient, Tag},
+    app::interface::{Database, RecipeRepository},
+    domain::entity::Tag,
 };
 use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Html, Path},
+    web::{Data, Html},
     Error, IntoResponse, Result,
 };
 use sqlx::MySqlPool;

@@ -61,6 +61,7 @@ main {
   height: 18px;
 }
 .ModifyTools__icon {
+  display: block;
   height: 1.2rem;
   width: 1.2rem;
 }

@@ -42,10 +42,12 @@ KEY_TWO: 76cc1ddbdebf4016ac72414e263c4ef3
 
 ## Version One
 
-[] - Delete recipe route
-[] - Edit recipe route and UI
-[] - Accounts page
-[] - Secure account use cases
-[] - Get cert for theprep.app
-[] - Hook up to planet scale cloud db
-[] - Develop pipeline for deploys
+- [x] - Delete recipe route
+    [ ] - Delete recipe UI animation
+    [ ] - Test route
+- [ ] - Edit recipe route and UI
+- [ ] - Accounts page
+- [ ] - Secure account use cases
+- [ ] - Get cert for theprep.app
+- [ ] - Hook up to planet scale cloud db
+- [ ] - Develop pipeline for deploys

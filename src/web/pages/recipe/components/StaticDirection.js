@@ -2,16 +2,16 @@ import { LitElement, html, css } from "/deps/lit.js";
 import { theme } from "/pages/global/styles/theme.js";
 
 export class StaticDirection extends LitElement {
-  constructor(order, details) {
+  constructor(order, detail) {
     super();
 
     this.order = order;
-    this.details = details;
+    this.detail = detail;
   }
 
   static properties = {
     order: { type: String },
-    details: { type: String },
+    detail: { type: String },
   };
 
   static styles = [
@@ -44,7 +44,7 @@ export class StaticDirection extends LitElement {
     return html`
       <div class="direction">
         <div class="order">${this.order}</div>
-        <p class="text">${this.details}</p>
+        <p class="text">${this.detail}</p>
       </div>
     `;
   }

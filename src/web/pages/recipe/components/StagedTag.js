@@ -8,6 +8,7 @@ export class StagedTag extends LitElement {
 
   static properties = {
     name: { type: String },
+    isChecked: { type: Boolean },
   };
 
   checkRecipeTagCheckbox(e) {
@@ -33,7 +34,12 @@ export class StagedTag extends LitElement {
     return html`
       <label class="StagedTag" @click="${this.checkRecipeTagCheckbox}">
         <p>${this.name}</p>
-        <input value=${this.name} name="tag" type="checkbox" />
+        <input
+          value=${this.name}
+          name="tag"
+          type="checkbox"
+          checked=${this.isChecked}
+        />
       </label>
     `;
   }

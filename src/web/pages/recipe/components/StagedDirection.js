@@ -7,6 +7,10 @@ export class StagedDirection extends LitElement {
     this.detail = detail;
   }
 
+  static properties = {
+    detail: { type: String },
+  };
+
   // render as light dom
   createRenderRoot() {
     return this;

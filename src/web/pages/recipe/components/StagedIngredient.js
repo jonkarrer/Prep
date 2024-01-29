@@ -9,6 +9,12 @@ export class StagedIngredient extends LitElement {
     this.unit = unit;
   }
 
+  static properties = {
+    ingredient: { type: String },
+    amount: { type: String },
+    unit: { type: String },
+  };
+
   // render as light dom
   createRenderRoot() {
     return this;

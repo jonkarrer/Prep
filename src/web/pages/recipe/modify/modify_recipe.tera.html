@@ -129,7 +129,7 @@
               {% for dir in directions %}
               <static-direction
                 order="{{ dir.step_order }}"
-                details="{{ dir.direction_details }}"
+                detail="{{ dir.direction_details }}"
               ></static-direction>
               {% endfor %}
               <div id="preview_direction_anchor"></div>
@@ -139,7 +139,7 @@
           <article>
             <h2 class="Headline">Tags</h2>
             <div class="Tags__stack">
-              {% for tag in tags %}
+              {% for tag in selected_tags %}
               <p class="TagBar__tag">{{ tag.tag_name }}</p>
               {% endfor %}
               <div id="preview_tag_anchor"></div>
@@ -148,6 +148,13 @@
         </section>
 
         <section id="ingredient_section" class="Ingredients">
+          {% for ing in ingredients %}
+          <staged-ingredient
+            amount="{{ ing.amount }}"
+            unit="{{ ing.unit }}"
+            ingredient="{{ ing.ingredient_name }}"
+          ></staged-ingredient>
+          {% endfor %}
           <div id="staged_ingredient_anchor"></div>
 
           <div class="Overlay" id="ingredient_bg_overlay"></div>
@@ -163,6 +170,11 @@
 
         <section id="direction_section" class="Directions">
           <ol>
+            {% for dir in directions %}
+            <staged-direction
+              detail="{{ dir.direction_details }}"
+            ></staged-direction>
+            {% endfor %}
             <div id="staged_direction_anchor"></div>
           </ol>
 
@@ -180,7 +192,7 @@
 
         <section id="tag_section" class="Tags">
           <ul id="tag_container" class="Tags__stack">
-            {% for tag in tags %}
+            {% for tag in all_tags %}
             <staged-tag name="{{ tag.tag_name }}"></staged-tag>
             {% endfor %}
             <div id="staged_tag_anchor"></div>

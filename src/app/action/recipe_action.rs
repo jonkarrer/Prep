@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use brize_auth::entity::Session;
 
 use crate::{
     app::interface::RecipeRepository,
@@ -32,6 +33,18 @@ pub async fn get_all_recipe_details_for_user<T: RecipeRepository>(
     }
 
     Ok(recipe_cards)
+}
+
+pub async fn delete_recipe<T: RecipeRepository>(
+    repo: &T,
+    session: &Session,
+    recipe_id: &str,
+    csrf_token: &str,
+) -> Result<()> {
+    match session.match_csrf_token(csrf_token) {
+        true => repo.delete_recipe(recipe_id).await,
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
 }
 
 pub fn validate_recipe_args(recipe: &RecipeArgs) -> bool {

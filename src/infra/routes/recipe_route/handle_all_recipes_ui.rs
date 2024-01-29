@@ -29,6 +29,7 @@ pub async fn handle_all_recipes_ui(
     // Inject recipes into template
     let mut context = Context::new();
     context.insert::<Vec<RecipeCard>, &str>("recipes", &recipes);
+    context.insert::<str, &str>("csrf_token", &session.csrf_token);
 
     let rendered_html = tera
         .render("all_recipes.tera.html", &context)

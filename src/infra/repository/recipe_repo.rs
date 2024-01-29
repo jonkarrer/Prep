@@ -216,11 +216,11 @@ impl RecipeRepository for Database<MySqlPool> {
         Ok(())
     }
 
-    async fn delete(&self, recipe_id: &str) -> Result<()> {
+    async fn delete_recipe(&self, recipe_id: &str) -> Result<()> {
         sqlx::query(
             r#"
             DELETE FROM recipes 
-            WHERE id = ?
+            WHERE recipe_id = ?
             "#,
         )
         .bind(recipe_id)

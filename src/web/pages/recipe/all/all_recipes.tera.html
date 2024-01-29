@@ -85,13 +85,14 @@
     <main>
       <ul id="list_container">
         {% for recipe in recipes %}
-        <a
-          data-title="{{ recipe.recipe_title }}"
-          class="RecipeCard"
-          href="/recipe/select/{{ recipe.recipe_id }}"
-        >
+        <div class="RecipeCard">
           <div class="RecipeCard__top-row">
-            <h1 class="RecipeCard__title">{{ recipe.recipe_title }}</h1>
+            <a
+              data-title="{{ recipe.recipe_title }}"
+              href="/recipe/select/{{ recipe.recipe_id }}"
+            >
+              <h1 class="RecipeCard__title">{{ recipe.recipe_title }}</h1>
+            </a>
 
             <div class="ModifyTools">
               <form action="/recipe/delete/{{ recipe.recipe_id }}" method="get">
@@ -148,7 +149,7 @@
             <p class="TagBar__tag">{{ tag.tag_name }}</p>
             {% endfor %}
           </div>
-        </a>
+        </div>
         {% endfor %}
       </ul>
     </main>
@@ -168,6 +169,10 @@
             recipe.classList.remove("hidden");
           }
         }
+      }
+
+      function navigate(path) {
+        window.location = path;
       }
     </script>
   </body>

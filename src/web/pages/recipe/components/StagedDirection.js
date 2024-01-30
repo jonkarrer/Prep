@@ -17,8 +17,16 @@ export class StagedDirection extends LitElement {
   }
 
   firstUpdated() {
-    let textarea = this.querySelector("#direction_input");
-    this.resize(textarea);
+    const textarea = this.querySelector("#direction_input");
+    const checkHeight = () => {
+      if (textarea.scrollHeight > 0) {
+        this.resize(textarea);
+      } else {
+        setTimeout(checkHeight, 50);
+      }
+    };
+
+    checkHeight();
   }
 
   adjustTextareaSize(e) {

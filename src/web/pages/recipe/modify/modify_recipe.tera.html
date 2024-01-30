@@ -140,7 +140,7 @@
             <h2 class="Headline">Tags</h2>
             <div class="Tags__stack">
               {% for tag in selected_tags %}
-              <p class="TagBar__tag">{{ tag.tag_name }}</p>
+              <static-tag name="{{ tag }}"></static-tag>
               {% endfor %}
               <div id="preview_tag_anchor"></div>
             </div>
@@ -192,9 +192,11 @@
 
         <section id="tag_section" class="Tags">
           <ul id="tag_container" class="Tags__stack">
-            {% for tag in all_tags %}
-            <staged-tag name="{{ tag.tag_name }}"></staged-tag>
-            {% endfor %}
+            {% for tag in all_tags %} {% if tag.1 %}
+            <staged-tag isChecked name="{{ tag.0 }}"></staged-tag>
+            {% else %}
+            <staged-tag name="{{ tag.0 }}"></staged-tag>
+            {% endif %} {% endfor %}
             <div id="staged_tag_anchor"></div>
 
             <tag-controller></tag-controller>

@@ -3,7 +3,7 @@ use crate::{
         action::get_single_recipe,
         interface::{Database, RecipeRepository},
     },
-    domain::entity::{Direction, Ingredient, Tag},
+    domain::entity::{Direction, Ingredient},
 };
 use brize_auth::entity::Session;
 use poem::{
@@ -37,6 +37,15 @@ pub async fn handle_modify_recipe_ui(
         .await
         .map_err(|e| Error::from_string(format!("{e}"), StatusCode::NOT_FOUND))?;
 
+    let selected_tags: Vec<String> = recipe.tags.into_iter().map(|item| item.tag_name).collect();
+    let all_tag_options: Vec<(String, bool)> = tags
+        .into_iter()
+        .map(|item| {
+            let is_checked = selected_tags.contains(&item.tag_name);
+            (item.tag_name, is_checked)
+        })
+        .collect();
+
     // Inject recipes into template
     let mut context = Context::new();
     context.insert("title", &recipe.recipe_title);
@@ -46,8 +55,8 @@ pub async fn handle_modify_recipe_ui(
     context.insert("direction_count", &recipe.directions.len());
     context.insert::<Vec<Ingredient>, &str>("ingredients", &recipe.ingredients);
     context.insert::<Vec<Direction>, &str>("directions", &recipe.directions);
-    context.insert::<Vec<Tag>, &str>("all_tags", &tags);
-    context.insert::<Vec<Tag>, &str>("selected_tags", &recipe.tags);
+    context.insert::<Vec<(String, bool)>, &str>("all_tags", &all_tag_options);
+    context.insert::<Vec<String>, &str>("selected_tags", &selected_tags);
 
     let rendered_html = tera
         .render("modify_recipe.tera.html", &context)

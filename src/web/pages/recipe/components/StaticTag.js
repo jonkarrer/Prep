@@ -5,11 +5,11 @@ export class StaticTag extends LitElement {
   constructor(tagName) {
     super();
 
-    this.tagName = tagName;
+    this.name = tagName;
   }
 
   static properties = {
-    tagName: { type: String },
+    name: { type: String },
   };
 
   static styles = [
@@ -27,6 +27,6 @@ export class StaticTag extends LitElement {
   ];
 
   render() {
-    return html`<p>${this.tagName}</p>`;
+    return html`<p>${this.name}</p>`;
   }
 }

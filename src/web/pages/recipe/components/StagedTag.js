@@ -4,6 +4,7 @@ export class StagedTag extends LitElement {
   constructor(name) {
     super();
     this.name = name;
+    this.isChecked = false;
   }
 
   static properties = {
@@ -25,6 +26,11 @@ export class StagedTag extends LitElement {
     }
   }
 
+  firstUpdated() {
+    let checkbox = this.querySelector("input[name=tag]");
+    if (this.isChecked) checkbox.checked = true;
+  }
+
   // render as light dom
   createRenderRoot() {
     return this;
@@ -33,13 +39,8 @@ export class StagedTag extends LitElement {
   render() {
     return html`
       <label class="StagedTag" @click="${this.checkRecipeTagCheckbox}">
-        <p>${this.name}</p>
-        <input
-          value=${this.name}
-          name="tag"
-          type="checkbox"
-          checked=${this.isChecked}
-        />
+        <p class="${this.isChecked ? "checked" : ""}">${this.name}</p>
+        <input value=${this.name} name="tag" type="checkbox" />
       </label>
     `;
   }

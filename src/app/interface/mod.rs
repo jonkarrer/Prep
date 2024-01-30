@@ -1,7 +1,7 @@
 #![allow(async_fn_in_trait)]
 
-mod recipes;
-pub use recipes::RecipeRepository;
+mod recipe;
+pub use recipe::RecipeRepository;
 
 mod users;
 pub use users::*;

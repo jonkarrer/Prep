@@ -21,7 +21,6 @@ pub async fn handle_modify_recipe_ui(
     Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<impl IntoResponse> {
-    dbg!(&recipe_id);
     // Init template engine
     let tera = Tera::new("src/web/pages/recipe/modify/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
@@ -49,6 +48,7 @@ pub async fn handle_modify_recipe_ui(
     // Inject recipes into template
     let mut context = Context::new();
     context.insert("title", &recipe.recipe_title);
+    context.insert("recipe_id", &recipe.recipe_id);
     context.insert("favorite", &recipe.favorite);
     context.insert("servings", &recipe.servings);
     context.insert("ingredient_count", &recipe.ingredients.len());

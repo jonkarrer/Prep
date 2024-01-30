@@ -91,13 +91,18 @@
       </nav>
     </header>
     <main>
-      <form id="recipe_form" action="/recipe/create" method="POST">
+      <form
+        id="recipe_form"
+        action="/recipe/modify/{{ recipe_id }}"
+        method="POST"
+      >
         <section id="general_section" class="General show">
           <input
             type="text"
             name="title"
             value="{{ title }}"
             placeholder="title"
+            style="border: var(--solid-border)"
             oninput="validateTitleInput(event)"
           />
           <br />
@@ -106,6 +111,7 @@
             name="servings"
             value="{{ servings }}"
             placeholder="servings"
+            style="border: var(--solid-border)"
             oninput="validateServingInput(event)"
           />
 

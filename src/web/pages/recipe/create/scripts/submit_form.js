@@ -56,7 +56,6 @@ async function submitForm(event) {
   });
 
   if (res.ok) {
-    console.log("response", await res.json());
     window.location = "/recipe/all";
   } else {
     let text = await res.text();

@@ -3,7 +3,6 @@ use crate::{
     domain::entity::{Direction, Ingredient, Recipe, RecipeArgs, RecipeDetails, Tag},
 };
 use anyhow::{Context, Result};
-use serde_json::Value;
 use sqlx::mysql::MySqlPool;
 
 impl RecipeRepository for Database<MySqlPool> {
@@ -197,26 +196,124 @@ impl RecipeRepository for Database<MySqlPool> {
         .context("Failed to select tags by user_id")
     }
 
-    async fn update(&self, new_recipe: Recipe, recipe_id: &str) -> Result<()> {
-        let blob: Value = serde_json::to_value(new_recipe)?;
+    async fn update_recipe(
+        &self,
+        recipe_args: RecipeArgs,
+        recipe_id: &str,
+        user_id: &str,
+    ) -> Result<()> {
+        self.delete_ingredients_by_recipe_id(recipe_id).await?;
+        self.delete_directions_by_recipe_id(recipe_id).await?;
+        self.delete_tags_by_recipe_id(recipe_id).await?;
 
+        let mut transaction = self
+            .pool
+            .begin()
+            .await
+            .expect("Failed to start transaction");
+
+        for ingredient in recipe_args.ingredients {
+            sqlx::query(
+                r#"
+                INSERT INTO ingredients (recipe_id, user_id, ingredient_name, amount, unit)
+                VALUES (?,?,?,?,?)
+                "#,
+            )
+            .bind(&recipe_id)
+            .bind(user_id)
+            .bind(ingredient.name)
+            .bind(ingredient.amount)
+            .bind(ingredient.unit)
+            .execute(&mut *transaction)
+            .await
+            .context("Failed to insert into ingredients")?;
+        }
+
+        for direction in recipe_args.directions {
+            sqlx::query(
+                r#"
+                INSERT INTO directions (recipe_id, direction_details, step_order)
+                VALUES (?,?,?)
+                "#,
+            )
+            .bind(&recipe_id)
+            .bind(direction.details)
+            .bind(direction.step_order)
+            .execute(&mut *transaction)
+            .await
+            .context("Failed to insert into directions")?;
+        }
+
+        for tag_name in recipe_args.tags {
+            sqlx::query(
+                r#"
+                INSERT INTO tags (recipe_id, user_id, tag_name)
+                VALUES (?,?,?)
+                "#,
+            )
+            .bind(&recipe_id)
+            .bind(user_id)
+            .bind(tag_name)
+            .execute(&mut *transaction)
+            .await
+            .context("Failed to insert into tags")?;
+        }
+
+        transaction
+            .commit()
+            .await
+            .context("Failed to commit transaction")?;
+
+        Ok(())
+    }
+
+    async fn delete_ingredients_by_recipe_id(&self, recipe_id: &str) -> Result<()> {
         sqlx::query(
             r#"
-            UPDATE recipes
-            SET recipe = ?
-            WHERE id = ?;
+            DELETE from ingredients
+            WHERE recipe_id = ?
             "#,
         )
-        .bind(blob)
         .bind(recipe_id)
         .execute(&self.pool)
         .await
-        .context("Failed to update recipe")?;
+        .context("Failed to delete ingredients by recipe id")?;
+
+        Ok(())
+    }
+
+    async fn delete_directions_by_recipe_id(&self, recipe_id: &str) -> Result<()> {
+        sqlx::query(
+            r#"
+            DELETE from directions
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(recipe_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to delete ingredients by recipe id")?;
+
+        Ok(())
+    }
+
+    async fn delete_tags_by_recipe_id(&self, recipe_id: &str) -> Result<()> {
+        sqlx::query(
+            r#"
+            DELETE from tags 
+            WHERE recipe_id = ?
+            "#,
+        )
+        .bind(recipe_id)
+        .execute(&self.pool)
+        .await
+        .context("Failed to delete ingredients by recipe id")?;
 
         Ok(())
     }
 
     async fn delete_recipe(&self, recipe_id: &str) -> Result<()> {
+        // TODO delete everything with that id
         sqlx::query(
             r#"
             DELETE FROM recipes 
@@ -227,6 +324,10 @@ impl RecipeRepository for Database<MySqlPool> {
         .execute(&self.pool)
         .await
         .context("Failed to delete recipe")?;
+
+        self.delete_ingredients_by_recipe_id(recipe_id).await?;
+        self.delete_directions_by_recipe_id(recipe_id).await?;
+        self.delete_tags_by_recipe_id(recipe_id).await?;
 
         Ok(())
     }

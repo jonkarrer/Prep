@@ -16,7 +16,7 @@ pub fn use_user_routes() -> AuthGuardImpl<Route> {
         .at(
             "/profile",
             get(StaticFileEndpoint::new(
-                StaticPath::from("/pages/profile.html").0,
+                StaticPath::from("/pages/user/profile.html").0,
             )),
         )
         .at("/profile/details", get(handle_user_profile_details))

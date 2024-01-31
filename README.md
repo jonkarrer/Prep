@@ -44,8 +44,9 @@ KEY_TWO: 76cc1ddbdebf4016ac72414e263c4ef3
 
 - [x] - Delete recipe route
     [ ] - Delete recipe UI animation
-    [ ] - Test route
-- [ ] - Edit recipe route and UI
+    [ ] - Test route and methods
+- [x] - Modify recipe route and UI
+    [ ] - Test route and methods
 - [ ] - Accounts page
 - [ ] - Secure account use cases
 - [ ] - Get cert for theprep.app

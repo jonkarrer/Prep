@@ -3,7 +3,7 @@ use crate::{
         action::{create_recipe, validate_recipe_args},
         interface::Database,
     },
-    domain::entity::{RecipeArgs, RecipeDetails},
+    domain::entity::RecipeArgs,
 };
 use brize_auth::entity::Session;
 use poem::{

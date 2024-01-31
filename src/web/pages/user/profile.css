@@ -1,0 +1,51 @@
+@import url("/pages/global/styles/index.css");
+
+body {
+  background-color: var(--sec-color);
+}
+main {
+  margin: auto;
+  margin-top: 100px;
+  width: 90%;
+}
+
+section {
+  margin-top: 50px;
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+}
+
+.FormsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+input {
+  width: 100%;
+  max-width: 310px;
+  height: 40px;
+
+  padding: 0.6rem 1rem;
+
+  color: var(--darker);
+  border: 1px solid var(--contrast);
+  border-radius: var(--border-radius);
+  box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+}

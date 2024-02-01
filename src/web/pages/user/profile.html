@@ -66,7 +66,7 @@
           <h4>Current Email</h4>
           <input type="text" disabled id="email" value="email@email.com" />
           <h4>Current Password</h4>
-          <input type="text" disabled id="email" value="email@email.com" />
+          <input type="text" disabled id="email" placeholder="Click to view" />
         </div>
       </section>
 
@@ -76,7 +76,7 @@
           <h4>Change Email</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
-            <input type="text" name="new_email" />
+            <input type="text" name="new_email" placeholder="Enter new email" />
             <br />
             <br />
             <button class="ActionButton" type="submit">Save Change</button>
@@ -86,13 +86,21 @@
           <form hx-put="profile/password_reset">
             <label>
               Current Password
-              <input type="password" name="current_password" />
+              <input
+                type="password"
+                name="current_password"
+                placeholder="Enter your password"
+              />
             </label>
             <br />
             <br />
             <label>
               New Password
-              <input type="password" name="new_password" />
+              <input
+                type="password"
+                name="new_password"
+                placeholder="Enter new password"
+              />
             </label>
             <input type="hidden" name="reset_token" value="{}" />
             <input type="hidden" name="csrf_token" value="{}" />
@@ -110,7 +118,11 @@
           <h4>Reset Account</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
-            <input type="password" name="reset_account_password" />
+            <input
+              type="password"
+              name="reset_account_password"
+              placeholder="Enter your password"
+            />
             <br />
             <br />
             <button class="ActionButton" type="submit">Save Change</button>
@@ -119,7 +131,11 @@
           <h4>Delete Account</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
-            <input type="password" name="delete_account_password" />
+            <input
+              type="password"
+              name="delete_account_password"
+              placeholder="Enter your password"
+            />
             <br />
             <br />
             <button class="ActionButton" type="submit">Save Change</button>

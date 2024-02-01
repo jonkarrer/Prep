@@ -14,6 +14,7 @@ main {
 
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   background-color: var(--sec-color);
   width: 100%;
@@ -114,4 +115,9 @@ main {
   width: 12px;
   min-width: 12px;
   min-height: 12px;
+}
+
+.UserProfileButton {
+  width: 28px;
+  height: 28px;
 }

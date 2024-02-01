@@ -5,7 +5,7 @@ body {
 }
 main {
   margin: auto;
-  margin-top: 100px;
+  margin-top: 80px;
   padding-bottom: 60px;
   width: 90%;
 }
@@ -25,17 +25,37 @@ section {
   width: 100%;
 
   padding: 1rem;
+  z-index: 1000;
 }
 
-.FormsContainer {
+section .InputContainer {
+  margin-bottom: 1.6rem;
+}
+.InputContainer h4 {
+  margin-bottom: 0.6rem;
+}
+
+.SubmitButton {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--button-padding);
+  width: max-content;
+  margin-top: 1rem;
+
+  font-size: var(--rg);
+  color: var(--sec-color);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+  background-color: var(--accent);
+
+  cursor: pointer;
 }
 
-label {
-  font-size: 1rem;
-  font-weight: 400;
+.SubmitButton.danger {
+  background-color: var(--error);
 }
 
 input {

@@ -62,9 +62,13 @@
     <main>
       <section>
         <h2 class="Headline">Account Details</h2>
-        <div class="FormsContainer">
+
+        <div class="InputContainer">
           <h4>Current Email</h4>
           <input type="text" disabled id="email" value="email@email.com" />
+        </div>
+
+        <div class="InputContainer">
           <h4>Current Password</h4>
           <input type="text" disabled id="email" placeholder="Click to view" />
         </div>
@@ -72,49 +76,43 @@
 
       <section>
         <h2 class="Headline">Account Settings</h2>
-        <div class="FormsContainer">
+        <div class="InputContainer">
           <h4>Change Email</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
             <input type="text" name="new_email" placeholder="Enter new email" />
-            <br />
-            <br />
-            <button class="ActionButton" type="submit">Save Change</button>
+            <button class="SubmitButton" type="submit">Save New Email</button>
           </form>
+        </div>
 
+        <div class="InputContainer">
           <h4>Change Password</h4>
           <form hx-put="profile/password_reset">
-            <label>
-              Current Password
-              <input
-                type="password"
-                name="current_password"
-                placeholder="Enter your password"
-              />
-            </label>
+            <input
+              type="password"
+              name="current_password"
+              placeholder="Enter current password"
+            />
             <br />
             <br />
-            <label>
-              New Password
-              <input
-                type="password"
-                name="new_password"
-                placeholder="Enter new password"
-              />
-            </label>
+            <input
+              type="password"
+              name="new_password"
+              placeholder="Enter new password"
+            />
             <input type="hidden" name="reset_token" value="{}" />
             <input type="hidden" name="csrf_token" value="{}" />
             <input type="hidden" name="current_email" value="{}" />
-            <br />
-            <br />
-            <button class="ActionButton" type="submit">Save Change</button>
+            <button class="SubmitButton" type="submit">
+              Save New Password
+            </button>
           </form>
         </div>
       </section>
 
       <section>
         <h2 class="Headline">Danger Zone</h2>
-        <div class="FormsContainer">
+        <div class="InputContainer">
           <h4>Reset Account</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
@@ -123,11 +121,13 @@
               name="reset_account_password"
               placeholder="Enter your password"
             />
-            <br />
-            <br />
-            <button class="ActionButton" type="submit">Save Change</button>
+            <button class="SubmitButton danger" type="submit">
+              Reset My Account
+            </button>
           </form>
+        </div>
 
+        <div class="InputContainer">
           <h4>Delete Account</h4>
           <form hx-put="profile/update_email">
             <input type="hidden" name="csrf_token" value="{}" />
@@ -136,9 +136,9 @@
               name="delete_account_password"
               placeholder="Enter your password"
             />
-            <br />
-            <br />
-            <button class="ActionButton" type="submit">Save Change</button>
+            <button class="SubmitButton danger" type="submit">
+              Delete My Account
+            </button>
           </form>
         </div>
       </section>

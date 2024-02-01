@@ -6,7 +6,7 @@ use brize_auth::entity::Session;
 use poem::{
     http::StatusCode,
     web::{Data, Form},
-    Error, Result,
+    Error, Response, Result,
 };
 use sqlx::MySqlPool;
 
@@ -15,10 +15,16 @@ pub async fn handle_password_reset(
     Data(session): Data<&Session>,
     Data(repo): Data<&Database<MySqlPool>>,
     Form(req): Form<UpdatePasswordForm>,
-) -> Result<String> {
+) -> Result<Response> {
+    // TODO handle the fail more gracefully
     reset_password(session, repo, &req)
         .await
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-    Ok("Password Has Been Updated".to_string())
+    let res = Response::builder()
+        .header("Location", "/usr/account")
+        .status(StatusCode::FOUND)
+        .finish();
+
+    Ok(res)
 }

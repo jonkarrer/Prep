@@ -36,6 +36,13 @@ impl PasswordResetToken {
 }
 
 #[derive(Deserialize, Serialize)]
+pub struct DeleteAccountForm {
+    pub csrf_token: String,
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Deserialize, Serialize)]
 pub struct UpdatePasswordForm {
     pub csrf_token: String,
     pub new_password: String,

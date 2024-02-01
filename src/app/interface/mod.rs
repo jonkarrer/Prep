@@ -3,8 +3,8 @@
 mod recipe;
 pub use recipe::RecipeRepository;
 
-mod users;
-pub use users::*;
+mod user;
+pub use user::*;
 
 mod database;
 pub use database::*;

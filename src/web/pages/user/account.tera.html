@@ -119,16 +119,12 @@
 
         <div class="InputContainer">
           <h4>Delete Account</h4>
-          <form action="/usr/account/delete/{{ user_id }}" method="POST">
-            <input type="hidden" name="csrf_token" value="{}" />
-            <input
-              type="hidden"
-              name="current_email"
-              value="{{ user_email }}"
-            />
+          <form action="/usr/account/delete_account" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input type="hidden" name="email" value="{{ user_email }}" />
             <input
               type="password"
-              name="delete_account_password"
+              name="password"
               placeholder="Enter your password"
             />
             <button class="SubmitButton danger" type="submit">

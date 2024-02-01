@@ -29,6 +29,7 @@ impl PasswordResetToken {
             password_reset_expiry,
         }
     }
+
     pub fn match_token(&self, token: &str) -> bool {
         self.password_reset_token == token
     }

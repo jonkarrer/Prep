@@ -1,32 +1,17 @@
-mod password_reset;
-mod profile_details;
-mod update_email;
+mod handle_account_ui;
+mod handle_modify_email;
+mod handle_password_reset;
 
-use crate::{
-    app::configs::StaticPath,
-    infra::middleware::{AuthGuard, AuthGuardImpl},
-};
-use password_reset::*;
-use poem::{endpoint::StaticFileEndpoint, get, EndpointExt, Route};
-use profile_details::*;
-use update_email::*;
+use crate::infra::middleware::{AuthGuard, AuthGuardImpl};
+use handle_account_ui::*;
+use handle_modify_email::*;
+use handle_password_reset::*;
+use poem::{get, post, EndpointExt, Route};
 
 pub fn use_user_routes() -> AuthGuardImpl<Route> {
     Route::new()
-        .at(
-            "/profile",
-            get(StaticFileEndpoint::new(
-                StaticPath::from("/pages/user/profile.html").0,
-            )),
-        )
-        .at("/profile/details", get(handle_user_profile_details))
-        .at(
-            "/profile/password_reset",
-            get(handle_password_reset_ui).put(handle_password_reset),
-        )
-        .at(
-            "/profile/update_email",
-            get(handle_update_email_ui).put(handle_update_email),
-        )
+        .at("/account", get(handle_account_ui))
+        .at("/account/password_reset", post(handle_password_reset))
+        .at("/account/modify_email", post(handle_modify_email))
         .with(AuthGuard)
 }

@@ -9,7 +9,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <link rel="stylesheet" href="/pages/user/profile.css" />
+    <link rel="stylesheet" href="/pages/user/account.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
 
     <title>User Profile</title>
@@ -65,12 +65,7 @@
 
         <div class="InputContainer">
           <h4>Current Email</h4>
-          <input type="text" disabled id="email" value="email@email.com" />
-        </div>
-
-        <div class="InputContainer">
-          <h4>Current Password</h4>
-          <input type="text" disabled id="email" placeholder="Click to view" />
+          <input type="text" disabled id="email" value="{{ user_email }}" />
         </div>
       </section>
 
@@ -78,8 +73,13 @@
         <h2 class="Headline">Account Settings</h2>
         <div class="InputContainer">
           <h4>Change Email</h4>
-          <form hx-put="profile/update_email">
-            <input type="hidden" name="csrf_token" value="{}" />
+          <form action="/usr/account/modify_email" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input
+              type="hidden"
+              name="current_email"
+              value="{{ user_email }}"
+            />
             <input type="text" name="new_email" placeholder="Enter new email" />
             <button class="SubmitButton" type="submit">Save New Email</button>
           </form>
@@ -87,7 +87,7 @@
 
         <div class="InputContainer">
           <h4>Change Password</h4>
-          <form hx-put="profile/password_reset">
+          <form action="/usr/account/password_reset">
             <input
               type="password"
               name="current_password"
@@ -100,9 +100,13 @@
               name="new_password"
               placeholder="Enter new password"
             />
-            <input type="hidden" name="reset_token" value="{}" />
-            <input type="hidden" name="csrf_token" value="{}" />
-            <input type="hidden" name="current_email" value="{}" />
+            <input type="hidden" name="reset_token" value="{{ reset_token }}" />
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input
+              type="hidden"
+              name="current_email"
+              value="{{ user_email }}"
+            />
             <button class="SubmitButton" type="submit">
               Save New Password
             </button>
@@ -112,25 +116,16 @@
 
       <section>
         <h2 class="Headline">Danger Zone</h2>
-        <div class="InputContainer">
-          <h4>Reset Account</h4>
-          <form hx-put="profile/update_email">
-            <input type="hidden" name="csrf_token" value="{}" />
-            <input
-              type="password"
-              name="reset_account_password"
-              placeholder="Enter your password"
-            />
-            <button class="SubmitButton danger" type="submit">
-              Reset My Account
-            </button>
-          </form>
-        </div>
 
         <div class="InputContainer">
           <h4>Delete Account</h4>
-          <form hx-put="profile/update_email">
+          <form action="/usr/account/delete/{{ user_id }}" method="POST">
             <input type="hidden" name="csrf_token" value="{}" />
+            <input
+              type="hidden"
+              name="current_email"
+              value="{{ user_email }}"
+            />
             <input
               type="password"
               name="delete_account_password"

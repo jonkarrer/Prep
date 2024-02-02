@@ -8,52 +8,18 @@ use crate::{
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Form, Html},
-    Error, IntoResponse, Request, Response, Result,
+    web::{Data, Form},
+    Error, Response, Result,
 };
 use regex::Regex;
 use serde::Deserialize;
 use sqlx::MySqlPool;
 
-#[handler]
-pub fn handle_register_ui(req: &Request) -> Result<impl IntoResponse> {
-    match req.header("HX-Request") {
-        Some(_) => Ok(Html(
-            r#"
-            <form action="/auth/register" method="POST">
-                <div>
-                    <input type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    title="Enter your email address"
-                />
-                </div>
-                <div>
-                    <input 
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    title="At least 8 characters with a number and uppercase letter"
-                />
-                </div>
-                <div>
-                    <input
-                        name="confirm_password"
-                        placeholder="Confirm Password"
-                    />
-                </div>
-                <button type="submit">Register</button>
-            </form>
-            "#,
-        )),
-        None => Err(Error::from_status(StatusCode::NOT_FOUND)),
-    }
-}
-
 #[derive(Deserialize)]
 pub struct RegisterRequest {
     email: String,
     password: String,
+    confirm_password: String,
 }
 
 #[handler]
@@ -65,7 +31,7 @@ pub async fn handle_register(
 
     match email_re.is_match(&req.email) {
         true => {
-            if is_valid_password(&req.password) {
+            if is_valid_password(&req.password, &req.confirm_password) {
                 let user_id = register_new_user(&req.email, &req.password, repo)
                     .await
                     .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
@@ -74,22 +40,23 @@ pub async fn handle_register(
                     .await
                     .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
+                // TODO add Secure; back to the cookie
                 let mut response = Response::builder()
                     .header(
                         "Set-Cookie",
                         format!(
-                            "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
+                            "{}={}; Path=/; HttpOnly; SameSite=Strict",
                             SESSION_COOKIE_KEY, session.session_id
                         ),
                     )
-                    .header("Location", "/dash")
+                    .header("Location", "/recipe/all")
                     .status(StatusCode::FOUND)
                     .body("Registration Successful");
 
                 Ok(response)
             } else {
                 return Err(Error::from_string(
-                    "Password must be at least 8 letters and one digit",
+                    "Invalid Password Entries",
                     StatusCode::BAD_REQUEST,
                 ));
             }
@@ -103,11 +70,12 @@ pub async fn handle_register(
     }
 }
 
-fn is_valid_password(password: &str) -> bool {
+fn is_valid_password(password: &str, confirm_password: &str) -> bool {
+    let passwords_match = password == confirm_password;
     let length_check = password.len() >= 8;
     let digit_check = Regex::new(r"\d").unwrap().is_match(password);
 
-    length_check && digit_check
+    length_check && digit_check && passwords_match
 }
 
 #[cfg(test)]

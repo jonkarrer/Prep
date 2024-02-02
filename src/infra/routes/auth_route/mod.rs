@@ -14,10 +14,9 @@ pub fn use_auth_routes() -> Route {
             "/",
             get(StaticFileEndpoint::new(
                 StaticPath::from("/pages/auth/auth.html").0,
-            ))
-            .post(handle_register),
+            )),
         )
-        .at("/register", get(handle_register_ui).post(handle_register))
+        .at("/register", post(handle_register))
         .at("/login", post(handle_login))
         .at(
             "/logout",

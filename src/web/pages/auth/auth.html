@@ -13,6 +13,8 @@
       <img src="/assets/left_panel.png" alt="" />
     </div>
 
+    <div id="transition_page" class="TransitionPage"></div>
+
     <main>
       <header>
         <div class="Logo">
@@ -69,10 +71,8 @@
           <button type="submit">Register</button>
         </form>
 
-        <a class="Link show" onclick="swapForms(event)" id="sign_up_link"
-          >Sign Up</a
-        >
-        <a class="Link" onclick="swapForms(event)" id="sign_in_link">Sign In</a>
+        <a class="Link show" id="sign_up_link">Sign Up</a>
+        <a class="Link" id="sign_in_link">Sign In</a>
 
         <div class="Slider">
           <p id="slider_text">
@@ -93,100 +93,6 @@
       </div>
     </main>
 
-    <script>
-      const loginForm = document.getElementById("login_form");
-      const registerForm = document.getElementById("register_form");
-      loginForm.addEventListener("submit", submitForm);
-      registerForm.addEventListener("submit", submitForm);
-
-      const signInLink = document.getElementById("sign_in_link");
-      const signUpLink = document.getElementById("sign_up_link");
-
-      function showRegisterForm() {
-        signInLink.classList.add("show");
-        registerForm.classList.add("show");
-
-        signUpLink.classList.remove("show");
-        loginForm.classList.remove("show");
-      }
-
-      function showLoginForm() {
-        signUpLink.classList.add("show");
-        loginForm.classList.add("show");
-
-        signInLink.classList.remove("show");
-        registerForm.classList.remove("show");
-      }
-
-      function swapForms(e) {
-        const id = e.target.id;
-
-        id === "sign_up_link" ? showRegisterForm() : showLoginForm();
-      }
-
-      function transitionSliderText(index) {
-        let textEl = document.getElementById("slider_text");
-        textEl.classList.add("fade-in");
-
-        textEl.innerText = [
-          "Organize your kitchen with Prep, the generative recipe system.",
-          "Don't let a great dish be forgotten, let Prep save it for next time.",
-          "Prep will help you learn, understand, and execute any recipe",
-        ][index];
-
-        setTimeout(() => textEl.classList.remove("fade-in"), 2000);
-      }
-
-      function transitionFilledDot(index) {
-        let dot_one = document.getElementById("dot_one");
-        let dot_two = document.getElementById("dot_two");
-        let dot_three = document.getElementById("dot_three");
-
-        let dots = [dot_one, dot_two, dot_three];
-
-        let currDot = dots[index];
-        let prevDot = dots[index - 1 === -1 ? 2 : index - 1];
-
-        currDot.classList.toggle("Dot--filled");
-        currDot.classList.add("fill-in");
-
-        prevDot.classList.toggle("Dot--filled");
-
-        setTimeout(() => currDot.classList.remove("fill-in"), 2000);
-      }
-
-      let i = 1;
-      setInterval(() => {
-        transitionSliderText(i);
-        transitionFilledDot(i);
-
-        i = i === 2 ? 0 : (i += 1);
-      }, 5000);
-
-      async function submitForm(event) {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        const path = event.target.action;
-        const method = event.target.method;
-        const body = new URLSearchParams(formData).toString();
-
-        let res = await fetch(path, {
-          method: method,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          redirect: "follow",
-          body: body,
-        });
-
-        if (res.redirected) {
-          window.location = res.url;
-        } else {
-          let text = await res.text();
-          handleToast("error", text);
-        }
-      }
-    </script>
+    <script type="module" src="/pages/auth/auth.js"></script>
   </body>
 </html>

@@ -34,14 +34,9 @@
 
         <div class="ActionButton__text--right">Back</div>
       </a>
-      <a class="ActionButton">
-        <button
-          class="ActionButton__text--left"
-          type="submit"
-          form="recipe_form"
-        >
-          Logout
-        </button>
+
+      <button type="submit" form="logout_form" class="ActionButton">
+        <div class="ActionButton__text--left">Logout</div>
 
         <div class="ActionButton__icon">
           <svg
@@ -57,7 +52,7 @@
             />
           </svg>
         </div>
-      </a>
+      </button>
     </header>
     <main>
       <section>
@@ -67,6 +62,9 @@
           <h4>Current Email</h4>
           <input type="text" disabled id="email" value="{{ user_email }}" />
         </div>
+        <form id="logout_form" action="/auth/logout" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        </form>
       </section>
 
       <section>

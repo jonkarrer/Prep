@@ -1,15 +1,12 @@
 use crate::{
-    app::{
-        action::get_single_recipe,
-        interface::{Database, RecipeRepository},
-    },
-    domain::entity::{Direction, Ingredient, Tag},
+    app::interface::{Database, RecipeRepository},
+    domain::entity::Tag,
 };
 use brize_auth::entity::Session;
 use poem::{
     handler,
     http::StatusCode,
-    web::{Data, Html, Path},
+    web::{Data, Html},
     Error, IntoResponse, Result,
 };
 use sqlx::MySqlPool;
@@ -24,7 +21,7 @@ pub async fn handle_create_recipe_ui(
     let tera = Tera::new("src/web/pages/recipe/create/*.tera.html")
         .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-    // Fetch single recipe
+    // Fetch tags
     let tags = repo
         .select_tags_for_user(&session.user_id)
         .await

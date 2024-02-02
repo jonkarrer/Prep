@@ -12,6 +12,7 @@ main {
 
   width: 90%;
   margin: auto;
+  padding-bottom: 40px;
 }
 
 article {
@@ -47,13 +48,14 @@ article {
 
 nav {
   position: fixed;
-  top: 4rem;
+  top: 3.6rem;
   left: 0;
 
   display: flex;
   justify-content: space-between;
 
-  padding: 0.6rem 1rem;
+  padding: 0.7rem 1rem;
+
   width: 100%;
 
   background-color: var(--sec-color);
@@ -165,7 +167,6 @@ input[name="servings"] {
   text-align: left;
   vertical-align: top;
   line-height: normal;
-  height: auto;
 }
 
 .Tags {

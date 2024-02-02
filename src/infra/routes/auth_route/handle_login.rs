@@ -18,7 +18,7 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         .header(
             "Set-Cookie",
             format!(
-                "{}={}; Path=/; HttpOnly; SameSite=Strict",
+                "{}={}; Path=/; HttpOnly; SameSite=Strict;",
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )

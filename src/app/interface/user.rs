@@ -12,4 +12,5 @@ pub trait UserRepository: Sync + Send {
     ) -> Result<()>;
     async fn update_email(&self, new_email: &str, user_id: &str) -> Result<()>;
     async fn get_password_reset_token(&self, user_id: &str) -> Result<PasswordResetToken>;
+    async fn delete_user(&self, user_id: &str) -> Result<()>;
 }

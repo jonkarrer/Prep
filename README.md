@@ -39,3 +39,16 @@ KEY_TWO: 76cc1ddbdebf4016ac72414e263c4ef3
   - [] Generate shopping list from meal plans
 
 - [] handle recipe drafts, maybe make a table in the db to then hydrate a tera template with all the stuff
+
+## Version One
+
+- [x] - Delete recipe route
+    [ ] - Delete recipe UI animation
+    [ ] - Test route and methods
+- [x] - Modify recipe route and UI
+    [ ] - Test route and methods
+- [ ] - Accounts page
+    [ ] - Secure account use cases
+- [ ] - Get cert for theprep.app
+- [ ] - Hook up to planet scale cloud db
+- [ ] - Develop pipeline for deploys

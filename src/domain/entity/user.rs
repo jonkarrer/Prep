@@ -29,9 +29,17 @@ impl PasswordResetToken {
             password_reset_expiry,
         }
     }
+
     pub fn match_token(&self, token: &str) -> bool {
         self.password_reset_token == token
     }
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct DeleteAccountForm {
+    pub csrf_token: String,
+    pub email: String,
+    pub password: String,
 }
 
 #[derive(Deserialize, Serialize)]

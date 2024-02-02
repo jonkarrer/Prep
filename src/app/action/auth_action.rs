@@ -3,7 +3,7 @@ use crate::{
         clients::{auth_client, db_client, session_client},
         interface::UserRepository,
     },
-    domain::entity::{UpdateEmailForm, UpdatePasswordForm, UserId},
+    domain::entity::{DeleteAccountForm, UpdateEmailForm, UpdatePasswordForm, UserId},
 };
 use anyhow::Result;
 use brize_auth::{config::Expiry, entity::Session};
@@ -87,6 +87,29 @@ pub async fn update_user_email<T: UserRepository>(
             repo.update_email(&form.new_email, &session.user_id).await?;
             auth.update_user_name(&old_user_email, &form.new_email)
                 .await?;
+
+            Ok(())
+        }
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
+}
+
+pub async fn delete_account<T: UserRepository>(
+    repo: &T,
+    form: &DeleteAccountForm,
+    session: &Session,
+) -> Result<()> {
+    match session.match_csrf_token(&form.csrf_token) {
+        true => {
+            let client = auth_client().await;
+
+            // Validate current auth
+            let user_id = verify_user_credentials(&form.email, &form.password).await?;
+
+            // Delete from credentials table
+            client.destroy_credentials(&form.email).await?;
+            repo.delete_user(&user_id.0).await?;
+            logout_user(session, &form.csrf_token).await?;
 
             Ok(())
         }

@@ -7,14 +7,26 @@ export class StagedDirection extends LitElement {
     this.detail = detail;
   }
 
+  static properties = {
+    detail: { type: String },
+  };
+
   // render as light dom
   createRenderRoot() {
     return this;
   }
 
   firstUpdated() {
-    let textarea = this.querySelector("#direction_input");
-    this.resize(textarea);
+    const textarea = this.querySelector("#direction_input");
+    const checkHeight = () => {
+      if (textarea.scrollHeight > 0) {
+        this.resize(textarea);
+      } else {
+        setTimeout(checkHeight, 50);
+      }
+    };
+
+    checkHeight();
   }
 
   adjustTextareaSize(e) {

@@ -33,7 +33,7 @@
       </a>
 
       <div class="Header__right-panel">
-        <a class="ActionButton" href="/recipe/edit">
+        <a class="ActionButton" href="/recipe/modify/{{ recipe_id }}">
           <div class="ActionButton__text--left">Edit</div>
 
           <div class="ActionButton__icon">
@@ -112,7 +112,7 @@
           {% for dir in directions %}
           <static-direction
             order="{{ dir.step_order }}"
-            details="{{ dir.direction_details }}"
+            detail="{{ dir.direction_details }}"
           ></static-direction>
           {% endfor %}
         </article>

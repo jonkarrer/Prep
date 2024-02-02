@@ -1,0 +1,72 @@
+@import url("/pages/global/styles/index.css");
+
+body {
+  background-color: var(--sec-color);
+}
+main {
+  margin: auto;
+  margin-top: 80px;
+  padding-bottom: 60px;
+  width: 90%;
+}
+
+section {
+  margin-top: 50px;
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: var(--sec-color);
+  width: 100%;
+
+  padding: 1rem;
+  z-index: 1000;
+}
+
+section .InputContainer {
+  margin-bottom: 1.6rem;
+}
+.InputContainer h4 {
+  margin-bottom: 0.6rem;
+}
+
+.SubmitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--button-padding);
+  width: max-content;
+  margin-top: 1rem;
+
+  font-size: var(--rg);
+  color: var(--sec-color);
+
+  border-radius: var(--border-radius);
+  border: var(--solid-border);
+  background-color: var(--accent);
+
+  cursor: pointer;
+}
+
+.SubmitButton.danger {
+  background-color: var(--error);
+}
+
+input {
+  width: 100%;
+  max-width: 310px;
+  height: 40px;
+
+  padding: 0.6rem 1rem;
+
+  color: var(--darker);
+  border: 1px solid var(--contrast);
+  border-radius: var(--border-radius);
+  box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+}

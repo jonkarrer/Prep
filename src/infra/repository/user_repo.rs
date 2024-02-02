@@ -103,4 +103,18 @@ impl UserRepository for Database<MySqlPool> {
 
         Ok(())
     }
+
+    async fn delete_user(&self, user_id: &str) -> Result<()> {
+        sqlx::query(
+            r#"
+            DELETE FROM users
+            WHERE user_id = ?
+            "#,
+        )
+        .bind(user_id)
+        .execute(&self.pool)
+        .await?;
+
+        Ok(())
+    }
 }

@@ -1,17 +1,18 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
+use brize_auth::entity::Session;
 
 use crate::{
     app::interface::RecipeRepository,
-    domain::entity::{Recipe, RecipeArgs, RecipeCard, RecipeDetails},
+    domain::entity::{Recipe, RecipeArgs, RecipeCard},
 };
 
 pub async fn create_recipe<T: RecipeRepository>(
     repo: &T,
     recipe_args: RecipeArgs,
     user_id: &str,
-) -> Result<RecipeDetails> {
-    let recipe_id = repo.create_recipe_from_args(recipe_args, user_id).await?;
-    repo.select_recipe_details_by_id(&recipe_id).await
+) -> Result<()> {
+    repo.create_recipe_from_args(recipe_args, user_id).await?;
+    Ok(())
 }
 
 pub async fn get_single_recipe<T: RecipeRepository>(repo: &T, recipe_id: &str) -> Result<Recipe> {
@@ -32,6 +33,28 @@ pub async fn get_all_recipe_details_for_user<T: RecipeRepository>(
     }
 
     Ok(recipe_cards)
+}
+
+pub async fn delete_recipe<T: RecipeRepository>(
+    repo: &T,
+    session: &Session,
+    recipe_id: &str,
+    csrf_token: &str,
+) -> Result<()> {
+    match session.match_csrf_token(csrf_token) {
+        true => repo.delete_recipe(recipe_id).await,
+        false => Err(anyhow::anyhow!("Unauthorized")),
+    }
+}
+
+pub async fn modify_recipe<T: RecipeRepository>(
+    repo: &T,
+    recipe_id: &str,
+    recipe_args: RecipeArgs,
+    user_id: &str,
+) -> Result<()> {
+    repo.update_recipe(recipe_args, recipe_id, user_id).await?;
+    Ok(())
 }
 
 pub fn validate_recipe_args(recipe: &RecipeArgs) -> bool {
@@ -97,9 +120,7 @@ mod tests {
         let recipe_args = get_test_recipe_args();
         let user_id = get_test_user_id().await;
 
-        let recipe = create_recipe(&repo, recipe_args, &user_id).await.unwrap();
-
-        assert_eq!(recipe.recipe_title, "Oatmeal")
+        create_recipe(&repo, recipe_args, &user_id).await.unwrap();
     }
 
     #[test]

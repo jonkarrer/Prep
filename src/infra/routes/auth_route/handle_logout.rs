@@ -60,7 +60,7 @@ mod tests {
     #[tokio::test]
     async fn test_route_logout() {
         // build route
-        let path = "/usr/lougout";
+        let path = "/usr/logout";
         let ep = Route::new().at(path, post(handle_logout)).with(AuthGuard);
         let test_client = TestClient::new(ep);
         let mut s = session_client().await;

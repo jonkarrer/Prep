@@ -28,6 +28,7 @@ pub async fn handle_single_recipe_ui(
     // Inject recipes into template
     let mut context = Context::new();
     context.insert("title", &recipe.recipe_title);
+    context.insert("recipe_id", &recipe.recipe_id);
     context.insert("favorite", &recipe.favorite);
     context.insert("servings", &recipe.servings);
     context.insert("ingredient_count", &recipe.ingredients.len());

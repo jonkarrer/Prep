@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.8"
+      integrity="sha384-rgjA7mptc2ETQqXoYC3/zJvkU7K/aP44Y+z7xQuJiVnB/422P/Ak+F/AqFR7E4Wr"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="/pages/user/account.css" />
+    <script type="module" src="/pages/global/components/index.js"></script>
+
+    <title>User Profile</title>
+  </head>
+  <body>
+    <header class="Header">
+      <a class="ActionButton" href="/recipe/all">
+        <div class="ActionButton__icon">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M81.1606 41.1831H22.3894L57.5657 10.6473C58.1282 10.1552 57.7867 9.24109 57.0434 9.24109H48.1539C47.7622 9.24109 47.3905 9.38171 47.0992 9.63283L9.14051 42.5692C8.79286 42.8706 8.51404 43.2431 8.32295 43.6617C8.13186 44.0802 8.03296 44.5349 8.03296 44.995C8.03296 45.4551 8.13186 45.9098 8.32295 46.3283C8.51404 46.7469 8.79286 47.1194 9.14051 47.4208L47.3202 80.5581C47.4709 80.6886 47.6517 80.7589 47.8425 80.7589H57.0334C57.7767 80.7589 58.1182 79.8348 57.5557 79.3527L22.3894 48.817H81.1606C81.6026 48.817 81.9642 48.4554 81.9642 48.0134V41.9866C81.9642 41.5447 81.6026 41.1831 81.1606 41.1831Z"
+              fill="black"
+            />
+          </svg>
+        </div>
+
+        <div class="ActionButton__text--right">Back</div>
+      </a>
+
+      <button type="submit" form="logout_form" class="ActionButton">
+        <div class="ActionButton__text--left">Logout</div>
+
+        <div class="ActionButton__icon">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M80.7589 67.0982H73.6975C73.2154 67.0982 72.7634 67.3091 72.4621 67.6808C71.7589 68.5346 71.0056 69.3583 70.2121 70.1417C66.9666 73.3905 63.1223 75.9795 58.8917 77.7656C54.5088 79.6168 49.798 80.5665 45.0402 80.558C40.2288 80.558 35.5681 79.6138 31.1886 77.7656C26.9581 75.9795 23.1138 73.3905 19.8683 70.1417C16.617 66.904 14.0245 63.0664 12.2344 58.8415C10.3761 54.462 9.44196 49.8114 9.44196 45C9.44196 40.1886 10.3862 35.5379 12.2344 31.1585C14.0223 26.9297 16.5937 23.1228 19.8683 19.8583C23.1429 16.5937 26.9498 14.0223 31.1886 12.2344C35.5681 10.3862 40.2288 9.44196 45.0402 9.44196C49.8516 9.44196 54.5123 10.3761 58.8917 12.2344C63.1306 14.0223 66.9375 16.5937 70.2121 19.8583C71.0056 20.6518 71.7489 21.4754 72.4621 22.3192C72.7634 22.6908 73.2254 22.9018 73.6975 22.9018H80.7589C81.3917 22.9018 81.7835 22.1987 81.4319 21.6663C73.7277 9.69307 60.2478 1.76785 44.9297 1.80803C20.8627 1.8683 1.56696 21.4051 1.80803 45.442C2.04911 69.0971 21.3147 88.192 45.0402 88.192C60.3181 88.192 73.7377 80.2768 81.4319 68.3337C81.7734 67.8013 81.3917 67.0982 80.7589 67.0982ZM89.6886 44.3672L75.4353 33.1172C74.9029 32.6953 74.1295 33.077 74.1295 33.75V41.3839H42.5893C42.1473 41.3839 41.7857 41.7455 41.7857 42.1875V47.8125C41.7857 48.2545 42.1473 48.6161 42.5893 48.6161H74.1295V56.25C74.1295 56.923 74.9129 57.3047 75.4353 56.8828L89.6886 45.6328C89.7847 45.5576 89.8623 45.4616 89.9158 45.352C89.9692 45.2423 89.9969 45.122 89.9969 45C89.9969 44.878 89.9692 44.7577 89.9158 44.648C89.8623 44.5384 89.7847 44.4424 89.6886 44.3672Z"
+              fill="#000"
+            />
+          </svg>
+        </div>
+      </button>
+    </header>
+    <main>
+      <section>
+        <h2 class="Headline">Account Details</h2>
+
+        <div class="InputContainer">
+          <h4>Current Email</h4>
+          <input type="text" disabled id="email" value="{{ user_email }}" />
+        </div>
+        <form id="logout_form" action="/auth/logout" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        </form>
+      </section>
+
+      <section>
+        <h2 class="Headline">Account Settings</h2>
+        <div class="InputContainer">
+          <h4>Change Email</h4>
+          <form action="/usr/account/modify_email" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input
+              type="hidden"
+              name="current_email"
+              value="{{ user_email }}"
+            />
+            <input type="text" name="new_email" placeholder="Enter new email" />
+            <button class="SubmitButton" type="submit">Save New Email</button>
+          </form>
+        </div>
+
+        <div class="InputContainer">
+          <h4>Change Password</h4>
+          <form action="/usr/account/password_reset" method="POST">
+            <input
+              type="password"
+              name="current_password"
+              placeholder="Enter current password"
+            />
+            <br />
+            <br />
+            <input
+              type="password"
+              name="new_password"
+              placeholder="Enter new password"
+            />
+            <input type="hidden" name="reset_token" value="{{ reset_token }}" />
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input
+              type="hidden"
+              name="current_email"
+              value="{{ user_email }}"
+            />
+            <button class="SubmitButton" type="submit">
+              Save New Password
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="Headline">Danger Zone</h2>
+
+        <div class="InputContainer">
+          <h4>Delete Account</h4>
+          <form action="/usr/account/delete_account" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input type="hidden" name="email" value="{{ user_email }}" />
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+            />
+            <button class="SubmitButton danger" type="submit">
+              Delete My Account
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

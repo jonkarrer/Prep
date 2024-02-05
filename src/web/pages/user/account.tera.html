@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/pages/user/account.css" />
     <script type="module" src="/pages/global/components/index.js"></script>
+    <script type="module" src="/pages/user/account.js"></script>
 
     <title>User Profile</title>
   </head>
@@ -71,7 +72,12 @@
         <h2 class="Headline">Account Settings</h2>
         <div class="InputContainer">
           <h4>Change Email</h4>
-          <form action="/usr/account/modify_email" method="POST">
+          <form
+            action="/usr/account/modify_email"
+            method="POST"
+            onsubmit="submitForm(event)"
+            id="change_email_form"
+          >
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
             <input
               type="hidden"
@@ -85,7 +91,12 @@
 
         <div class="InputContainer">
           <h4>Change Password</h4>
-          <form action="/usr/account/password_reset" method="POST">
+          <form
+            action="/usr/account/password_reset"
+            method="POST"
+            onsubmit="submitForm(event)"
+            id="change_password_form"
+          >
             <input
               type="password"
               name="current_password"
@@ -117,7 +128,12 @@
 
         <div class="InputContainer">
           <h4>Delete Account</h4>
-          <form action="/usr/account/delete_account" method="POST">
+          <form
+            action="/usr/account/delete_account"
+            method="POST"
+            onsubmit="submitForm(event)"
+            id="delete_account_form"
+          >
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
             <input type="hidden" name="email" value="{{ user_email }}" />
             <input

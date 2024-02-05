@@ -13,12 +13,11 @@ pub async fn handle_login(Form(req): Form<LoginRequest>) -> Result<Response> {
         Error::from_string("Username or Password is incorrect", StatusCode::BAD_REQUEST)
     })?;
 
-    // TODO make cookie Secure; this is only for dev mode
     let res = Response::builder()
         .header(
             "Set-Cookie",
             format!(
-                "{}={}; Path=/; HttpOnly; SameSite=Strict;",
+                "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict;",
                 SESSION_COOKIE_KEY, session.session_id
             ),
         )

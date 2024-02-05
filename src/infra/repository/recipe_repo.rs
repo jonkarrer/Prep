@@ -313,7 +313,6 @@ impl RecipeRepository for Database<MySqlPool> {
     }
 
     async fn delete_recipe(&self, recipe_id: &str) -> Result<()> {
-        // TODO delete everything with that id
         sqlx::query(
             r#"
             DELETE FROM recipes 

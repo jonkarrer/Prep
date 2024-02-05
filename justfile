@@ -1,9 +1,16 @@
-# ---- Build ----
-build-app:
-    ./scripts/build.sh
+# ---- Composer ----
+compose-prod:
+    docker compose -f docker-compose.prod.yml -p prep-prod up
 
-teardown-app:
-    docker compose down
+decompose-prod:
+    docker compose -p prep-prod down
+
+compose-dev:
+    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up
+
+decompose-dev:
+    docker compose -p prep-dev down
+
 
 # ---- Development ----
 run-dev:

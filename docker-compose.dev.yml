@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  database:
+    build: ./database
+    hostname: database
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    hostname: web
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      - DB_HOST=database # use hostname defined in database service
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - APP_PORT=${APP_PORT}
+      - APP_HOST=${APP_HOST}
+      - NGINX_PORT=${NGINX_PORT}
+      - STATIC_FILE_PREFIX=${STATIC_FILE_PREFIX}
+      - OPEN_API_TOKEN=${OPEN_API_TOKEN}
+    depends_on:
+      - database
+
+  nginx:
+    build: ./proxy
+    env_file:
+      - .env.dev
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+    depends_on:
+      - web
+      - database

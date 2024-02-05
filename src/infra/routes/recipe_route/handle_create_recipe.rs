@@ -39,7 +39,6 @@ mod tests {
     use crate::app::clients::db_client;
     use crate::app::helper::{get_test_recipe_args, get_test_session};
     use crate::domain::constants::SESSION_COOKIE_KEY;
-    use crate::domain::entity::RecipeDetails;
     use crate::infra::middleware::AuthGuard;
 
     #[tokio::test]

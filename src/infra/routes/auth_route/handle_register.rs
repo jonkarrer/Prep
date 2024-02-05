@@ -34,11 +34,13 @@ pub async fn handle_register(
             if is_valid_password(&req.password, &req.confirm_password) {
                 let user_id = register_new_user(&req.email, &req.password, repo)
                     .await
-                    .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+                    .map_err(|e| {
+                        Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR)
+                    })?;
 
-                let session = start_session_for_user(&user_id.0)
-                    .await
-                    .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+                let session = start_session_for_user(&user_id.0).await.map_err(|e| {
+                    Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR)
+                })?;
 
                 // TODO add Secure; back to the cookie
                 let mut response = Response::builder()

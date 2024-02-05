@@ -19,7 +19,7 @@ pub async fn handle_all_recipes_ui(
 ) -> Result<impl IntoResponse> {
     // Init template engine
     let tera = Tera::new("src/web/pages/recipe/all/*.tera.html")
-        .map_err(|_| Error::from_status(StatusCode::NOT_FOUND))?;
+        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     // Fetch all recipes
     let recipes = get_all_recipe_details_for_user(repo, &session.user_id)
@@ -30,6 +30,7 @@ pub async fn handle_all_recipes_ui(
     let mut context = Context::new();
     context.insert::<Vec<RecipeCard>, &str>("recipes", &recipes);
     context.insert::<str, &str>("csrf_token", &session.csrf_token);
+    context.insert::<bool, &str>("no_recipes", &(recipes.len() == 0));
 
     let rendered_html = tera
         .render("all_recipes.tera.html", &context)

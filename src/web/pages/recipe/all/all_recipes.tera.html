@@ -81,6 +81,15 @@
     </header>
 
     <main>
+      {% if no_recipes %}
+      <section class="EmptyRecipeSection">
+        <h2>
+          You don't have any recipes, <br />let's make
+          <span>one.</span>
+        </h2>
+        <a href="/recipe/create"> Create First Recipe </a>
+      </section>
+      {% else %}
       <ul id="list_container">
         {% for recipe in recipes %}
         <div class="RecipeCard">
@@ -150,6 +159,7 @@
         </div>
         {% endfor %}
       </ul>
+      {% endif %}
     </main>
 
     <script>

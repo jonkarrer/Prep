@@ -121,3 +121,28 @@ main {
   width: 28px;
   height: 28px;
 }
+
+.EmptyRecipeSection {
+  display: grid;
+  align-items: center;
+  text-align: center;
+  height: 150px;
+  margin-top: 3rem;
+}
+.EmptyRecipeSection a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 16px;
+  width: max-content;
+  margin: auto;
+
+  font-size: var(--sm);
+  color: var(--sec-color);
+
+  border-radius: var(--border-radius);
+  background-color: var(--accent);
+
+  cursor: pointer;
+}

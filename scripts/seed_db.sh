@@ -1,4 +1,9 @@
 #!/bin/bash
+# print each command before it is executed
+set -x
+# stop on any error from any command in a pipeline. 
+set -eo pipefail
+
 # check for dependancies
 if ! [ -x "$(command -v mysql)" ]; then
   echo >&2 "Error: mysql is not installed."
@@ -10,23 +15,15 @@ if ! [ -x "$(command -v sqlx)" ]; then
   exit 1
 fi
 
-if ! [ -x "$(command -v docker)" ]; then
-  echo >&2 "Error: docker is not installed."
-  exit 1
-fi
-
-# start docker containers
-docker compose up --build --detach
-
 # pull in enviornment vars
 source .env.dev
 
-# keep pinging MySQL container until it's ready to accept connections
+# Keep pinging MySQL until it's ready to accept commands
 until mysql -h 127.0.0.1 -u "${DB_USER}" -p"${DB_PASSWORD}" -P "${DB_PORT}" -D "${DB_NAME}" -e 'SELECT 1'; do
   >&2 echo "MySQL is still unavailable - sleeping"
-  sleep 2
+  sleep 1
 done
 
-# run migrations on database when ready for connections
-sqlx database create
-sqlx migrate run --source database/migrations 
+# create migration with sqlx
+sqlx database create --database-url ${DATABASE_URL}
+sqlx migrate run --database-url ${DATABASE_URL} --source database/migrations

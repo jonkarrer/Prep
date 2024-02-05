@@ -1,3 +1,6 @@
+# ---- Build -----
+
+
 # ---- Composer ----
 compose-prod:
     docker compose -f docker-compose.prod.yml -p prep-prod up
@@ -5,12 +8,17 @@ compose-prod:
 decompose-prod:
     docker compose -p prep-prod down
 
+destroy-prod:
+    docker compose -p prep-prod down --rmi all --remove-orphans
+
 compose-dev:
-    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up
+    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up -d && bash ./scripts/seed_db.sh
 
 decompose-dev:
     docker compose -p prep-dev down
 
+destroy-dev:
+    docker compose -p prep-dev down --rmi all --remove-orphans
 
 # ---- Development ----
 run-dev:

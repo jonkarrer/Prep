@@ -54,6 +54,12 @@ KEY_TWO: 76cc1ddbdebf4016ac72414e263c4ef3
 - [ ] - Hook up to planet scale cloud db
 - [ ] - Develop pipeline for deploys
 
-```bash
-sadkj;lfjksdjf;klsd
-```
+## MySQL install for Debian
+
+FROM rust:bullseye as builder
+
+RUN apt-get update && \
+ apt-get install -y default-mysql-client && \
+ apt-get clean && \
+ rm -rf /var/lib/apt/lists/_ /tmp/_ /var/tmp/\*
+RUN cargo install sqlx-cli

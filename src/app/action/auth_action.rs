@@ -262,7 +262,7 @@ mod tests {
 
         // Create update email form
         let random_str = &uuid::Uuid::new_v4().to_string();
-        let user_email = &random_str[..10];
+        let user_email = format!("{}@gmail.com", &random_str[..10]);
         let form = UpdateEmailForm {
             csrf_token: session.csrf_token.to_string(),
             new_email: user_email.to_string(),
@@ -274,7 +274,7 @@ mod tests {
         // Test that session is no longer valid
         let auth = auth_client().await;
         let verify = auth
-            .verify_credentials(user_email, TEST_USER_PASSWORD)
+            .verify_credentials(&user_email, TEST_USER_PASSWORD)
             .await;
 
         assert!(verify.is_ok());

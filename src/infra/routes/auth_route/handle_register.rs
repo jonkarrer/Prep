@@ -100,6 +100,7 @@ mod tests {
         let form_data = [
             ("email", format!("{}12@gmail.com", &email)),
             ("password", password.to_string()),
+            ("confirm_password", password.to_string()),
         ];
 
         // run test

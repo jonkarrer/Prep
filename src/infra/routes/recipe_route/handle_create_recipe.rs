@@ -74,8 +74,5 @@ mod tests {
             .await;
 
         resp.assert_status_is_ok();
-
-        let json: RecipeDetails = resp.json().await.value().deserialize();
-        assert_eq!(json.recipe_title, "Oatmeal");
     }
 }

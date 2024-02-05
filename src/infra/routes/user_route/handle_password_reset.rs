@@ -16,10 +16,9 @@ pub async fn handle_password_reset(
     Data(repo): Data<&Database<MySqlPool>>,
     Form(req): Form<UpdatePasswordForm>,
 ) -> Result<Response> {
-    // TODO handle the fail more gracefully
     reset_password(session, repo, &req)
         .await
-        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR))?;
 
     let res = Response::builder()
         .header("Location", "/usr/account")

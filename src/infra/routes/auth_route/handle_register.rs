@@ -1,6 +1,6 @@
 use crate::{
     app::{
-        action::{register_new_user, start_session_for_user},
+        action::{register_new_user, start_session_for_user, validate_user_email},
         interface::Database,
     },
     domain::constants::SESSION_COOKIE_KEY,
@@ -27,9 +27,7 @@ pub async fn handle_register(
     Form(req): Form<RegisterRequest>,
     Data(repo): Data<&Database<MySqlPool>>,
 ) -> Result<Response> {
-    let email_re = Regex::new(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").unwrap();
-
-    match email_re.is_match(&req.email) {
+    match validate_user_email(&req.email) {
         true => {
             if is_valid_password(&req.password, &req.confirm_password) {
                 let user_id = register_new_user(&req.email, &req.password, repo)
@@ -42,12 +40,11 @@ pub async fn handle_register(
                     Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR)
                 })?;
 
-                // TODO add Secure; back to the cookie
                 let mut response = Response::builder()
                     .header(
                         "Set-Cookie",
                         format!(
-                            "{}={}; Path=/; HttpOnly; SameSite=Strict",
+                            "{}={}; Path=/; HttpOnly; Secure; SameSite=Strict",
                             SESSION_COOKIE_KEY, session.session_id
                         ),
                     )
@@ -115,8 +112,5 @@ mod tests {
 
         // assert result
         resp.assert_text("Registration Successful").await;
-
-        // TODO select by id in db to confirm registration
-        // let id: String = resp.0.take_body().into_string().await.unwrap();
     }
 }

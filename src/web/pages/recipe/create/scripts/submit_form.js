@@ -42,8 +42,6 @@ async function submitForm(event) {
     });
   }
 
-  console.log("recipe", recipe);
-
   const body = JSON.stringify(recipe);
 
   let res = await fetch(path, {

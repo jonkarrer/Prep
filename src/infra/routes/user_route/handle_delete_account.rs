@@ -18,7 +18,7 @@ pub async fn handle_delete_account(
 ) -> Result<Response> {
     delete_account(repo, &req, session)
         .await
-        .map_err(|_| Error::from_status(StatusCode::INTERNAL_SERVER_ERROR))?;
+        .map_err(|e| Error::from_string(format!("{e}"), StatusCode::INTERNAL_SERVER_ERROR))?;
 
     let res = Response::builder()
         .header("Location", "/")

@@ -7,6 +7,7 @@ use crate::{
 };
 use anyhow::Result;
 use brize_auth::{config::Expiry, entity::Session};
+use regex::Regex;
 
 pub async fn login_user(user_name: &str, password: &str) -> Result<Session> {
     let user_id = verify_user_credentials(user_name, password).await?;
@@ -78,6 +79,10 @@ pub async fn update_user_email<T: UserRepository>(
     repo: &T,
     form: &UpdateEmailForm,
 ) -> Result<()> {
+    if !validate_user_email(&form.new_email) {
+        return Err(anyhow::anyhow!("Email is invalid"));
+    }
+
     match session.match_csrf_token(&form.csrf_token) {
         true => {
             let auth = auth_client().await;
@@ -115,6 +120,13 @@ pub async fn delete_account<T: UserRepository>(
         }
         false => Err(anyhow::anyhow!("Unauthorized")),
     }
+}
+
+pub fn validate_user_email(user_email: &str) -> bool {
+    let email_re = Regex::new(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+        .expect("Regex failed to init");
+
+    email_re.is_match(user_email)
 }
 
 pub async fn verify_user_credentials(user_name: &str, password: &str) -> Result<UserId> {

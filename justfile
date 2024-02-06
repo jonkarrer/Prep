@@ -1,9 +1,6 @@
-# ---- Build -----
-
-
 # ---- Composer ----
 compose-prod:
-    docker compose -f docker-compose.prod.yml -p prep-prod up
+    docker compose -f docker-compose.prod.yml -p prep-prod --env-file .env.prod up
 
 decompose-prod:
     docker compose -p prep-prod down

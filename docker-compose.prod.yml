@@ -3,7 +3,6 @@ version: "3.8"
 services:
   web:
     build: .
-    hostname: web
     ports:
       - ${APP_PORT}:${APP_PORT}
     environment:
@@ -17,7 +16,6 @@ services:
       - APP_HOST=${APP_HOST}
       - NGINX_PORT=${NGINX_PORT}
       - STATIC_FILE_PREFIX=${STATIC_FILE_PREFIX}
-      - OPEN_API_TOKEN=${OPEN_API_TOKEN}
 
   nginx:
     build: ./proxy

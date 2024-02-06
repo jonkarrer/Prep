@@ -22,6 +22,6 @@ services:
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
     volumes:
-      - /etc/letsencrypt/live:/etc/nginx/certs:ro
+      - /etc/letsencrypt/live/theprep.app:/etc/nginx/certs:ro
     depends_on:
       - web

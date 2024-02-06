@@ -63,3 +63,38 @@ RUN apt-get update && \
  apt-get clean && \
  rm -rf /var/lib/apt/lists/_ /tmp/_ /var/tmp/\*
 RUN cargo install sqlx-cli
+
+## Cert Provisioning
+
+Https connection steps
+
+### Install Let's Encrypt Certbot
+
+```bash
+sudo apt update && sudo apt install certbot python3-certbot-nginx  # For Ubuntu/Debian
+```
+
+### Provision Cert
+
+```bash
+sudo certbot certonly --standalone -d theprep.app -d www.theprep.app
+```
+
+### Put certs into nginx conf
+
+```nginx
+  server {
+    listen 443 ssl;
+    server_name theprep.app www.theprep.app;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+  }
+```
+
+### Mount the created certs from Amazon VM into Docker
+
+```yaml
+volumes:
+  - /etc/letsencrypt:/etc/nginx/certs:ro
+```

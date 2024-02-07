@@ -3,6 +3,8 @@ version: "3.8"
 services:
   web:
     build: .
+    volumes:
+      - ~/devjon/rust/prep/certs:/etc/nginx/certs:ro
     ports:
       - ${APP_PORT}:${APP_PORT}
     environment:
@@ -21,7 +23,9 @@ services:
     build: ./proxy
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
+      - 443:443
     volumes:
-      - /etc/letsencrypt/live/theprep.app:/etc/nginx/certs:ro
+      - ~/devjon/rust/prep/certs:/etc/nginx/certs:ro
+      - ~/devjon/rust/prep/proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web

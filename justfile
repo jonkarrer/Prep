@@ -1,3 +1,10 @@
+# ---- Cert ----
+cert-dry-run:
+    docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d theprep.app
+
+cert-run:
+   docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d theprep.app
+
 # ---- Composer ----
 compose-prod:
     docker compose -f docker-compose.prod.yml -p prep-prod --env-file .env.prod up

@@ -6,7 +6,7 @@ services:
     ports:
       - ${APP_PORT}:${APP_PORT}
     environment:
-      - DB_HOST=database # use hostname defined in database service
+      - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -17,21 +17,22 @@ services:
       - STATIC_FILE_PREFIX=${STATIC_FILE_PREFIX}
 
   nginx:
-    build: ./proxy
+    image: nginx:latest
     ports:
       - 80:80
       - 443:443
+    restart: always
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
-    depends_on:
-      - web
+    # depends_on:
+    #   - web
 
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-    depends_on:
-      - nginx
+    # depends_on:
+    #   - nginx

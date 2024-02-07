@@ -6,5 +6,6 @@
 Cargo.lock
 ._*
 .DS_Store
+certbot
 
 tailwindcss

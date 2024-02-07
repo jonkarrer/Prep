@@ -1,3 +1,8 @@
+# ---- Build For Production -----
+release-new-version:
+    docker container kill prep-web && docker rm prep-web && docker rmi prep-web && \
+    docker compose -f docker-compose.prod.yml -p prep --env-file .env.prod up -d web
+
 # ---- Cert ----
 cert-dry-run:
     docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d theprep.app

@@ -71,7 +71,7 @@ Https connection steps
 ### Install Let's Encrypt Certbot
 
 ```bash
-sudo apt update && sudo apt install certbot python3-certbot-nginx  # For Ubuntu/Debian
+sudo apt update && sudo apt install certbot python3-certbot-nginx
 ```
 
 ### Provision Cert

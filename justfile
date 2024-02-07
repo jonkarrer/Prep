@@ -9,7 +9,10 @@ destroy-prod:
     docker compose -p prep-prod down --rmi all --remove-orphans
 
 compose-dev:
-    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up -d && bash ./scripts/seed_db.sh
+    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up -d && \
+    bash ./scripts/seed_db.sh && \
+    export DATABASE_URL=mysql://root:my-secret-pw@localhost:3306/mysql && cargo run --bin seeder
+
 
 decompose-dev:
     docker compose -p prep-dev down
@@ -26,8 +29,8 @@ echo-db-url:
     @source .env && echo "${DATABASE_URL}"
 
 ## init docker database instance and run migrations
-init-db env_config:
-    export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh && cargo run --bin seeder
+init-db:
+    export ENV_CONFIG=dev && ./scripts/init_db.sh && cargo run --bin seeder
 
 start-db:
     docker start mysql

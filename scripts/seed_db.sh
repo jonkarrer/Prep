@@ -15,15 +15,13 @@ if ! [ -x "$(command -v sqlx)" ]; then
   exit 1
 fi
 
-# pull in enviornment vars
-source .env.dev
 
 # Keep pinging MySQL until it's ready to accept commands
-until mysql -h 127.0.0.1 -u "${DB_USER}" -p"${DB_PASSWORD}" -P "${DB_PORT}" -D "${DB_NAME}" -e 'SELECT 1'; do
+until mysql -h 127.0.0.1 -u root -pmy-secret-pw -P 3306 -D mysql -e 'SELECT 1'; do
   >&2 echo "MySQL is still unavailable - sleeping"
   sleep 1
 done
 
 # create migration with sqlx
-sqlx database create --database-url ${DATABASE_URL}
-sqlx migrate run --database-url ${DATABASE_URL} --source database/migrations
+sqlx database create --database-url mysql://root:my-secret-pw@localhost:3306/mysql
+sqlx migrate run --source database/migrations --database-url mysql://root:my-secret-pw@localhost:3306/mysql

@@ -3,29 +3,31 @@ cert-dry-run:
     docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d theprep.app
 
 cert-run:
-   docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d theprep.app
+    docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d theprep.app
 
 # ---- Composer ----
 compose-prod:
-    docker compose -f docker-compose.prod.yml -p prep-prod --env-file .env.prod up
+    docker compose -f docker-compose.prod.yml -p prep --env-file .env.prod up -d web
 
 decompose-prod:
-    docker compose -p prep-prod down
+    docker compose -p prep down
 
 destroy-prod:
-    docker compose -p prep-prod down --rmi all --remove-orphans
+    docker compose -p prep down --rmi all --remove-orphans
 
 compose-dev:
     docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up -d && \
     bash ./scripts/seed_db.sh && \
     export DATABASE_URL=mysql://root:my-secret-pw@localhost:3306/mysql && cargo run --bin seeder
 
-
 decompose-dev:
     docker compose -p prep-dev down
 
 destroy-dev:
     docker compose -p prep-dev down --rmi all --remove-orphans
+
+restart-nginx:
+    docker compose --env-file .env.prod -f docker-compose.prod.yml restart nginx
 
 # ---- Development ----
 run-dev:

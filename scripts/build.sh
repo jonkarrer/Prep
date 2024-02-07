@@ -19,7 +19,7 @@ fi
 docker compose up --build --detach
 
 # pull in enviornment vars
-source .env
+source .env.dev
 
 # keep pinging MySQL container until it's ready to accept connections
 until mysql -h 127.0.0.1 -u "${DB_USER}" -p"${DB_PASSWORD}" -P "${DB_PORT}" -D "${DB_NAME}" -e 'SELECT 1'; do

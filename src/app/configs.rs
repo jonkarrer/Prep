@@ -22,7 +22,7 @@ pub struct DbConfig {
     pub user_name: String,
     pub password: String,
     pub host: String,
-    pub port: String,
+    pub port: Option<String>,
     pub db_name: String,
 }
 
@@ -34,16 +34,36 @@ impl DbConfig {
             password: env::var("DB_PASSWORD").expect("DB_PASSWORD not found"),
             user_name: env::var("DB_USER").expect("DB_USER not found"),
             host: env::var("DB_HOST").expect("DB_HOST not found"),
-            port: env::var("DB_PORT").expect("DB_PORT not found"),
+            port: env::var("DB_PORT").ok(),
             db_name: env::var("DB_NAME").expect("DB_NAME not found"),
         }
     }
 
-    pub fn connection_string(&self) -> String {
-        format!(
-            "mysql://{}:{}@{}:{}/{}",
-            self.user_name, self.password, self.host, self.port, self.db_name
-        )
+    pub fn connection_string() -> String {
+        dotenvy::dotenv().unwrap_or_default();
+
+        let password = env::var("DB_PASSWORD").expect("DB_PASSWORD not found");
+        let user_name = env::var("DB_USER").expect("DB_USER not found");
+        let host = env::var("DB_HOST").expect("DB_HOST not found");
+        let port = env::var("DB_PORT").ok();
+        let db_name = env::var("DB_NAME").expect("DB_NAME not found");
+
+        match port {
+            Some(port) => {
+                format!(
+                    "mysql://{}:{}@{}:{}/{}",
+                    user_name, password, host, port, db_name
+                )
+            }
+            None => {
+                format!("mysql://{}:{}@{}/{}", user_name, password, host, db_name)
+            }
+        }
+    }
+
+    pub fn from_url() -> String {
+        dotenvy::dotenv().unwrap_or_default();
+        env::var("DATABASE_URL").expect("DATABASE_URL not found")
     }
 }
 

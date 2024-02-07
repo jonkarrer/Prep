@@ -1,9 +1,33 @@
-# ---- Build ----
-build-app:
-    ./scripts/build.sh
+# ---- Cert ----
+cert-dry-run:
+    docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d theprep.app
 
-teardown-app:
-    docker compose down
+cert-run:
+    docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d theprep.app
+
+# ---- Composer ----
+compose-prod:
+    docker compose -f docker-compose.prod.yml -p prep --env-file .env.prod up -d web
+
+decompose-prod:
+    docker compose -p prep down
+
+destroy-prod:
+    docker compose -p prep down --rmi all --remove-orphans
+
+compose-dev:
+    docker compose -f docker-compose.dev.yml -p prep-dev --env-file .env.dev up -d && \
+    bash ./scripts/seed_db.sh && \
+    export DATABASE_URL=mysql://root:my-secret-pw@localhost:3306/mysql && cargo run --bin seeder
+
+decompose-dev:
+    docker compose -p prep-dev down
+
+destroy-dev:
+    docker compose -p prep-dev down --rmi all --remove-orphans
+
+restart-nginx:
+    docker compose --env-file .env.prod -f docker-compose.prod.yml restart nginx
 
 # ---- Development ----
 run-dev:
@@ -14,8 +38,8 @@ echo-db-url:
     @source .env && echo "${DATABASE_URL}"
 
 ## init docker database instance and run migrations
-init-db env_config:
-    export ENV_CONFIG={{env_config}} && ./scripts/init_db.sh && cargo run --bin seeder
+init-db:
+    export ENV_CONFIG=dev && ./scripts/init_db.sh && cargo run --bin seeder
 
 start-db:
     docker start mysql

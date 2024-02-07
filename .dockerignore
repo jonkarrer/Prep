@@ -1,0 +1,7 @@
+certbot
+scripts
+
+.env
+*.env
+.env.*
+*.env.*

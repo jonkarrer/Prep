@@ -3,7 +3,6 @@ use prep::{
     app::clients::{auth_client, db_client},
     app::{
         clients::session_client,
-        configs::DbConfig,
         helper::{TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD},
         interface::UserRepository,
     },
@@ -11,6 +10,8 @@ use prep::{
 };
 use sqlx::MySqlPool;
 use std::fs;
+
+const SEEDER_DB_URL: &str = "mysql://root:my-secret-pw@localhost:3306/mysql";
 
 fn get_recipe_seed_data() -> Vec<RecipeArgs> {
     let raw_data =
@@ -23,8 +24,7 @@ fn get_recipe_seed_data() -> Vec<RecipeArgs> {
 }
 
 async fn seed_with_recipes(user_id: &str) -> anyhow::Result<()> {
-    let db_configs = DbConfig::default();
-    let pool = MySqlPool::connect(db_configs.connection_string().as_str())
+    let pool = MySqlPool::connect(SEEDER_DB_URL)
         .await
         .expect("Failed connection with database");
 
@@ -102,8 +102,7 @@ async fn seed_with_recipes(user_id: &str) -> anyhow::Result<()> {
 }
 
 async fn seed_pantry_and_common_ingredients(user_id: &str) -> anyhow::Result<()> {
-    let db_configs = DbConfig::default();
-    let pool = MySqlPool::connect(db_configs.connection_string().as_str())
+    let pool = MySqlPool::connect(SEEDER_DB_URL)
         .await
         .expect("Failed connection with database");
 
@@ -145,8 +144,7 @@ async fn seed_pantry_and_common_ingredients(user_id: &str) -> anyhow::Result<()>
 }
 
 async fn seed_meal_plans(user_id: &str) -> anyhow::Result<()> {
-    let db_configs = DbConfig::default();
-    let pool = MySqlPool::connect(db_configs.connection_string().as_str())
+    let pool = MySqlPool::connect(SEEDER_DB_URL)
         .await
         .expect("Failed connection with database");
 

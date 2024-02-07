@@ -1,4 +1,3 @@
-use crate::app::configs::DbConfig;
 use sqlx::mysql::MySqlPool;
 
 #[derive(Clone)]
@@ -7,12 +6,8 @@ pub struct Database<T> {
 }
 
 impl Database<MySqlPool> {
-    pub async fn new(config: &DbConfig) -> Database<MySqlPool> {
-        let addr = format!(
-            "mysql://{}:{}@{}:{}/{}",
-            config.user_name, config.password, config.host, config.port, config.db_name
-        );
-        let pool = MySqlPool::connect(addr.as_str())
+    pub async fn new(db_url: &str) -> Database<MySqlPool> {
+        let pool = MySqlPool::connect(db_url)
             .await
             .expect("Failed connection with database");
 
